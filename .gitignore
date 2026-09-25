@@ -216,3 +216,21 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Biến môi trường & Khóa bảo mật
+.env
+
+# Dữ liệu cào thô & tệp xuất
+data/raw/
+data/processed/
+*.csv
+*.json
+*.html
+
+# Dữ liệu cục bộ của DB / Vector DB
+qdrant_storage/
+postgres_data/
+
+# Checkpoint mô hình
+models/checkpoints/
