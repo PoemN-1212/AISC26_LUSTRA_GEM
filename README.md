@@ -1,103 +1,442 @@
-# 🚀 Dự Án GEM: Nền Tảng AI Định Hướng & Khớp Nối Năng Lực Đồ Án CNTT
+# 💎 GEM — Nền tảng AI định hướng & khớp nối năng lực Đồ án CNTT với xu hướng tuyển dụng
 
-## 📌 1. Giới thiệu Dự Án
-**GEM (An AI Platform for Orienting and Matching IT Capstone Projects with Recruitment Trends)** là dự án tham gia cuộc thi *Advanced Information Systems Contest 2026* do đội thi LUSTRA thuộc Khoa Hệ thống Thông tin (UIT) thực hiện.
+> **GEM** là nền tảng AI hỗ trợ sinh viên CNTT lựa chọn công nghệ và kỹ năng cho đồ án dựa trên dữ liệu tuyển dụng thực tế, đồng thời cung cấp góc nhìn về xu hướng công nghệ cho nhà trường.
 
-**Bài toán:** Sinh viên CNTT thường gặp khó khăn trong việc chọn công nghệ cho đồ án, dẫn đến tình trạng hệ thống xây dựng xong bị lỗi thời, tạo ra "Độ chêch lệch kỹ năng" (Skill Gap) lớn so với yêu cầu của thị trường lao động.
-
-**Mục tiêu GEM:** 
-Thay vì chỉ khớp nối CV khi sinh viên đã ra trường, GEM ứng dụng tư duy **Shift-Left** bằng cách can thiệp sớm vào giai đoạn thai nghén ý tưởng đồ án. Nền tảng sử dụng Kiến trúc RAG (Retrieval-Augmented Generation) để đối chiếu "Điểm thực chiến" của ý tưởng đồ án với hàng chục ngàn tin tuyển dụng (Job Descriptions) thời gian thực, từ đó xuất ra báo cáo định hướng công nghệ cá nhân hóa.
+<p align="center">
+  <b>AISC 2026 · Data Driven Business · Team LUSTRA</b>
+</p>
 
 ---
 
-## 👥 2. Đội thi LUSTRA
-*Sinh viên Khoa Hệ thống Thông tin - Trường Đại học Công nghệ Thông tin (UIT)*
-- **Lê Vĩnh Thái** - 23521417 (Trưởng nhóm / Data Engineer)
-- **Nguyễn Văn Mạnh Huy** - 23520641
-- **Trần Nhụy Tam Tử Phục** - 24521400
-- **Phạm Nhật Khoa** - 23520753
+## 📖 Giới thiệu
+
+Trong quá trình thực hiện đồ án CNTT, sinh viên thường phải tự quyết định nên sử dụng công nghệ, framework và kỹ năng nào. Tuy nhiên, việc lựa chọn này đôi khi dựa nhiều vào kinh nghiệm cá nhân hoặc xu hướng nhất thời, trong khi nhu cầu tuyển dụng trên thị trường liên tục thay đổi.
+
+**GEM** giải quyết vấn đề này bằng cách thu thập dữ liệu tuyển dụng thực tế, phân tích các kỹ năng và công nghệ đang được doanh nghiệp yêu cầu, sau đó **khớp nối với thông tin đồ án của sinh viên** để đưa ra định hướng công nghệ phù hợp.
+
+### 🎯 GEM hướng đến
+
+- 📊 Phân tích xu hướng công nghệ từ dữ liệu tuyển dụng.
+- 🧩 Khớp nối kỹ năng giữa **Đồ án CNTT ↔ Job Description**.
+- 🤖 Ứng dụng AI/NLP để tự động nhận diện kỹ năng.
+- 🛣️ Hỗ trợ xây dựng **Tech Roadmap** cho sinh viên.
+- 🏫 Cung cấp **Dashboard xu hướng thị trường** cho nhà trường.
 
 ---
 
-## 🏗️ 3. Phân Hệ Đang Triển Khai: Data Ingestion Pipeline
-Kho lưu trữ (Repository) này chứa mã nguồn của **Giai đoạn 1: Thu thập và Tiền xử lý dữ liệu thô (Data Ingestion)**. 
-Hệ thống sử dụng Python và Apache Airflow để cào tự động 10.000+ tin tuyển dụng IT từ TopCV, vượt rào chống bot qua FlareSolverr và lưu trữ tập trung trên hệ thống Neon.tech Cloud PostgreSQL.
+## 🏗️ Kiến trúc hệ thống
 
-### Kiến Trúc Data Pipeline
-- **Apache Airflow:** Lập lịch và điều phối (Orchestration).
-- **Python (BeautifulSoup, Requests):** Bóc tách văn bản phi cấu trúc áp dụng cơ chế Chunking tối ưu RAM.
-- **FlareSolverr:** Proxy Server vượt tường lửa Cloudflare Captcha.
-- **Neon.tech:** Cloud Database lưu trữ JDs chia sẻ cho toàn bộ Data Analyst/AI Engineer trong nhóm.
-- **Docker Compose:** Đóng gói môi trường đồng nhất.
-![Giao diện Pipeline hệ thống](images/Drafv1.png)
+![Kiến trúc hệ thống GEM](Drafv1.png)
+
+> `Drafv1.png` là bản kiến trúc hệ thống hiện tại và sẽ tiếp tục được cập nhật trong quá trình phát triển.
+
+### 🔄 Luồng xử lý chính
+
+```text
+             JOB DESCRIPTION
+                    │
+                    │
+                    ▼
+              Thu thập dữ liệu
+                    │
+                    │
+                    ├───────────────┐
+                    │               │
+                    ▼               ▼
+             Auto Labeling     Student Project
+                    │               │
+                    └───────┬───────┘
+                            ▼
+                       PostgreSQL
+                            │
+                            ▼
+                   Vector Embedding
+                            │
+                            ▼
+                     Vector Database
+                            │
+                            ▼
+                   Hybrid Scoring
+                  ┌─────────┼─────────┐
+                  │         │         │
+               Cosine    Jaccard   Xu hướng
+              Similarity Similarity thị trường
+                  └─────────┼─────────┘
+                            ▼
+                  ┌─────────┴─────────┐
+                  ▼                   ▼
+             Tech Roadmap       Market Dashboard
+                Student              School
+```
+
 ---
 
-## ⚙️ 4. Hướng dẫn Cài đặt Môi trường & Khởi chạy Pipeline
+## 🧩 Các thành phần chính
 
-### Yêu cầu tiên quyết (Prerequisites)
-1. Cài đặt **Git**, **Docker Desktop**, và phần mềm quản trị CSDL **DBeaver**.
-2. *(Máy Windows)* Bật WSL2 và tạo file `%USERPROFILE%\.wslconfig` để cấp đủ RAM:
-   ```ini
-   [wsl2]
-   memory=8GB
-   swap=4GB
-   ```
-Các bước khởi động
+| Thành phần | Chức năng |
+|---|---|
+| **Apache Airflow** | Lập lịch và điều phối các pipeline dữ liệu |
+| **BeautifulSoup** | Thu thập và phân tích dữ liệu từ trang web |
+| **Auto Labeling** | Tự động nhận diện và kiểm tra kỹ năng |
+| **PostgreSQL** | Lưu trữ dữ liệu và metadata |
+| **Vector Embedding** | Chuyển đổi dữ liệu thành vector |
+| **Vector Database** | Lưu trữ và tìm kiếm dữ liệu vector |
+| **Hybrid Scoring** | Tính mức độ tương đồng và kết hợp xu hướng thị trường |
+| **Dashboard** | Trực quan hóa xu hướng tuyển dụng |
+| **Tech Roadmap** | Định hướng công nghệ cho sinh viên |
+| **Docker** | Đóng gói và vận hành các dịch vụ |
 
-**Bước 1**: Clone Code
+---
 
-```Bash
+## 📊 Dữ liệu
+
+GEM tập trung vào hai nhóm dữ liệu chính:
+
+### 1. Job Description
+
+Dữ liệu tuyển dụng được thu thập từ các nền tảng tuyển dụng, trong đó tập trung vào:
+
+- Vị trí tuyển dụng.
+- Mô tả công việc.
+- Yêu cầu kỹ năng.
+- Công nghệ và framework.
+- Thông tin liên quan đến thị trường tuyển dụng.
+
+### 2. Student Project
+
+Thông tin đồ án của sinh viên được sử dụng để xác định:
+
+- Chủ đề và lĩnh vực của đồ án.
+- Công nghệ đang sử dụng.
+- Kỹ năng hiện có.
+- Các công nghệ/kỹ năng cần được bổ sung.
+
+Dữ liệu sau khi thu thập sẽ được làm sạch, chuẩn hóa và đưa vào các bước xử lý tiếp theo.
+
+---
+
+## 🤖 AI & xử lý dữ liệu
+
+Pipeline AI của GEM được xây dựng theo các bước chính:
+
+```text
+Dữ liệu thô
+    │
+    ▼
+Làm sạch & chuẩn hóa
+    │
+    ▼
+Auto Labeling
+    │
+    ▼
+Deterministic Verification
+    │
+    ▼
+Vector Embedding
+    │
+    ▼
+Vector Database
+    │
+    ▼
+Semantic Retrieval / Matching
+```
+
+### Auto Labeling
+
+Hệ thống sử dụng mô hình AI để hỗ trợ trích xuất kỹ năng từ Job Description và dữ liệu đồ án.
+
+Sau đó, kết quả được kiểm tra bằng cơ chế **Deterministic Verification** nhằm hạn chế các nhãn không chính xác.
+
+### Vector Embedding
+
+Thông tin về JD và đồ án được biểu diễn dưới dạng vector để phục vụ tìm kiếm và so sánh ngữ nghĩa.
+
+### Vector Database
+
+Các vector được lưu trữ trong cơ sở dữ liệu vector để hỗ trợ truy vấn và tìm kiếm các nội dung có mức độ tương đồng cao.
+
+---
+
+## 🎯 Cơ chế Matching & Scoring
+
+GEM sử dụng cơ chế **Hybrid Scoring**, kết hợp nhiều yếu tố thay vì chỉ dựa vào một phép đo tương đồng.
+
+```text
+                 Hybrid Score
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+     Cosine         Jaccard      Market Trend
+    Similarity      Similarity       Weight
+        └─────────────┼─────────────┘
+                      ▼
+                Matching Result
+```
+
+### Các thành phần
+
+**Cosine Similarity**
+
+> Đánh giá mức độ tương đồng về mặt ngữ nghĩa giữa các vector.
+
+**Jaccard Similarity**
+
+> So sánh mức độ giao nhau giữa các tập kỹ năng/công nghệ.
+
+**Market Trend**
+
+> Bổ sung trọng số dựa trên xu hướng xuất hiện của công nghệ trong dữ liệu tuyển dụng.
+
+> Các trọng số và công thức cuối cùng có thể tiếp tục được điều chỉnh trong quá trình thực nghiệm.
+
+---
+
+## 📈 Kết quả đầu ra
+
+### 👨‍🎓 Dành cho sinh viên
+
+GEM hướng đến việc cung cấp:
+
+- Danh sách kỹ năng/công nghệ phù hợp với đồ án.
+- Mức độ tương đồng giữa đồ án và nhu cầu tuyển dụng.
+- Những kỹ năng đang có xu hướng được tuyển dụng.
+- **Tech Roadmap** để định hướng bổ sung công nghệ/kỹ năng.
+
+### 🏫 Dành cho nhà trường
+
+Dashboard cung cấp góc nhìn tổng quan về:
+
+- Xu hướng công nghệ trên thị trường.
+- Các kỹ năng được doanh nghiệp yêu cầu.
+- Mức độ phổ biến của từng công nghệ.
+- Thông tin hỗ trợ định hướng đào tạo.
+
+---
+
+## 🛠️ Công nghệ sử dụng
+
+| Nhóm | Công nghệ |
+|---|---|
+| **Ngôn ngữ** | Python |
+| **Data Pipeline** | Apache Airflow |
+| **Web Crawling** | BeautifulSoup, Requests |
+| **AI / NLP** | LLM, Embedding Model |
+| **Database** | PostgreSQL |
+| **Vector Search** | Vector Database |
+| **Container** | Docker, Docker Compose |
+| **Database Client** | DBeaver |
+| **Dashboard** | Đang phát triển |
+
+---
+
+## 📦 Công cụ cần cài đặt
+
+Các thành viên có thể sử dụng danh sách dưới đây để chuẩn bị môi trường phát triển.
+
+| Công cụ | Mục đích | Tải xuống |
+|---|---|---|
+| **Git** | Quản lý mã nguồn | [Git](https://git-scm.com/downloads) |
+| **Docker Desktop** | Chạy các container | [Docker Desktop](https://www.docker.com/products/docker-desktop/) |
+| **Python** | Phát triển Data Pipeline | [Python](https://www.python.org/downloads/) |
+| **DBeaver** | Quản lý PostgreSQL | [DBeaver](https://dbeaver.io/download/) |
+| **Visual Studio Code** | Lập trình và chỉnh sửa mã nguồn | [VS Code](https://code.visualstudio.com/download) |
+| **WSL2** | Môi trường Linux trên Windows | [WSL2](https://learn.microsoft.com/windows/wsl/install) |
+
+> **Lưu ý:** Phiên bản cụ thể của từng công cụ sẽ được thống nhất theo môi trường triển khai của nhóm.
+
+---
+
+## ⚙️ Cài đặt & chạy dự án
+
+### 1. Clone repository
+
+```bash
 git clone https://github.com/PoemN-1212/AISC26_LUSTRA_GEM.git
-cd gem-data-ingestion
-```
-**Bước 2**: Cấu hình Biến môi trường (.env)
-Tạo file .env ở thư mục gốc và dán thông tin (Liên hệ Trưởng nhóm Lê Vĩnh Thái để nhận Password Cloud DB):
-
-```Ini, TOML
-# Cấu hình Metadata Airflow (Local)
-POSTGRES_USER=gem_admin
-POSTGRES_PASSWORD=gem_secret_password
-POSTGRES_DB=gem_database
-POSTGRES_PORT=5432
-
-# Kết nối Cloud Database (Neon.tech)
-CLOUD_DB_URL=postgresql://neondb_owner:[PASSWORD_Ở_ĐÂY]@ep-red-salad-b3mi20mi-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
-```
-**Bước 3**: Chạy Hệ Thống
-
-```Bash
-docker-compose --env-file .env up -d
+cd AISC26_LUSTRA_GEM
 ```
 
-Chờ khoảng 2 phút để container khởi tạo mạng.
+### 2. Tạo file môi trường
 
-**Bước 4**: Kích hoạt Thu Thập (Airflow)
-Truy cập http://localhost:8080, tìm DAG gem_topcv_daily_crawler, gạt công tắc Unpause và bấm Trigger DAG.
+Tạo file `.env` dựa trên cấu hình mẫu:
 
-## 🗄️ 5. Hướng dẫn Lấy Dữ Liệu (Dành cho AI Team)
-Các thành viên phụ trách xây dựng Bộ kiểm duyệt tất định (Deterministic Verifier) và Mô hình Không gian Vector (Qdrant) không cần chạy Airflow. Chỉ cần kết nối thẳng vào Cloud DB để lấy Data JDs sạch.
+```bash
+cp .env.example .env
+```
 
-Mở DBeaver -> Tạo kết nối PostgreSQL mới.
+Sau đó cấu hình các thông tin cần thiết như:
 
-Nhập các thông số:
+```env
+POSTGRES_USER=your_username
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=your_database
+```
 
-Host: ep-red-salad-b3mi20mi-pooler.c-4.ap-southeast-1.aws.neon.tech
+> ⚠️ **Không commit mật khẩu, API Key hoặc thông tin kết nối cơ sở dữ liệu thật lên GitHub.**
 
-Database: neondb
+### 3. Khởi động hệ thống
 
-Username: neondb_owner
+```bash
+docker compose --env-file .env up -d
+```
 
-Password: Liên hệ Trưởng nhóm.
+Kiểm tra các container:
 
-⚠️ Chuyển sang tab SSL, mục SSL mode chọn require.
+```bash
+docker compose ps
+```
 
-Truy vấn hoặc Export bảng: neondb > Schemas > public > Tables > raw_job_postings.
+### 4. Truy cập Airflow
 
-## 🎯 6. Giai Đoạn Tiếp Theo (Roadmap)
-Dữ liệu JDs thu thập từ Pipeline này sẽ được chuyển sang các phân hệ sau của dự án:
+Sau khi hệ thống khởi động:
 
-Auto-labeling Framework: Đưa qua LLM để định dạng nhãn đóng khung (Span Anchoring).
+```text
+http://localhost:8080
+```
 
-Vectorization: Nhúng đa ngữ bằng BGE-M3 và lưu trữ lên Qdrant DB.
+Tại Airflow, các DAG có thể được theo dõi và thực thi theo lịch đã cấu hình.
 
-Web Application: Tích hợp thuật toán tính điểm thực chiến (Cosine Distance & Jaccard) trên nền tảng Web cho sinh viên trải nghiệm.
+---
+
+## 🗄️ Lưu trữ dữ liệu
+
+Kiến trúc hiện tại sử dụng PostgreSQL làm nơi lưu trữ dữ liệu có cấu trúc và metadata.
+
+Luồng tổng quát:
+
+```text
+Crawler
+   │
+   ▼
+Raw Job Data
+   │
+   ▼
+Cleaning / Processing
+   │
+   ▼
+Auto Labeling
+   │
+   ▼
+PostgreSQL
+   │
+   ├──────────────► Metadata / JSON
+   │
+   └──────────────► Vector Embedding
+                            │
+                            ▼
+                     Vector Database
+```
+
+Hệ thống cũng có cơ chế **Data Retiring / TTL Cleanup** để xử lý dữ liệu cũ theo chu kỳ.
+
+---
+
+## 🧹 Data Retiring
+
+Dữ liệu tuyển dụng có tính chất thay đổi theo thời gian. Vì vậy, GEM có cơ chế quản lý vòng đời dữ liệu:
+
+```text
+Dữ liệu mới
+    │
+    ▼
+Lưu trữ
+    │
+    ▼
+Theo dõi thời gian
+    │
+    ▼
+TTL / Retiring
+    │
+    ▼
+Dọn dẹp dữ liệu cũ
+```
+
+Việc này giúp hạn chế dữ liệu lỗi thời ảnh hưởng đến việc phân tích xu hướng thị trường.
+
+---
+
+## 📂 Cấu trúc Repository
+
+```text
+AISC26_LUSTRA_GEM/
+│
+├── dags/                 # Airflow DAGs
+├── crawler/              # Thu thập dữ liệu
+├── processing/           # Làm sạch & xử lý dữ liệu
+├── labeling/             # Auto Labeling
+├── embedding/            # Vector Embedding
+├── scoring/              # Matching & Scoring
+├── dashboard/            # Dashboard
+├── docker/               # Docker configuration
+│
+├── Drafv1.png            # Kiến trúc hệ thống hiện tại
+├── .env.example          # Mẫu biến môi trường
+├── docker-compose.yml     # Docker Compose
+└── README.md             # Tài liệu dự án
+```
+
+> Cấu trúc thư mục có thể thay đổi khi các module tiếp tục được phát triển.
+
+---
+
+## 🗺️ Tiến độ phát triển
+
+| Hạng mục | Trạng thái |
+|---|---|
+| Thu thập dữ liệu tuyển dụng | 🟢 Đang phát triển |
+| Làm sạch & xử lý dữ liệu | 🟢 Đang phát triển |
+| Auto Labeling | 🟡 Đang hoàn thiện |
+| Vector Embedding | 🟡 Đang phát triển |
+| Vector Database | 🟡 Đang phát triển |
+| Hybrid Matching | 🟡 Đang phát triển |
+| Tech Roadmap | ⚪ Đang lên kế hoạch |
+| Market Trend Dashboard | ⚪ Đang lên kế hoạch |
+
+> Trạng thái sẽ được cập nhật theo tiến độ thực tế của nhóm.
+
+---
+
+## 👥 Đội ngũ LUSTRA
+
+**Cuộc thi Advanced Information Systems Contest 2026 — AISC 2026**
+
+| Thành viên | MSSV | Vai trò |
+|---|---:|---|
+| **Lê Vĩnh Thái** | 23521417 | Team Lead / Data Engineer |
+| **Nguyễn Văn Mạnh Huy** | 23520641 | — |
+| **Trần Nhụy Tam Tử Phục** | 24521400 | — |
+| **Phạm Nhật Khoa** | 23520753 | — |
+
+**Đơn vị:** Trường Đại học Công nghệ Thông tin — ĐHQG-HCM (UIT)  
+**Khoa:** Hệ thống Thông tin  
+**Chủ đề:** Data Driven Business
+
+---
+
+## 🏆 Về dự án
+
+**GEM** được phát triển trong khuôn khổ **AISC 2026**, với định hướng xây dựng một nền tảng dữ liệu và AI giúp kết nối:
+
+```text
+Đồ án sinh viên
+       ↕
+      GEM
+       ↕
+Thị trường tuyển dụng
+```
+
+Mục tiêu cuối cùng là biến dữ liệu tuyển dụng thành những thông tin có thể sử dụng trực tiếp để hỗ trợ sinh viên **định hướng công nghệ, phát triển kỹ năng và xây dựng đồ án có tính thị trường cao hơn**.
+
+---
+
+## 🚧 Trạng thái dự án
+
+> **GEM đang trong quá trình phát triển.**
+
+Kiến trúc `Drafv1.png` hiện là bản mô tả tổng thể của hệ thống. Các thành phần, công nghệ và luồng xử lý sẽ tiếp tục được nhóm cập nhật khi triển khai thực tế.
+
+---
+
+<p align="center">
+  <b>💎 GEM × LUSTRA</b><br>
+  <i>Kết nối Đồ án CNTT với nhu cầu của thị trường tuyển dụng.</i>
+</p>
