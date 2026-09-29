@@ -60,6 +60,8 @@ services:
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__WEBSERVER__SECRET_KEY=thu_khoa_bao_mat_cua_gem
+      - CLOUD_DB_URL=${CLOUD_DB_URL}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
     volumes:
       - ../dags:/opt/airflow/dags
     networks:
@@ -80,6 +82,8 @@ services:
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__WEBSERVER__SECRET_KEY=thu_khoa_bao_mat_cua_gem
+      - CLOUD_DB_URL=${CLOUD_DB_URL}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
     volumes:
       - ../dags:/opt/airflow/dags
     networks:
