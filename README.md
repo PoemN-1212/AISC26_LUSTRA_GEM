@@ -29,7 +29,7 @@ Hệ thống sử dụng Python và Apache Airflow để cào tự động 10.00
 - **FlareSolverr:** Proxy Server vượt tường lửa Cloudflare Captcha.
 - **Neon.tech:** Cloud Database lưu trữ JDs chia sẻ cho toàn bộ Data Analyst/AI Engineer trong nhóm.
 - **Docker Compose:** Đóng gói môi trường đồng nhất.
-
+![Giao diện Pipeline hệ thống](images/Drafv1.png)
 ---
 
 ## ⚙️ 4. Hướng dẫn Cài đặt Môi trường & Khởi chạy Pipeline
