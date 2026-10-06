@@ -255,7 +255,23 @@ git clone https://github.com/PoemN-1212/AISC26_LUSTRA_GEM.git
 cd AISC26_LUSTRA_GEM
 ```
 
-### 2. Tạo file môi trường
+### 2. Thiết lập môi trường ảo (Virtual Environment)
+Việc này giúp IDE nhận diện đúng thư viện, hỗ trợ code và tránh báo lỗi (chạy ở thư mục gốc AISC26_LUSTRA_GEM).
+
+```bash
+# Tạo môi trường ảo
+python -m venv .venv
+
+# Kích hoạt môi trường (Dành cho Windows PowerShell)
+.\.venv\Scripts\Activate.ps1
+# Lưu ý: Nếu báo lỗi đỏ, chạy lệnh này trước để cấp quyền: Set-ExecutionPolicy Unrestricted -Scope CurrentUser
+
+# Cài đặt các thư viện cơ bản
+pip install requests bs4 psycopg2-binary apache-airflow
+```
+
+
+### 3. Tạo file môi trường
 
 Tạo file `.env` dựa trên cấu hình mẫu:
 
@@ -266,17 +282,38 @@ cp .env.example .env
 Sau đó cấu hình các thông tin cần thiết như:
 
 ```env
-POSTGRES_USER=your_username
-POSTGRES_PASSWORD=your_password
-POSTGRES_DB=your_database
+# POSTGRESQL CONFIG
+POSTGRES_USER=gem_admin
+POSTGRES_PASSWORD=gem_secret_password
+POSTGRES_DB=gem_database
+POSTGRES_PORT=5432
+
+# QDRANT CONFIG
+QDRANT_PORT=6333
+
+# KẾT NỐI CLOUD (Nhận Password từ Trưởng nhóm)
+CLOUD_DB_URL=postgresql://neondb_owner:[PASSWORD]@ep-red-salad-b3mi20mi-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+GITHUB_TOKEN=ghp_...
 ```
 
 > ⚠️ **Không commit mật khẩu, API Key hoặc thông tin kết nối cơ sở dữ liệu thật lên GitHub.**
 
-### 3. Khởi động hệ thống
+### 4. Khởi động hệ thống
 
 ```bash
-docker compose --env-file .env up -d
+# Di chuyển vào thư mục chứa file docker-compose.yml
+cd docker
+
+# Khởi động toàn bộ container lên (Lấy biến môi trường từ thư mục cha)
+docker-compose --env-file ../.env up -d
+
+# --- CÁC BƯỚC DƯỚI ĐÂY CHỈ CẦN CHẠY TRONG LẦN ĐẦU TIÊN CÀI ĐẶT ---
+
+# Khởi tạo Metadata Database cho Airflow
+docker exec -it gem_airflow_webserver airflow db init
+
+# Tạo tài khoản đăng nhập giao diện Airflow (có thể thay đổi dựa theo bạn muốn)
+docker exec -it gem_airflow_webserver airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com
 ```
 
 Kiểm tra các container:
@@ -285,7 +322,7 @@ Kiểm tra các container:
 docker compose ps
 ```
 
-### 4. Truy cập Airflow
+### 5. Truy cập hệ thống
 
 Sau khi hệ thống khởi động:
 
