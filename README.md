@@ -302,7 +302,7 @@ GITHUB_TOKEN=ghp_...
 
 ```bash
 # Di chuyển vào thư mục chứa file docker-compose.yml
-cd docker
+cd infra
 
 # Khởi động toàn bộ container lên (Lấy biến môi trường từ thư mục cha)
 docker-compose --env-file ../.env up -d
