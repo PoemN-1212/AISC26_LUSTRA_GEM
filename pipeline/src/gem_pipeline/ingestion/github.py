@@ -3,29 +3,38 @@ import time
 import requests
 import psycopg2
 import base64
-from datetime import datetime, timedelta
-from airflow import DAG
-from airflow.operators.python import PythonOperator
+
+DB_HOST = os.getenv("POSTGRES_HOST", "postgres")
+DB_PORT = os.getenv("POSTGRES_PORT", "5432")
+DB_USER = os.getenv("POSTGRES_USER", "gem_admin")
+DB_PASS = os.getenv("POSTGRES_PASSWORD", "gem_secret_password")
+DB_NAME = os.getenv("POSTGRES_DB", "gem_database")
 
 CLOUD_DB_URL = os.getenv("CLOUD_DB_URL")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-# Tách riêng 2 hàm kết nối
+
 def get_local_connection():
     return psycopg2.connect(
-        host=os.getenv("POSTGRES_HOST", "postgres"),
-        user=os.getenv("POSTGRES_USER", "gem_admin"),
-        password=os.getenv("POSTGRES_PASSWORD", "gem_secret_password"),
-        dbname=os.getenv("POSTGRES_DB", "gem_database")
+        host=DB_HOST,
+        port=DB_PORT,
+        user=DB_USER,
+        password=DB_PASS,
+        dbname=DB_NAME
     )
+
 
 def get_cloud_connection():
     if CLOUD_DB_URL:
-        return psycopg2.connect(CLOUD_DB_URL)
+        try:
+            return psycopg2.connect(CLOUD_DB_URL)
+        except Exception as e:
+            print(f"Cảnh báo: Không thể kết nối Cloud DB ({e})")
+            return None
     return None
 
+
 def init_dbs():
-    # Câu lệnh tạo bảng
     create_table_sql = """
         CREATE TABLE IF NOT EXISTS raw_github_projects (
             id SERIAL PRIMARY KEY,
@@ -55,17 +64,17 @@ def init_dbs():
         conn_cloud.commit()
         conn_cloud.close()
 
+
 def fetch_github_projects():
     if not GITHUB_TOKEN:
         print("LỖI: Chưa cấu hình GITHUB_TOKEN trong file .env!")
         return
 
     init_dbs()
-    
-    # Mở 2 kết nối song song
+
     conn_local = get_local_connection()
     cursor_local = conn_local.cursor()
-    
+
     conn_cloud = get_cloud_connection()
     cursor_cloud = conn_cloud.cursor() if conn_cloud else None
 
@@ -79,20 +88,20 @@ def fetch_github_projects():
         '"capstone project" in:readme,description',
         '"khóa luận tốt nghiệp" in:readme,description'
     ]
-    
+
     total_saved = 0
 
     for query in queries:
         print(f"\n--- Đang tìm kiếm từ khóa: {query} ---")
-        for page in range(1, 6): 
+        for page in range(1, 6):
             search_url = f"https://api.github.com/search/repositories?q={query}&sort=updated&order=desc&per_page=30&page={page}"
             res = requests.get(search_url, headers=headers)
-            
+
             if res.status_code != 200:
                 print(f"Lỗi API hoặc hết Rate Limit: {res.text}")
                 time.sleep(10)
                 continue
-                
+
             items = res.json().get("items", [])
             if not items:
                 break
@@ -100,18 +109,18 @@ def fetch_github_projects():
             for repo in items:
                 repo_name = repo.get("full_name")
                 repo_url = repo.get("html_url")
-                
+
                 # Kiểm tra trùng lặp trên Local để tiết kiệm Request
                 cursor_local.execute("SELECT 1 FROM raw_github_projects WHERE repo_url = %s", (repo_url,))
                 if cursor_local.fetchone():
                     continue
 
                 print(f"  -> Đang bóc tách: {repo_name}")
-                
+
                 readme_url = f"https://api.github.com/repos/{repo_name}/readme"
                 readme_res = requests.get(readme_url, headers=headers)
                 readme_content = ""
-                
+
                 if readme_res.status_code == 200:
                     readme_data = readme_res.json()
                     if "content" in readme_data:
@@ -132,43 +141,29 @@ def fetch_github_projects():
                     repo.get("stargazers_count"), repo.get("created_at")
                 )
 
-                # Lưu vào Local DB (Ổ D của bạn)
+                # Lưu vào Local DB
                 cursor_local.execute(insert_sql, data_tuple)
                 conn_local.commit()
-                
-                # Lưu vào Cloud DB (Neon.tech cho team)
+
+                # Lưu vào Cloud DB (nếu có cấu hình)
                 if cursor_cloud:
-                    cursor_cloud.execute(insert_sql, data_tuple)
-                    conn_cloud.commit()
+                    try:
+                        cursor_cloud.execute(insert_sql, data_tuple)
+                        conn_cloud.commit()
+                    except Exception as err:
+                        print(f"Lỗi ghi Cloud DB: {err}")
 
                 total_saved += 1
-                time.sleep(1) 
+                time.sleep(1)
 
     cursor_local.close()
     conn_local.close()
     if conn_cloud:
         cursor_cloud.close()
         conn_cloud.close()
-        
-    print(f"\n✅ HOÀN THÀNH! Đã lưu {total_saved} đồ án vào cả Local và Cloud.")
 
-default_args = {
-    'owner': 'PoemN',
-    'retries': 2,
-    'retry_delay': timedelta(minutes=2),
-}
+    print(f"\n✅ HOÀN THÀNH! Đã lưu {total_saved} đồ án.")
 
-with DAG(
-    dag_id='gem_github_projects_crawler',
-    default_args=default_args,
-    start_date=datetime(2026, 9, 25),
-    schedule_interval='0 8 * * *',
-    catchup=False,
-    tags=['ingestion', 'github', 'cloud_db', 'local_db'],
-) as dag:
 
-    crawl_task = PythonOperator(
-        task_id='fetch_projects_and_readme',
-        python_callable=fetch_github_projects,
-        execution_timeout=timedelta(hours=1)
-    )
+if __name__ == "__main__":
+    fetch_github_projects()

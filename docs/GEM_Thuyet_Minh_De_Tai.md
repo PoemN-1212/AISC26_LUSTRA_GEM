@@ -7,8 +7,8 @@
 | **Cuộc thi** | AISC 2026 — Data Driven Business |
 | **Đơn vị** | Trường ĐH Công nghệ Thông tin — ĐHQG-HCM (UIT), Khoa Hệ thống Thông tin |
 | **Nhóm** | LUSTRA — Lê Vĩnh Thái (Team Lead / Data Engineer), Nguyễn Văn Mạnh Huy, Trần Nhụy Tam Tử Phục, Phạm Nhật Khoa |
-| **Phiên bản tài liệu** | v0.1 — 2026-10-07 |
-| **Trạng thái dự án** | Cuối Phase 1 (Data) — xem [§14](#14-kế-hoạch-thực-hiện-và-tiến-độ) |
+| **Phiên bản tài liệu** | v0.2 — 2026-10-08 |
+| **Trạng thái dự án** | Hoàn thành Phase 1 (Data) & Phase 2 (Extraction + Verifier + Evaluator); Chuẩn bị Phase 3 (Normalization & Market) — xem [§14](#14-kế-hoạch-thực-hiện-và-tiến-độ) |
 
 > **Quy ước nhãn trong tài liệu**
 >
@@ -178,7 +178,7 @@ Thiếu: chuẩn hóa alias, đếm theo JD, ngữ cảnh, hồ sơ sinh viên, 
 | `full_content` | mô tả **đã strip HTML** |
 | `scraped_at` | thời điểm cào |
 
-- **Hiện trạng:** ✅ đã cào được **hơn 400 JD**.
+- **Hiện trạng:** ✅ Đã cào được **hơn 700 JD** (lưu trong `raw_job_postings` và đã làm sạch qua pipeline lưu tại `cleaned_job_postings`).
 - **Thiếu, sẽ bổ sung ở vòng 2:** raw HTML/JSON-LD gốc, `datePosted` (bắt buộc cho trend), `external_id`, `location`, `content_hash`, `last_seen_at`; xử lý lương "Thỏa thuận".
 
 ### 5.2 Nguồn 2 — GitHub (sinh viên xây gì)
@@ -188,7 +188,7 @@ Thiếu: chuẩn hóa alias, đếm theo JD, ngữ cảnh, hồ sơ sinh viên, 
 - **Lịch:** DAG `gem_github_projects_crawler`, 08:00 hằng ngày.
 - **Lưu trữ:** ghi đồng thời **Postgres local** (để xem/kiểm tra trước) và **Neon cloud** (chia sẻ cho team) — lựa chọn có chủ đích ở giai đoạn này.
 - **Bảng hiện tại:** `raw_github_projects` — `repo_url` (UNIQUE), `repo_name`, `author`, `description`, `readme_content`, `language`, `stars`, `created_at`, `scraped_at`.
-- **Hiện trạng:** ✅ đã cào được **gần 200 dự án**.
+- **Hiện trạng:** ✅ Đã cào được **hơn 292 dự án** (lưu trong `raw_github_projects` và đã làm sạch tại `cleaned_github_projects`).
 - **Thiếu, bổ sung sau:** `repository_id`, `topics`, `updated_at`, thống kê ngôn ngữ, file manifest (`package.json`, `requirements.txt`, `Dockerfile`...).
 
 > **Cách diễn giải đúng:** GitHub cho *"có bằng chứng kỹ thuật liên quan đến skill X trong project Y"*, **không** chứng minh *"sinh viên thành thạo X"*.
@@ -200,7 +200,7 @@ Thiếu: chuẩn hóa alias, đếm theo JD, ngữ cảnh, hồ sơ sinh viên, 
 - **Quy trình đã chốt 🔒:** dùng LLM gán nhãn trước (pre-annotation) → chạy hết vòng pipeline → **sau đó mới gán nhãn thủ công**.
 - 💡 Khi gán nhãn tay: người gán phải được **thêm** span LLM bỏ sót (không chỉ tick đúng/sai), để Recall không bị thổi phồng.
 - 💡 Quy mô khoảng 100–150 JD; tách ~20–30 JD làm tập chỉnh prompt (dev), phần còn lại giữ cố định làm tập đánh giá (test).
-- **Hiện trạng:** 🟡 có script nháp [`scripts/generate_golden_set.py`](../scripts/generate_golden_set.py) — lấy ngẫu nhiên 80 JD, gọi Gemini, xuất Excel. Schema hiện là `{skill, evidence, context}` → **cần chỉnh** về `{evidence, type}`.
+- **Hiện trạng:** ✅ Đã ban hành hướng dẫn gán nhãn chuẩn [`docs/annotation/GEM_Annotation_Guideline_v1.0.md`](annotation/GEM_Annotation_Guideline_v1.0.md) với schema `{evidence, type}` (`TECHNOLOGY`, `ABILITY`), ranh giới span tối thiểu và tiêu chuẩn khớp Strict/Relaxed. Script [`scripts/generate_golden_set.py`](../scripts/generate_golden_set.py) đã cập nhật kết nối database trực tiếp lấy mẫu từ `cleaned_job_postings` và `cleaned_github_projects`, tự động gọi LLM trích xuất bản nháp và xuất file Excel nghiệm thu [`data/gold/annotations/GEM_Golden_Set_Draft.xlsx`](../data/gold/annotations/GEM_Golden_Set_Draft.xlsx) với các cột kiểm định thực tế (`human_verify`, `human_corrected_skill`, `missing_skills_added`...).
 
 ### 5.4 Chiến lược ngôn ngữ 🔒
 
@@ -315,9 +315,9 @@ Yêu cầu khi hoàn thiện: chạy lặp lại được, kiểm soát trùng, 
 | | |
 |---|---|
 | **Input** | `full_content` (JD), `description` + `readme_content` (project) |
-| **Output** | text sạch dùng được cho LLM; giữ raw song song (`*_raw` / `*_clean`) |
-| **Module** | `cleaning/job_cleaner.py`, `project_cleaner.py` |
-| **Trạng thái** | ⬜ Chưa làm |
+| **Output** | text sạch dùng được cho LLM; giữ raw song song (`raw_*` và `cleaned_*`) |
+| **Module** | `pipeline/src/gem_pipeline/cleaning/job_cleaner.py`, `project_cleaner.py` |
+| **Trạng thái** | ✅ **Đã hoàn thành** (đã làm sạch và nạp 700+ JD vào `cleaned_job_postings`, 292+ repo vào `cleaned_github_projects`) |
 
 Các bước:
 
@@ -337,8 +337,8 @@ Các bước:
 |---|---|
 | **Input** | text sạch (JD hoặc README) |
 | **Output** | danh sách `{evidence, type}` |
-| **Module** | `extraction/qwen.py`, `prompts.py` |
-| **Trạng thái** | 🟡 Mới có script Gemini cho Gold Set (schema chưa khớp) |
+| **Module** | `pipeline/src/gem_pipeline/extraction/extractor.py`, `prompts.py` |
+| **Trạng thái** | ✅ **Đã hoàn thành** (Dual Backend: Ollama Local Qwen2.5 GPU + Gemini Cloud API fallback) |
 
 **Nhãn MVP 🔒:**
 
@@ -377,7 +377,9 @@ Các bước:
 
 🧩 RAG-lite: truy hồi 2–5 ví dụ đã gán nhãn tương tự để đưa vào prompt (few-shot động). Không bắt buộc vòng 1.
 
-❓ Mô hình/phiên bản Qwen, chạy local hay qua endpoint — chưa chốt. Vòng 1 có thể tạm dùng LLM đang có (Gemini) để chạy thông pipeline, giữ interface để thay bằng Qwen.
+✅ **Mô hình triển khai:** Đã kiểm chứng và hỗ trợ 2 backend linh hoạt:
+1. **Ollama Local (Mặc định / Khuyến nghị):** Chạy `qwen2.5:3b` (hoặc `7b`) nạp 100% layers vào VRAM của NVIDIA RTX 3050 Laptop GPU (CUDA 13.0) với tốc độ ~50 tokens/s, không tốn chi phí API, lưu model tại `D:\ollama_models`.
+2. **Gemini Cloud API:** `gemini-3.5-flash-lite` hoặc `gemini-3.8-flash` làm phương án dự phòng throughput cao.
 
 ---
 
@@ -386,23 +388,23 @@ Các bước:
 | | |
 |---|---|
 | **Input** | output thô của LLM + văn bản nguồn |
-| **Output** | mỗi bản ghi gắn `ACCEPT` / `REJECT` / `RETRY` |
-| **Module** | `extraction/verifier.py` |
-| **Trạng thái** | ⬜ Chưa làm |
+| **Output** | mỗi bản ghi gắn `ACCEPT` / `REJECT` (kèm danh sách lỗi vi phạm) |
+| **Module** | `pipeline/src/gem_pipeline/extraction/verifier.py` |
+| **Trạng thái** | ✅ **Đã hoàn thành** (Cài đặt thuật toán tất định 5 lớp) |
 
-💡 Bắt đầu bằng **kiểm tra tất định (deterministic)**:
+💡 **Bộ kiểm định tất định 5 lớp (5-Layer Deterministic Verifier)**:
 
-| Kiểm tra | Hành động khi lỗi |
-|---|---|
-| JSON hợp lệ, đúng schema | `RETRY` (giới hạn số lần) |
-| `evidence` có xuất hiện trong nguồn (so khớp sau chuẩn hóa khoảng trắng/hoa-thường) | `REJECT` (hallucination) |
-| `type` ∈ {TECHNOLOGY, ABILITY} | `REJECT` / `RETRY` |
-| Độ dài span hợp lý (không cả câu dài) | `REJECT` hoặc cắt filler |
-| Không phải chức danh / filler thuần (*kinh nghiệm, thành thạo...*) | `REJECT` |
-
-🧩 Sau này có thể thêm LLM-judge cho các ca mơ hồ.
+| Lớp kiểm tra | Cơ chế xử lý | Hành động khi lỗi |
+|---|---|---|
+| **Lớp 1: Evidence Existence** | So khớp chính xác substring không phân biệt hoa thường trong text gốc | `REJECT` (Hallucination - Ảo giác) |
+| **Lớp 2: Boundary & Filler Trimming** | Tự động dò offset và cắt tỉa từ thừa mở đầu (*"thành thạo", "có kinh nghiệm về", "proficient in"...*) | Cắt gọn span về minimal meaningful span |
+| **Lớp 3: Valid Type** | Chuẩn hóa synonym (`TECH`, `TOOL` $\rightarrow$ `TECHNOLOGY`; `SKILL`, `TASK` $\rightarrow$ `ABILITY`) | `REJECT` nếu nằm ngoài danh mục |
+| **Lớp 4: Duplicate Elimination** | Khử trùng lặp nội bộ văn bản, ưu tiên ngữ cảnh quan trọng hơn | Gộp các span giống nhau trong cùng văn bản |
+| **Lớp 5: Negative Rules** | Loại bỏ chức danh (*Backend Developer*), tên công ty, đãi ngộ (*Lương 15M*), soft skills (*kỹ năng giao tiếp*) | `REJECT` (Rule Violation) |
 
 Chỉ bản ghi `ACCEPT` đi tiếp sang normalization.
+
+Đồng thời, hệ thống đã xây dựng module đánh giá định lượng [`pipeline/src/gem_pipeline/golden_set/evaluator.py`](../pipeline/src/gem_pipeline/golden_set/evaluator.py) và script [`scripts/run_extraction_benchmark.py`](../scripts/run_extraction_benchmark.py) để chạy **Thực nghiệm E1**: Đo lường đối sánh hiệu năng giữa Baseline LLM thuần vs GEM Pipeline (LLM + Verifier) theo các chỉ số: Strict Precision / Recall / F1, Relaxed F1, Per-class F1, Hallucination Rate, và Negative Rule Violation Rate.
 
 ---
 
@@ -829,14 +831,14 @@ Làm **từng bước một**, xong bước nào kiểm tra bước đó rồi m
 ### 14.2 Tiến độ tổng quan
 
 ```text
-Phase 1  Data                       ███████░░░  ~70%   ← ĐANG Ở ĐÂY
-Phase 2  Extraction + Verifier      █░░░░░░░░░  ~5%
-Phase 3  Normalization + Market     ░░░░░░░░░░   0%
+Phase 1  Data                       ██████████ 100%   ✅ HOÀN THÀNH (700+ JD, 292+ Repo)
+Phase 2  Extraction + Verifier      ████████░░  ~85%   ✅ CƠ BẢN HOÀN THÀNH (Đang mở rộng Gold Set)
+Phase 3  Normalization + Market     █░░░░░░░░░  ~10%   ← ĐANG TRIỂN KHAI TIẾP THEO
 Phase 4  Student Profile            ░░░░░░░░░░   0%
-Phase 5  Semantic (BGE-M3, Qdrant)  ░░░░░░░░░░   0%  (Qdrant container đã có)
+Phase 5  Semantic (BGE-M3, Qdrant)  ░░░░░░░░░░   0%  (Qdrant container đã sẵn sàng)
 Phase 6  Gap + Recommendation       ░░░░░░░░░░   0%
 Phase 7  Product (API + UI)         ░░░░░░░░░░   0%
-Phase 8  Demo + Báo cáo             █░░░░░░░░░  ~5%  (Master Context, thuyết minh này)
+Phase 8  Demo + Báo cáo             ██░░░░░░░░  ~20%  (Annotation Guideline v1.0, Thuyết minh v0.2)
 ```
 
 *(% là ước lượng định tính để định hướng, không phải số đo.)*
@@ -852,15 +854,17 @@ Phase 8  Demo + Báo cáo             █░░░░░░░░░  ~5%  (Mast
 - [x] Chốt cấu trúc thư mục chính thức
 - [x] Chốt ngôn ngữ: tiếng Việt là chính
 - [x] Bản thuyết minh đề tài (tài liệu này)
+- [x] Cập nhật README tổng quan chính thức của dự án
 - [ ] Điền `requirements.txt` (root / pipeline / backend), `.env.example`
 - [ ] Sắp lại thư mục theo cấu trúc chính thức (`pipeline/src/gem_pipeline/...`, `pipeline/tests`, xóa `dags/` root, chuyển `.drawio` vào `docs/architecture/`)
-- [ ] Cập nhật README theo Master Context
 
 #### Phase 1 — Data
 
 - [x] TopCV crawler (FlareSolverr + BS4 + JSON-LD) → `raw_job_postings`
 - [x] GitHub crawler (Search API + README) → `raw_github_projects` (local + Neon)
-- [x] Đã thu thập: **400+ JD**, **~200 project**
+- [x] Đã thu thập: **700+ JD**, **292+ project**
+- [x] Xây dựng text cleaner chuyên sâu: `job_cleaner.py` và `project_cleaner.py`
+- [x] Nạp dữ liệu sạch vào bảng `cleaned_job_postings` và `cleaned_github_projects`
 - [ ] 🔁 *(Vòng 2)* Tách logic crawler ra `gem_pipeline/ingestion/`, DAG mỏng
 - [ ] 🔁 *(Vòng 2)* TopCV: lưu raw JSON-LD/HTML, `datePosted`, `external_id`, `location`, `content_hash`, `last_seen_at`; sửa lỗi lương "Thỏa thuận"
 - [ ] 🔁 *(Vòng 2)* GitHub: `repository_id`, `topics`, `updated_at`, manifest files
@@ -868,26 +872,26 @@ Phase 8  Demo + Báo cáo             █░░░░░░░░░  ~5%  (Mast
 
 #### Phase 2 — Extraction + Verifier
 
-- [x] Script nháp Gold Set (Gemini, 80 JD → Excel)
-- [ ] **Vòng 1 – Bước 1:** đọc dữ liệu từ DB + cleaning tối thiểu (JD + README) ← **BƯỚC TIẾP THEO**
-- [ ] **Vòng 1 – Bước 2:** LLM extraction `{evidence, type}` với prompt tiếng Việt
-- [ ] **Vòng 1 – Bước 3:** verifier tối giản (JSON hợp lệ + evidence có trong nguồn + code tự dò offset)
-- [ ] Chỉnh script Gold Set về schema TECHNOLOGY/ABILITY
-- [ ] Viết `docs/annotation/GEM_Annotation_Guideline_v1.0.md` (có ví dụ tiếng Việt, tiêu chí khớp span)
-- [ ] 🔁 *(Vòng 2)* Gán nhãn tay Gold Set (cho phép thêm span bị bỏ sót), tách dev/test
-- [ ] 🔁 *(Vòng 2)* Chốt & triển khai Qwen
-- [ ] 🔁 *(Vòng 2)* Evaluator P/R/F1 (strict + relaxed) — Thực nghiệm E1
+- [x] Ban hành tài liệu hướng dẫn gán nhãn: `docs/annotation/GEM_Annotation_Guideline_v1.0.md`
+- [x] Prompt kỹ thuật trích xuất song ngữ và Few-shot (`prompts.py`)
+- [x] Xây dựng kiến trúc trích xuất Dual Backend (`extractor.py`):
+  - [x] Tích hợp Ollama Local: Chạy `qwen2.5:3b` (hoặc `7b`) tối ưu trên GPU NVIDIA RTX 3050 (CUDA 13.0)
+  - [x] Tích hợp Gemini Cloud API (`gemini-3.5-flash-lite`, `gemini-3.8-flash`) làm fallback
+- [x] Xây dựng bộ kiểm định tất định 5 lớp (`verifier.py`): Substring match, Boundary & filler trimming, Valid type, Duplicate removal, Negative rules
+- [x] Script tạo nhãn vàng tự động từ Clean Postgres ra Excel: `scripts/generate_golden_set.py`
+- [x] Xây dựng Evaluator định lượng và script chạy thực nghiệm E1: `evaluator.py`, `run_extraction_benchmark.py` (Strict/Relaxed P, R, F1, Hallucination, Violation)
+- [ ] 🔁 *(Vòng 2)* Hoàn tất nghiệm thu gán nhãn tay trên file Excel Golden Set (mục tiêu ~100-150 mẫu, tách dev/test)
 
 #### Phase 3 — Normalization + Market
 
-- [ ] **Vòng 1 – Bước 4:** từ điển alias nhỏ + chuẩn hóa chuỗi
-- [ ] **Vòng 1 – Bước 5:** demand theo distinct JD
+- [ ] **Vòng 1 – Bước 4:** Từ điển alias nhỏ (`aliases.py`) + chuẩn hóa chuỗi (`normalizer.py`)
+- [ ] **Vòng 1 – Bước 5:** Demand theo distinct-JD (`demand.py`)
 - [ ] 🔁 *(Vòng 2)* Phát hiện alias ứng viên (string similarity, BGE-M3) + người duyệt
 - [ ] 🔁 *(Vòng 2)* Trend theo period (cần `datePosted` + nhiều kỳ cào) — Thực nghiệm E3
 
 #### Phase 4 — Student Profile
 
-- [ ] **Vòng 1 – Bước 6:** profile cho project (dùng lại Stage 1–4 trên README)
+- [ ] **Vòng 1 – Bước 6:** Profile cho project (dùng lại Stage 1–4 trên README)
 - [ ] 🔁 *(Vòng 2)* Thêm tín hiệu tất định (language, topics, manifest)
 - [ ] 🔁 *(Vòng 2)* Luồng on-demand: sinh viên nhập URL repo
 
@@ -899,7 +903,7 @@ Phase 8  Demo + Báo cáo             █░░░░░░░░░  ~5%  (Mast
 
 #### Phase 6 — Gap + Recommendation
 
-- [ ] **Vòng 1 – Bước 7:** gap + priority (Gap × Demand) + in kết quả cho 1 project mẫu
+- [ ] **Vòng 1 – Bước 7:** Gap + priority (Gap × Demand) + in kết quả cho 1 project mẫu
 - [ ] 🔁 *(Vòng 2)* Chốt định nghĩa M (dùng JD liên quan qua Qdrant)
 - [ ] 🔁 *(Vòng 2)* Thêm TrendFactor
 - [ ] 🔁 *(Vòng 2)* Roadmap có thứ tự tiên quyết + lý do
@@ -912,20 +916,21 @@ Phase 8  Demo + Báo cáo             █░░░░░░░░░  ~5%  (Mast
 
 #### Phase 8 — Demo + Báo cáo
 
-- [x] Master Context, thuyết minh đề tài
+- [x] Master Context, Thuyết minh đề tài (v0.2)
+- [x] GEM Annotation Guideline (v1.0)
 - [ ] Kịch bản demo theo 1 sinh viên
-- [ ] Kết quả thực nghiệm, phần hạn chế
-- [ ] Slide / báo cáo cuối
+- [ ] Báo cáo kết quả thực nghiệm E1, E2, E3
+- [ ] Slide / báo cáo nghiệm thu cuối cùng
 
 ### 14.4 Vòng 1 — lộ trình 7 bước (đang triển khai)
 
 | Bước | Nội dung | Đầu ra kiểm tra được | Trạng thái |
-|---|---|---|---|
-| 1 | Đọc DB + cleaning tối thiểu | Bảng/file JD & README sạch, thống kê độ dài | ⬜ **tiếp theo** |
-| 2 | LLM extraction | `{evidence, type}` cho mỗi JD/README | ⬜ |
-| 3 | Verifier tối giản | Tỉ lệ ACCEPT/REJECT, danh sách bị loại | ⬜ |
-| 4 | Alias dictionary nhỏ | Mỗi evidence có canonical skill | ⬜ |
-| 5 | Demand distinct-JD | Bảng top skill theo demand | ⬜ |
+|---|---|---|:---:|
+| 1 | Đọc DB + cleaning tối thiểu | Bảng `cleaned_job_postings` & `cleaned_github_projects` | ✅ **Đã xong** |
+| 2 | LLM extraction | `{evidence, type}` qua Qwen local hoặc Gemini | ✅ **Đã xong** |
+| 3 | Verifier 5 lớp tất định | Lọc sạch hallucination, filler, vi phạm negative rules | ✅ **Đã xong** |
+| 4 | Alias dictionary nhỏ | Mỗi evidence có canonical skill | 🟡 **TIẾP THEO** |
+| 5 | Demand distinct-JD | Bảng top skill theo demand thị trường | ⬜ |
 | 6 | Project profile | Tập skill + evidence cho từng project | ⬜ |
 | 7 | Gap + priority + in kết quả | Roadmap dạng text cho 1 project mẫu | ⬜ |
 
@@ -955,24 +960,24 @@ Phase 8  Demo + Báo cáo             █░░░░░░░░░  ~5%  (Mast
 
 ### 15.2 Chưa chốt ❓
 
-| # | Vấn đề | Gợi ý hiện tại 💡 |
-|---|---|---|
-| Q1 | Mô hình/phiên bản Qwen; chạy local hay endpoint | Vòng 1 dùng LLM có sẵn, giữ interface để thay |
-| Q2 | Định nghĩa market set M cho gap | Top-N JD giống project nhất (qua Qdrant) |
-| Q3 | ABILITY có tham gia demand/gap trong MVP? | Vòng 1 chỉ TECHNOLOGY; ABILITY để giải thích |
-| Q4 | Trend nằm trong MatchScore hay Priority? | Priority |
-| Q5 | Công thức trend | Slope / thay đổi tương đối theo tháng |
-| Q6 | TTL xóa dữ liệu cũ hay đánh dấu hết hạn? | Đánh dấu, không xóa |
-| Q7 | Tiêu chí khớp span khi tính P/R/F1 | Báo cả strict + relaxed |
-| Q8 | Quy mô Gold Set chính xác, tách dev/test | ~100–150 JD, ~20–30 làm dev |
-| Q9 | Trọng số hybrid α, β | Đánh giá bằng thực nghiệm E2 |
-| Q10 | Schema collection Qdrant, cách chạy BGE-M3 | — |
-| Q11 | Context required/preferred có dùng không | Để mở rộng sau |
-| Q12 | Role taxonomy | Để tương lai |
-| Q13 | Bảng prerequisite cho roadmap | Viết tay vài chục cạnh |
-| Q14 | Luồng on-demand cho sinh viên | Cần cho demo; chưa chọn cách |
-| Q15 | Auth / user model | — |
-| Q16 | Vị trí guideline duy nhất | `docs/annotation/` |
+| # | Vấn đề | Gợi ý hiện tại 💡 | Trạng thái cập nhật |
+|---|---|---|---|
+| Q1 | Mô hình/phiên bản Qwen; chạy local hay endpoint | Qwen2.5 (3B / 7B) chạy local qua Ollama | ✅ **Đã chốt:** Dùng Ollama local trên GPU RTX 3050 (`qwen2.5:3b` nạp 100% VRAM, model lưu tại `D:\ollama_models`), giữ Gemini API dự phòng |
+| Q2 | Định nghĩa market set M cho gap | Top-N JD giống project nhất (qua Qdrant) | Đang chờ Stage 5 |
+| Q3 | ABILITY có tham gia demand/gap trong MVP? | Vòng 1 chỉ TECHNOLOGY; ABILITY để giải thích | Khuyến nghị giữ nguyên |
+| Q4 | Trend nằm trong MatchScore hay Priority? | Priority | Khuyến nghị giữ nguyên |
+| Q5 | Công thức trend | Slope / thay đổi tương đối theo tháng | Đang chờ Stage 5 |
+| Q6 | TTL xóa dữ liệu cũ hay đánh dấu hết hạn? | Đánh dấu, không xóa | Khuyến nghị giữ nguyên |
+| Q7 | Tiêu chí khớp span khi tính P/R/F1 | Báo cả strict + relaxed | ✅ **Đã chốt:** Đã cài đặt trong `evaluator.py`, báo cáo cả Strict Match (100% char + type) và Relaxed Overlap Match |
+| Q8 | Quy mô Gold Set chính xác, tách dev/test | ~100–150 JD, ~20–30 làm dev | Đang tiến hành lấy mẫu và nghiệm thu |
+| Q9 | Trọng số hybrid α, β | Đánh giá bằng thực nghiệm E2 | Đang chờ Stage 7-8 |
+| Q10 | Schema collection Qdrant, cách chạy BGE-M3 | — | Đang chuẩn bị |
+| Q11 | Context required/preferred có dùng không | Để mở rộng sau | Giữ nguyên |
+| Q12 | Role taxonomy | Để tương lai | Giữ nguyên |
+| Q13 | Bảng prerequisite cho roadmap | Viết tay vài chục cạnh | Giữ nguyên |
+| Q14 | Luồng on-demand cho sinh viên | Cần cho demo; chưa chọn cách | Giữ nguyên |
+| Q15 | Auth / user model | — | Giữ nguyên |
+| Q16 | Vị trí guideline duy nhất | `docs/annotation/` | ✅ **Đã chốt:** Đã ban hành chính thức tại `docs/annotation/GEM_Annotation_Guideline_v1.0.md` |
 
 ---
 
