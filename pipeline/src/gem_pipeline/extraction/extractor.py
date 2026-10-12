@@ -6,6 +6,7 @@ Hỗ trợ cả Qwen Local (qua Ollama) và Gemini Cloud fallback
 
 import os
 import re
+import sys
 import json
 import time
 from typing import List, Dict, Any, Tuple, Optional
@@ -13,6 +14,13 @@ import urllib.request
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 from gem_pipeline.extraction.prompts import SYSTEM_PROMPT_EXTRACTION, build_extraction_prompt
 from gem_pipeline.extraction.verifier import SkillExtractionVerifier, VerificationResult
@@ -62,7 +70,7 @@ class SkillExtractor:
             "options": {
                 "temperature": 0.1,
                 "num_predict": 2048,
-                "num_ctx": 2048
+                "num_ctx": 4096
             }
         }
         data = json.dumps(payload).encode("utf-8")
@@ -72,7 +80,7 @@ class SkillExtractor:
             headers={"Content-Type": "application/json"}
         )
         try:
-            with urllib.request.urlopen(req, timeout=120) as resp:
+            with urllib.request.urlopen(req, timeout=300) as resp:
                 result = json.loads(resp.read().decode("utf-8"))
                 resp_text = result.get("response", "[]").strip()
                 return resp_text

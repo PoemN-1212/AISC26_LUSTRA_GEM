@@ -47,18 +47,18 @@ class ExperimentReport:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "Tên thực nghiệm": self.name,
-            "Tổng số dự đoán": self.total_predictions,
-            "Tổng số Ground Truth": self.total_ground_truth,
-            "Strict Precision": round(self.strict_metrics_overall.precision * 100, 2),
-            "Strict Recall": round(self.strict_metrics_overall.recall * 100, 2),
-            "Strict F1-Score": round(self.strict_metrics_overall.f1 * 100, 2),
-            "Relaxed F1-Score": round(self.relaxed_metrics_overall.f1 * 100, 2),
-            "F1 TECHNOLOGY": round(self.strict_metrics_technology.f1 * 100, 2),
-            "F1 ABILITY": round(self.strict_metrics_ability.f1 * 100, 2),
-            "Số lỗi ảo giác (Hallucinations)": self.hallucination_count,
-            "Tỷ lệ ảo giác (%)": round(self.hallucination_rate, 2),
-            "Số lỗi vi phạm chức danh/phúc lợi": self.negative_rule_violations,
-            "Tỷ lệ vi phạm (%)": round(self.violation_rate, 2)
+            "Strict P": f"{self.strict_metrics_overall.precision * 100:.2f}%",
+            "Strict R": f"{self.strict_metrics_overall.recall * 100:.2f}%",
+            "Strict F1": f"{self.strict_metrics_overall.f1 * 100:.2f}%",
+            "Relaxed P": f"{self.relaxed_metrics_overall.precision * 100:.2f}%",
+            "Relaxed R": f"{self.relaxed_metrics_overall.recall * 100:.2f}%",
+            "Relaxed F1": f"{self.relaxed_metrics_overall.f1 * 100:.2f}%",
+            "F1 TECH": f"{self.strict_metrics_technology.f1 * 100:.2f}%",
+            "F1 ABILITY": f"{self.strict_metrics_ability.f1 * 100:.2f}%",
+            "Số lỗi ảo giác": self.hallucination_count,
+            "Tỷ lệ ảo giác (%)": f"{self.hallucination_rate:.2f}%",
+            "Số lỗi vi phạm": self.negative_rule_violations,
+            "Tỷ lệ vi phạm (%)": f"{self.violation_rate:.2f}%"
         }
 
 
@@ -69,10 +69,16 @@ class ExtractionEvaluator:
 
     @staticmethod
     def _is_relaxed_match(pred_skill: str, gt_skill: str) -> bool:
-        """Kiểm tra khớp nới lỏng (Relaxed match) qua bao hàm xâu con."""
+        """Kiểm tra khớp nới lỏng (Relaxed match) qua bao hàm xâu con hoặc trùng lặp token."""
         p = pred_skill.lower().strip()
         g = gt_skill.lower().strip()
-        return p == g or p in g or g in p
+        if p == g or p in g or g in p:
+            return True
+        p_tokens = set(p.split())
+        g_tokens = set(g.split())
+        if p_tokens and g_tokens and (p_tokens.issubset(g_tokens) or g_tokens.issubset(p_tokens)):
+            return True
+        return False
 
     def evaluate_predictions(
         self,
