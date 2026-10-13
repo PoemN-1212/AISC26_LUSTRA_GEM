@@ -57,12 +57,22 @@ Một câu hỏi lớn mà các hội đồng khoa học và chuyên gia tuyển
 GEM không phải là một chatbot gợi ý công nghệ cảm tính hay một công cụ prompt wrapper. GEM là **cỗ máy chẩn đoán và chuyển hóa khoảng cách năng lực thành kế hoạch hành động kỹ thuật kèm bằng chứng bàn giao cụ thể (Verifiable Evidence Artifacts)** được bảo chứng bởi dữ liệu thị trường thực tế.
 
 ```mermaid
-graph LR
-    subgraph Traditional ["Gợi ý Công nghệ Thông thường (Tech Dumping)"]
-        T1["Ý tưởng thô"] --> T2["Liệt kê công nghệ theo trend: Kafka, Redis, Docker..."] --> T3["Sinh viên bội thực, không hiểu lý do, không có bằng chứng năng lực"]
+flowchart TD
+    subgraph Traditional ["⚠️ Cách Tiếp Cận Thông Thường: Đổ Đống Công Nghệ (Tech Dumping)"]
+        direction TB
+        T1["💡 Ý tưởng đồ án sơ khai"]
+        T2["📋 Liệt kê công nghệ dàn trải theo xu hướng<br/>(Kafka, Redis, Kubernetes, Microservices...)"]
+        T3["❌ Hậu quả: Sinh viên quá tải, over-engineering<br/>Không hiểu lý do kỹ thuật & Thiếu bằng chứng thực chiến khi phỏng vấn"]
+        T1 --> T2 --> T3
     end
-    subgraph GEM_Approach ["Cơ chế Thu hẹp Skill Gap của GEM (AISC 2026)"]
-        G1["Ý tưởng thô"] --> G2["Phân định: Đã bao phủ vs Thực sự thiếu vs Tạm hoãn"] --> G3["Hành động kỹ thuật + Bằng chứng nộp Git (Artifacts)"] --> G4["Đo lường mức thu hẹp Gap (+30% -> +40%)"]
+
+    subgraph GEM_Approach ["✨ Cơ Chế Thu Hẹp Skill Gap Của GEM (AISC 2026)"]
+        direction TB
+        G1["💡 Ý tưởng đồ án sơ khai"]
+        G2["🔍 Phân định Ma trận 3 Trạng thái Năng lực<br/>🟢 Đã bao phủ · 🟡 Cần bổ sung · ⚪ Tạm hoãn"]
+        G3["🛠️ Chỉ định hành động kỹ thuật cụ thể<br/>+ Bằng chứng nộp Git Repo (Verifiable Artifacts)"]
+        G4["📈 Định lượng mức độ thu hẹp khoảng cách<br/>(Điểm Thực Chiến tăng trưởng từ +30% đến +45%)"]
+        G1 --> G2 --> G3 --> G4
     end
 ```
 
@@ -85,7 +95,7 @@ Nhiều nghiên cứu và ứng dụng AI thường mắc sai lầm nghiêm tr�
 
 Mọi gợi ý công nghệ của GEM đều tuân thủ chu trình khép kín:
 
-$$\mathbf{Chẩn\ đoán\ (Diagnosis)} \longrightarrow \mathbf{Can\ thiệp\ (Intervention)} \longrightarrow \mathbf{Tạo\ bằng\ chứng\ (Evidence)} \longrightarrow \mathbf{Đánh\ giá\ lại\ (Re\text{-}evaluation)}$$
+> 🔍 **Chẩn đoán (Diagnosis)** &nbsp;➔&nbsp; 🛠️ **Can thiệp (Intervention)** &nbsp;➔&nbsp; 📦 **Tạo bằng chứng (Evidence Artifacts)** &nbsp;➔&nbsp; 📈 **Đánh giá lại (Re-evaluation)**
 
 * **Giai đoạn A — Chẩn đoán (Baseline Assessment):** Đối chiếu thiết kế sơ khởi với tập JD TopCV để phân loại kỹ năng thành **Ma trận 3 Trạng thái**:
   * 🟢 **Đã bao phủ (Covered):** Kỹ năng tự nhiên có trong thiết kế đồ án (ví dụ MySQL, REST API, Git).
@@ -101,16 +111,23 @@ $$\mathbf{Chẩn\ đoán\ (Diagnosis)} \longrightarrow \mathbf{Can\ thiệp\ (In
 
 ### 1.4. Công thức định lượng Điểm Thực Chiến (Readiness Score)
 
-Điểm thực chiến trong GEM **không phải là một con số ngẫu nhiên sinh ra từ LLM**, mà được chuẩn hóa qua công thức toán học minh bạch:
+Điểm thực chiến trong GEM **không phải là con số ngẫu nhiên sinh ra từ LLM**, mà được lượng hóa qua hệ thống công thức toán học minh bạch:
 
-$$\mathcal{R}_{\text{market}} = \text{round}\left(0.35 \cdot \mathcal{S}_{\text{semantic}} + 0.65 \cdot \mathcal{C}_{\text{potential}}\right)$$
+$$R_{\text{market}} = \text{round}\left(0.35 \times S_{\text{semantic}} + 0.65 \times C_{\text{potential}}\right)$$
 
-Trong đó:
-* $\mathcal{S}_{\text{semantic}} \in [0, 100]$: Mức độ tương đồng ngữ nghĩa giữa mô tả đề tài và cụm JD của vai trò mục tiêu (tính toán qua Cosine Similarity trên Qdrant Vector Store sử dụng dense vectors 1024 chiều BGE-M3).
-* $\mathcal{C}_{\text{baseline}} \in [0, 100]$: Độ bao phủ kỹ năng ban đầu trước khi can thiệp:
-  $$\mathcal{C}_{\text{baseline}} = \frac{\sum_{s \in \text{Covered}} \text{DemandPct}(s)}{\sum_{s \in \text{CoreMarketSkills}} \text{DemandPct}(s)} \times 100$$
-* $\mathcal{C}_{\text{potential}} \in [0, 100]$: Độ bao phủ tiềm năng sau khi sinh viên cam kết hoàn thành các Actionable Gaps.
-* $\Delta_{\text{reduction}} = \mathcal{C}_{\text{potential}} - \mathcal{C}_{\text{baseline}}$: **Chỉ số định lượng mức độ thu hẹp khoảng cách kỹ năng** mà đồ án mang lại (thực nghiệm chứng minh đạt mức tăng từ $+30\% \rightarrow +45\%$).
+$$C_{\text{baseline}} = \frac{\sum_{s \in \text{Covered}} \text{Demand}(s)}{\sum_{s \in \text{CoreSkills}} \text{Demand}(s)} \times 100\%$$
+
+$$\Delta_{\text{reduction}} = C_{\text{potential}} - C_{\text{baseline}}$$
+
+**Bảng giải thích chi tiết các tham số định lượng:**
+
+| Tham số | Khoảng giá trị | Ý nghĩa & Phương pháp tính toán khoa học |
+| :--- | :---: | :--- |
+| **$R_{\text{market}}$** (Market Readiness) | `0 – 100` điểm | **Điểm Thực Chiến tổng hợp** phản ánh mức độ sẵn sàng ứng tuyển của đồ án với vị trí mục tiêu. |
+| **$S_{\text{semantic}}$** (Semantic Fit) | `0 – 100%` | **Độ tương đồng ngữ nghĩa** giữa mô tả đồ án và cụm tin tuyển dụng thực tế (Cosine Similarity qua BGE-M3 1024 chiều trên Qdrant Vector Store). |
+| **$C_{\text{baseline}}$** (Baseline Coverage) | `0 – 100%` | **Độ bao phủ kỹ năng ban đầu** tự nhiên của đề tài (nhóm 🟢 Covered) trước khi có can thiệp từ GEM. |
+| **$C_{\text{potential}}$** (Potential Coverage) | `0 – 100%` | **Độ bao phủ tiềm năng sau can thiệp** khi sinh viên hoàn thành các hành động kỹ thuật bổ sung (nhóm 🟡 Actionable Gaps). |
+| **$\Delta_{\text{reduction}}$** (Gap Reduction) | `+30% – +45%` | **Chỉ số thu hẹp khoảng cách kỹ năng** ($C_{\text{potential}} - C_{\text{baseline}}$) mà đồ án mang lại cho sinh viên khi hoàn thiện. |
 
 ---
 
@@ -229,8 +246,12 @@ Dành cho việc học tập, giải trình kỹ thuật và bảo vệ đồ á
 * **Cơ sở Dữ liệu Thực nghiệm:**
   * Bảng `extracted_skills` trong PostgreSQL lưu trữ toàn bộ các thực thể đã qua kiểm định `verifier_status = 'ACCEPT'`.
 * **Công thức Distinct-JD Demand:**
-  $$\text{Demand}(s, r) = \frac{\text{Số lượng JD thuộc vị trí } r \text{ có nhắc tới kỹ năng } s}{\text{Tổng số lượng JD thuộc vị trí } r} \times 100\%$$
-  *Ý nghĩa:* Một tin tuyển dụng nhắc lại từ khóa "Java" 10 lần cũng chỉ được tính $+1$, ngăn ngừa hoàn toàn hiện tượng thiên lệch tần suất (keyword stuffing).
+  $$\text{Demand}(s, r) = \frac{N_{\text{JD}}(s, r)}{N_{\text{Total}}(r)} \times 100\%$$
+
+  *Trong đó:*
+  * $N_{\text{JD}}(s, r)$: Số lượng tin tuyển dụng phân biệt thuộc vị trí $r$ có yêu cầu kỹ năng $s$.
+  * $N_{\text{Total}}(r)$: Tổng số tin tuyển dụng phân biệt thuộc vị trí $r$ trong tập dữ liệu TopCV.
+  * *Ý nghĩa:* Một tin tuyển dụng dù nhắc lại từ khóa "Java" 10 lần cũng chỉ được tính $+1$, ngăn ngừa hoàn toàn hiện tượng thiên lệch tần suất (keyword stuffing).
 * **Phân loại Kỹ năng Thị trường:**
   * `Core Market Skills (Kỹ năng Nòng cốt):` $\text{Demand} \ge 35\%$.
   * `Booster Skills (Kỹ năng Gia tăng Giá trị):` $20\% \le \text{Demand} < 35\%$.
@@ -239,7 +260,7 @@ Dành cho việc học tập, giải trình kỹ thuật và bảo vệ đồ á
 #### 🔹 Giai đoạn 4: Closed-Loop Skill Gap Diagnostic Engine (`consultant.py`)
 * **Bước 1 — Phân tích Nghiệp vụ Đề tài:** Phân tích ý tưởng đồ án của sinh viên thành các thành phần: domain bài toán, các chức năng chính, kiến trúc tiềm năng.
 * **Bước 2 — Truy xuất Đối sánh Ngữ nghĩa (Semantic Search):**
-  * Tìm kiếm top JD tương đồng nhất từ bộ sưu tập `market_jds` trên Qdrant để đo lường độ phù hợp của bài toán ($\mathcal{S}_{\text{semantic}}$).
+  * Tìm kiếm top JD tương đồng nhất từ bộ sưu tập `market_jds` trên Qdrant để đo lường độ phù hợp của bài toán ($S_{\text{semantic}}$).
   * Tìm kiếm đồ án mẫu tương đồng từ bộ sưu tập `student_projects` để làm căn cứ đối chiếu.
 * **Bước 3 — Phân định Ma trận 3 Trạng thái Năng lực:**
   * 🟢 **Đã bao phủ (Covered):** Kỹ năng tự nhiên sinh viên sẽ rèn luyện được thông qua việc code các chức năng của đồ án.
@@ -248,7 +269,7 @@ Dành cho việc học tập, giải trình kỹ thuật và bảo vệ đồ á
 * **Bước 4 — Sinh Bằng chứng Bàn giao Kỹ thuật (Verifiable Git Artifacts):**
   * Đối với mỗi kỹ năng 🟡, chỉ định file cụ thể trong Git Repo cần commit: ví dụ Docker (`Dockerfile`, `docker-compose.yml`), CI/CD (`.github/workflows/ci.yml`), Caching (`RedisTemplate`, `redis.conf`), Testing (`tests/test_api.py`).
 * **Bước 5 — Định lượng Điểm Thực Chiến & Lập Lộ trình Sprint:**
-  * Tính toán $\mathcal{C}_{\text{baseline}}$, $\mathcal{C}_{\text{potential}}$ và mức thu hẹp $\Delta_{\text{reduction}}$.
+  * Tính toán $C_{\text{baseline}}$, $C_{\text{potential}}$ và mức thu hẹp $\Delta_{\text{reduction}}$.
   * Lập lộ trình chia thành 4 Sprint: *Sprint 1 (Khung kiến trúc & CSDL) $\rightarrow$ Sprint 2 (Core Business Logic) $\rightarrow$ Sprint 3 (Bổ sung Kỹ năng Thực chiến 🟡) $\rightarrow$ Sprint 4 (Đóng gói, Testing & Artifacts Proof)*.
 
 ---
