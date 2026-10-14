@@ -2,7 +2,7 @@
 ### Nền tảng AI Định hướng và Khớp nối Năng lực Đồ án CNTT với Xu hướng Tuyển dụng
 
 <p align="center">
-  <img src="Drafv1.png" alt="GEM Architecture" width="850" />
+  <img src="Pipeline end-to-end.png" alt="GEM End-to-End Pipeline Architecture" width="880" />
 </p>
 
 <p align="center">
@@ -366,72 +366,145 @@ AISC26_LUSTRA_GEM/
 
 ---
 
-## 🚀 7. Hướng dẫn Cài đặt & Khởi chạy Toàn diện
+## 🚀 7. Hướng dẫn Cài đặt & Khởi chạy Toàn diện (Chạy 1 Phát Ăn Ngay)
 
-### Bước 1: Clone Repository & Tạo Môi trường Ảo
+> 💡 **Dành cho Thành viên Mới / Đồng đội / Giám khảo:** Toàn bộ dữ liệu sạch (2,500+ JDs, 520+ đồ án GitHub, 12,500+ kỹ năng và 280 nhãn vàng Golden Set) **đã được đóng gói sẵn trong thư mục `data/` của repository**. Bạn **KHÔNG CẦN CÀO LẠI DỮ LIỆU**, chỉ cần 3 phút để khởi chạy toàn bộ hệ thống!
+
+---
+
+### 🌟 Quy trình 5 Bước Khởi chạy Nhanh (Dành cho Bạn bè / Đồng đội)
+
+#### Bước 1: Clone Repository & Tạo Môi trường Ảo Python
+
+Mở **PowerShell** (hoặc Terminal) và thực thi:
 
 ```powershell
+# 1. Clone mã nguồn về máy
 git clone https://github.com/PoemN-1212/AISC26_LUSTRA_GEM.git
 cd AISC26_LUSTRA_GEM
 
-# Khởi tạo môi trường ảo Python 3.11 hoặc 3.12
+# 2. Khởi tạo môi trường ảo Python 3.11 hoặc 3.12
 python -m venv .venv
 
-# Kích hoạt môi trường ảo trên Windows PowerShell
+# 3. Kích hoạt môi trường ảo trên Windows PowerShell:
 .\.venv\Scripts\Activate.ps1
+# (Nếu dùng Linux/macOS: source .venv/bin/activate)
 
-# Trên Linux/macOS:
-# source .venv/bin/activate
-
-# Cài đặt toàn bộ thư viện cần thiết
+# 4. Cài đặt các thư viện cần thiết (Đã loại bỏ Airflow khỏi requirements.txt để tránh lỗi build C++ trên Windows!)
 pip install -r requirements.txt
 ```
 
-### Bước 2: Cấu hình Biến Môi trường
+> ⚠️ **Lưu ý quan trọng giải thích lỗi cài đặt:** Trước đây cài đặt trên Windows thường bị lỗi đỏ lòm do `apache-airflow` phụ thuộc vào nhân Linux POSIX (`pwd`, `fcntl`). Dự án hiện tại đã tách biệt 100%: **Airflow chỉ chạy trong Docker**, còn môi trường Python cục bộ chỉ cài các thư viện chuẩn (FastAPI, psycopg2, qdrant-client, pydantic...) nên cài đặt cực kỳ nhanh và 100% không phát sinh lỗi!
 
-Sao chép `.env.example` thành `.env` và điền khóa API:
+---
 
-```env
-POSTGRES_USER=gem_admin
-POSTGRES_PASSWORD=gem_secret_password
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_DB=gem_database
-QDRANT_URL=http://localhost:6333
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=qwen2.5:7b
-GEMINI_API_KEY=your_gemini_api_key_here
-```
+#### Bước 2: Tạo File Cấu hình Môi trường `.env`
 
-### Bước 3: Khởi động Hạ tầng Docker
+Sao chép file mẫu `.env.example` thành `.env` (file này đã có sẵn các cấu hình mặc định để chạy cục bộ):
 
 ```powershell
-cd infra
-docker compose up -d
-cd ..
+# Trên Windows PowerShell:
+Copy-Item .env.example .env
+
+# Trên Linux/macOS:
+# cp .env.example .env
 ```
 
-Kiểm tra các cổng dịch vụ đang hoạt động:
+*(Tùy chọn)* Nếu bạn muốn thử nghiệm gọi LLM Google Gemini hoặc cào thêm GitHub, hãy mở file `.env` và điền:
+- `GEMINI_API_KEY`: Khóa API Google AI Studio (miễn phí)
+- `GITHUB_TOKEN`: Personal Access Token GitHub của bạn
 
-- **PostgreSQL:** `localhost:5432`
-- **Qdrant Vector DB Dashboard:** `http://localhost:6333/dashboard`
-- **Apache Airflow:** `http://localhost:8080` (Tài khoản: `airflow` / `airflow`)
+---
 
-### Bước 4: Khởi động Mô hình AI Cục bộ (Ollama)
+#### Bước 3: Khởi động Cơ sở Dữ liệu (PostgreSQL & Qdrant) bằng Docker
+
+Chỉ cần khởi động 2 container nền tảng cực kỳ nhẹ:
 
 ```powershell
-ollama pull qwen2.5:7b
-ollama serve
+docker compose -f infra/docker-compose.yml up -d gem_postgres gem_qdrant
 ```
 
-### Bước 5: Khởi chạy Máy chủ GEM Web App
+> 📌 **Kiểm tra trạng thái container:**
+> - **PostgreSQL:** `localhost:5432` (User: `gem_admin` / Pass: `gem_secret_password` / DB: `gem_database`)
+> - **Qdrant Vector DB:** `http://localhost:6333/dashboard`
+
+---
+
+#### Bước 4: Nạp Toàn bộ Dữ liệu CSDL trong 10 Giây (Data Bootstrapper)
+
+Không cần cào lại dữ liệu từ đầu! Chạy ngay lệnh sau để nạp toàn bộ 5 bảng CSDL từ các file seed có sẵn trong thư mục `data/`:
+
+```powershell
+# Cách 1 (Khuyên dùng - Nạp Offline từ file có sẵn, mất ~10 giây):
+python scripts/seed_database.py --source file
+
+# Cách 2 (Tùy chọn - Đồng bộ trực tiếp từ Cloud Neon PostgreSQL của nhóm):
+python scripts/seed_database.py --source cloud
+```
+
+Kết quả hiển thị trên màn hình:
+```text
+  ✅ Đã nạp thành công 2,522 bản ghi vào bảng raw_job_postings.
+  ✅ Đã nạp thành công 527 bản ghi vào bảng raw_github_projects.
+  ✅ Đã nạp thành công 1,732 bản ghi vào bảng cleaned_job_postings.
+  ✅ Đã nạp thành công 527 bản ghi vào bảng cleaned_github_projects.
+  ✅ Đã nạp thành công 12,557 bản ghi vào bảng extracted_skills.
+🎉 HOÀN TẤT NẠP DỮ LIỆU TỪ FILE! Local PostgreSQL đã sẵn sàng hoạt động 100%!
+```
+
+---
+
+#### Bước 5: Khởi chạy Máy chủ GEM Web App & Trải nghiệm
+
+Khởi động backend FastAPI:
 
 ```powershell
 python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-- **Trải nghiệm Giao diện Web App:** [http://localhost:8000/](http://localhost:8000/)
-- **Xem Tài liệu REST API Tự động (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+- 🌐 **Trải nghiệm Giao diện Web App Người dùng:** [http://localhost:8000/](http://localhost:8000/)
+- 📖 **Xem Tài liệu REST API Tự động (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+- 📊 **Kiểm tra Dashboard Vector Qdrant:** [http://localhost:6333/dashboard](http://localhost:6333/dashboard)
+
+---
+
+### 🤖 (Tùy chọn) Chạy Mô hình AI Cục bộ (Ollama Qwen 2.5) & Benchmark E1
+
+Nếu máy tính của bạn có card đồ họa NVIDIA (hoặc muốn chạy LLM hoàn toàn Offline không tốn tiền API):
+
+1. **Khởi động Ollama:**
+   ```powershell
+   ollama pull qwen2.5:7b
+   # Hoặc máy nhẹ hơn (4GB VRAM): ollama pull qwen2.5:3b
+   ollama serve
+   ```
+
+2. **Chạy Thực nghiệm Đối sánh Benchmark E1 (So sánh Baseline vs GEM Pipeline):**
+   ```powershell
+   python scripts/run_extraction_benchmark.py --provider ollama --model qwen2.5:7b --limit 50
+   ```
+
+---
+
+### 🛠️ Dành cho Quản trị viên (Cách Đẩy Dữ liệu Mới lên Git cho Cả Nhóm)
+
+Khi bạn đã thu thập thêm dữ liệu hoặc cập nhật Golden Set mới và muốn đồng đội chỉ cần `git pull` là có ngay:
+
+```powershell
+# 1. Đồng bộ dữ liệu mới nhất từ Cloud về thư mục data/:
+python scripts/seed_database.py --source cloud
+
+# 2. Kiểm tra các file dữ liệu chuẩn đã sẵn sàng:
+git status
+
+# 3. Thêm code, script và các file seed vào commit:
+git add data/ scripts/seed_database.py requirements.txt .gitignore README.md
+
+# 4. Commit và đẩy lên GitHub:
+git commit -m "feat: cap nhat du lieu seed moi nhat va huong dan onboarding chuan"
+git push origin <ten-branch-cua-ban>
+```
+
 
 ---
 

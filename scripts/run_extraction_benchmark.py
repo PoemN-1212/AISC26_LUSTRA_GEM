@@ -81,15 +81,30 @@ def load_golden_set_from_excel(excel_path: str) -> Tuple[Dict[str, str], Dict[st
 
 
 def run_benchmark(
-    excel_path: str = "data/gold/annotations/GEM_Golden_Set_100JDs.xlsx",
-    max_docs: int = 100,
+    excel_path: str = "data/gold/annotations/GEM_Golden_Set_280Docs.xlsx",
+    max_docs: int = 0,
     model_name: str = "qwen2.5:7b",
-    backend: str = "ollama"
+    backend: str = "ollama",
+    prompt_type: str = "student"
 ):
+    # Fallback về 280Docs -> 200JDs -> 100JDs
+    if not os.path.exists(excel_path):
+        candidates = [
+            "data/gold/annotations/GEM_Golden_Set_280Docs.xlsx",
+            "data/gold/annotations/GEM_Golden_Set_200JDs.xlsx",
+            "data/gold/annotations/GEM_Golden_Set_100JDs.xlsx"
+        ]
+        for c in candidates:
+            if os.path.exists(c):
+                print(f"ℹ️ Dùng file nhãn vàng có sẵn: {c}")
+                excel_path = c
+                break
+
     print("=" * 80)
     print("🔬 BẮT ĐẦU THỰC NGHIỆM ĐỐI SÁNH HIỆU NĂNG TRÍCH XUẤT (EXPERIMENT E1)")
     print(f"📄 Tệp nhãn vàng: {excel_path}")
-    print(f"🤖 LLM Model: {model_name} (Backend: {backend})")
+    print(f"🤖 Evaluated LLM Model: {model_name} (Backend: {backend})")
+    print(f"📝 Prompt Mode: {prompt_type.upper()} (Độc lập với Prompt sinh nhãn vàng)")
     print("=" * 80)
 
     source_texts, ground_truth = load_golden_set_from_excel(excel_path)
@@ -98,7 +113,7 @@ def run_benchmark(
     gh_ids = [d for d in all_doc_ids if d.startswith("GH_")]
 
     if max_docs > 0 and max_docs < len(all_doc_ids):
-        num_gh = max(1, int(max_docs * len(gh_ids) / len(all_doc_ids)))
+        num_gh = max(1, int(max_docs * len(gh_ids) / len(all_doc_ids))) if gh_ids else 0
         num_jd = max_docs - num_gh
         test_doc_ids = jd_ids[:num_jd] + gh_ids[:num_gh]
     else:
@@ -107,26 +122,47 @@ def run_benchmark(
     total_gt_skills = sum(len(ground_truth.get(doc, [])) for doc in test_doc_ids)
     print(f"📊 Đã chọn {len(test_doc_ids)} tài liệu ({len([d for d in test_doc_ids if d.startswith('JD_')])} JDs + {len([d for d in test_doc_ids if d.startswith('GH_')])} GitHub Repos) với tổng cộng {total_gt_skills} nhãn vàng chuẩn (Ground Truth).")
 
-    extractor = SkillExtractor(backend=backend, ollama_model=model_name)
+    extractor = SkillExtractor(backend=backend, ollama_model=model_name, gemini_models=[model_name, "gemini-3.8-flash", "gemini-flash-latest"])
     evaluator = ExtractionEvaluator()
 
+    safe_model = model_name.replace(":", "_").replace("/", "_")
+    checkpoint_file = f"data/gold/benchmark_{backend}_{safe_model}_checkpoint.json"
     preds_baseline: Dict[str, List[Dict[str, Any]]] = {}
     preds_verifier: Dict[str, List[Dict[str, Any]]] = {}
-
     hallucinations_baseline: Dict[str, int] = {}
     hallucinations_verifier: Dict[str, int] = {}
     violations_baseline: Dict[str, int] = {}
     violations_verifier: Dict[str, int] = {}
 
+    if os.path.exists(checkpoint_file):
+        try:
+            with open(checkpoint_file, "r", encoding="utf-8") as f:
+                ckpt = json.load(f)
+                preds_baseline = ckpt.get("preds_baseline", {})
+                preds_verifier = ckpt.get("preds_verifier", {})
+                hallucinations_baseline = ckpt.get("hallucinations_baseline", {})
+                hallucinations_verifier = ckpt.get("hallucinations_verifier", {})
+                violations_baseline = ckpt.get("violations_baseline", {})
+                violations_verifier = ckpt.get("violations_verifier", {})
+                print(f"🔄 Checkpoint: Đã phục hồi {len(preds_baseline)} tài liệu đã đánh giá trước đó.")
+        except Exception as e:
+            print(f"  ⚠ Không thể đọc checkpoint benchmark ({e}), bắt đầu mới.")
+
     for idx, doc_id in enumerate(test_doc_ids, 1):
+        gt_skills = ground_truth.get(doc_id, [])
+        if doc_id in preds_baseline and doc_id in preds_verifier:
+            # Bỏ qua nếu đã có trích xuất hợp lệ hoặc chính văn bản đó không có nhãn vàng
+            if len(preds_baseline[doc_id]) > 0 or len(gt_skills) == 0:
+                continue
+
         text = source_texts[doc_id]
         if len(text) > 3500:
             text = text[:3500]
         print(f"\n[{idx}/{len(test_doc_ids)}] Đang đánh giá {doc_id} ({len(text)} ký tự)...", flush=True)
 
-        # 1. Chạy Baseline (Prompt thuần qua LLM)
+        # 1. Chạy Baseline (Inference Prompt độc lập thuần túy qua LLM)
         t0 = time.time()
-        raw_candidates = extractor.extract_baseline(text)
+        raw_candidates = extractor.extract_baseline(text, prompt_type=prompt_type)
         t_el = time.time() - t0
         preds_baseline[doc_id] = raw_candidates
 
@@ -148,6 +184,21 @@ def run_benchmark(
         print(f"  ⏱ Thời gian LLM: {t_el:.1f}s")
         print(f"  -> Baseline: {len(raw_candidates)} kỹ năng (Ảo giác: {h_base}, Vi phạm: {v_base})")
         print(f"  -> Verifier: {len(accepted)} kỹ năng hợp lệ | Bị loại bỏ: {len(rejected)}")
+
+        # Lưu checkpoint sau mỗi tài liệu
+        try:
+            with open(checkpoint_file, "w", encoding="utf-8") as f:
+                json.dump({
+                    "preds_baseline": preds_baseline,
+                    "preds_verifier": preds_verifier,
+                    "hallucinations_baseline": hallucinations_baseline,
+                    "hallucinations_verifier": hallucinations_verifier,
+                    "violations_baseline": violations_baseline,
+                    "violations_verifier": violations_verifier
+                }, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
+        time.sleep(0.4)
 
     # 3. Tính toán các chỉ số
     rep_baseline = evaluator.evaluate_predictions(
@@ -188,15 +239,17 @@ def run_benchmark(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Chạy benchmark đối sánh trích xuất kỹ năng")
-    parser.add_argument("--excel", type=str, default="data/gold/annotations/GEM_Golden_Set_100JDs.xlsx")
-    parser.add_argument("--max_docs", type=int, default=100, help="Số lượng tài liệu đánh giá (mặc định: 100)")
-    parser.add_argument("--model", type=str, default="qwen2.5:7b")
-    parser.add_argument("--backend", type=str, default="ollama")
+    parser.add_argument("--excel", type=str, default="data/gold/annotations/GEM_Golden_Set_280Docs.xlsx")
+    parser.add_argument("--max_docs", type=int, default=0, help="Số lượng tài liệu đánh giá (0 = toàn bộ tập)")
+    parser.add_argument("--model", type=str, default="gemini-3.5-flash-lite")
+    parser.add_argument("--backend", type=str, default="gemini")
+    parser.add_argument("--prompt_type", type=str, default="student", choices=["student", "guideline"], help="Loại prompt đánh giá: 'student' (độc lập) hoặc 'guideline'")
     args = parser.parse_args()
 
     run_benchmark(
         excel_path=args.excel,
         max_docs=args.max_docs,
         model_name=args.model,
-        backend=args.backend
+        backend=args.backend,
+        prompt_type=args.prompt_type
     )

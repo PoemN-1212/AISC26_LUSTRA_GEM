@@ -1,7 +1,7 @@
 """
 Kịch bản tạo tập Golden Set chuẩn hóa (Pre-annotation & Guideline Alignment) cho GEM
 Dự án GEM (LUSTRA_GEM) - UIT AISC'26
-Mô hình: Qwen 2.5 7B Local qua Ollama (GPU RTX 3050 CUDA 13.0) hoặc Gemini Cloud Fallback
+Mô hình Teacher: Gemini Cloud (gemini-3.5-flash-lite) độc lập theo Annotation Guideline v1.0
 """
 
 import os
@@ -14,7 +14,6 @@ from typing import Dict, List, Any
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 
-# Đảm bảo Windows console in UTF-8 không lỗi charmap
 if sys.platform == "win32":
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -23,7 +22,9 @@ if sys.platform == "win32":
         pass
 
 # Thêm pipeline/src vào sys.path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "pipeline", "src"))
+pipeline_src = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "pipeline", "src"))
+if pipeline_src not in sys.path:
+    sys.path.insert(0, pipeline_src)
 
 from gem_pipeline.extraction.extractor import SkillExtractor
 from gem_pipeline.extraction.verifier import SkillExtractionVerifier
@@ -57,27 +58,28 @@ def save_checkpoint(checkpoint_path: str, data: Dict[str, Any]):
 
 
 def build_golden_set(
-    jd_limit: int = 100,
+    jd_limit: int = 200,
     project_limit: int = 20,
-    model_name: str = "qwen2.5:7b",
-    backend: str = "ollama",
+    model_name: str = "gemini-3.5-flash-lite",
+    backend: str = "gemini",
     delay_sec: float = 0.5,
-    resume: bool = True
+    resume: bool = True,
+    output_prefix: str = "GEM_Golden_Set_200JDs"
 ):
     print("=" * 80)
-    print("🚀 BẮT ĐẦU TẠO TẬP NHÃN VÀNG (GOLDEN SET GENERATOR) - GEM PIPELINE")
-    print(f"📊 Mục tiêu: {jd_limit} JDs tuyển dụng | {project_limit} Đồ án sinh viên")
-    print(f"🤖 LLM Engine: {model_name} (Backend: {backend})")
+    print("🚀 BẮT ĐẦU TẠO TẬP NHÃN VÀNG ĐỘC LẬP (INDEPENDENT GOLDEN SET GENERATOR)")
+    print(f"📊 Mục tiêu: {jd_limit} JDs tuyển dụng (~10% dataset) | {project_limit} Đồ án sinh viên")
+    print(f"🤖 Teacher LLM Engine: {model_name} (Backend: {backend})")
     print("=" * 80)
 
     engine = create_engine(get_db_uri())
-    extractor = SkillExtractor(backend=backend, ollama_model=model_name)
+    extractor = SkillExtractor(backend=backend, gemini_models=[model_name, "gemini-3.8-flash", "gemini-flash-latest"])
     verifier = SkillExtractionVerifier()
 
     output_dir = os.path.join("data", "gold", "annotations")
     os.makedirs(output_dir, exist_ok=True)
-    checkpoint_file = os.path.join(output_dir, "golden_set_checkpoint.json")
-    excel_output = os.path.join(output_dir, "GEM_Golden_Set_100JDs.xlsx")
+    checkpoint_file = os.path.join(output_dir, f"{output_prefix.lower()}_checkpoint.json")
+    excel_output = os.path.join(output_dir, f"{output_prefix}.xlsx")
 
     ckpt = load_checkpoint(checkpoint_file) if resume else {"source_docs": [], "extracted_records": [], "processed_ids": []}
     source_docs = ckpt["source_docs"]
@@ -86,19 +88,19 @@ def build_golden_set(
 
     print(f"🔄 Checkpoint: Đã xử lý {len(processed_ids)} tài liệu trước đó.")
 
-    # 1. Lấy mẫu ngẫu nhiên từ cleaned_job_postings
+    # 1. Lấy mẫu phân tầng từ cleaned_job_postings
     print("\n[1/3] Đang tải danh sách cleaned_job_postings từ PostgreSQL...")
     jd_query = f"""
         SELECT id, raw_job_id, title, company, content_clean
         FROM cleaned_job_postings
-        WHERE char_count >= 200
+        WHERE char_count >= 250
         ORDER BY id ASC
         LIMIT {jd_limit};
     """
     df_jds = pd.read_sql(jd_query, engine)
     print(f"✅ Đã chọn {len(df_jds)} JD tuyển dụng.")
 
-    # 2. Lấy mẫu ngẫu nhiên từ cleaned_github_projects
+    # 2. Lấy mẫu từ cleaned_github_projects
     print("\n[2/3] Đang tải danh sách cleaned_github_projects từ PostgreSQL...")
     proj_query = f"""
         SELECT id, raw_project_id, repo_name, author, combined_clean_text
@@ -128,7 +130,8 @@ def build_golden_set(
         print(f"\n[{current_count}/{total_docs}] Đang xử lý {doc_id}: {title[:50]}... ({len(content)} ký tự)", flush=True)
 
         t0 = time.time()
-        raw_candidates = extractor.extract_baseline(content)
+        # Gọi Teacher Prompt chuẩn Guideline
+        raw_candidates = extractor.extract_baseline(content, prompt_type="guideline")
         t_el = time.time() - t0
 
         verified_results = verifier.verify_document_skills(raw_candidates, content)
@@ -185,7 +188,7 @@ def build_golden_set(
         print(f"\n[{current_count}/{total_docs}] Đang xử lý {doc_id}: {repo[:50]}... ({len(content)} ký tự)", flush=True)
 
         t0 = time.time()
-        raw_candidates = extractor.extract_baseline(content)
+        raw_candidates = extractor.extract_baseline(content, prompt_type="guideline")
         t_el = time.time() - t0
 
         verified_results = verifier.verify_document_skills(raw_candidates, content)
@@ -249,7 +252,7 @@ def build_golden_set(
             df_sources.to_excel(writer, sheet_name="Source_Documents", index=False)
             guideline_sheet_data.to_excel(writer, sheet_name="Guideline_Summary", index=False)
     except PermissionError:
-        print(f"\n  ⚠ Cảnh báo: File '{excel_output}' đang được mở bởi ứng dụng khác (Excel).")
+        print(f"\n  ⚠ Cảnh báo: File '{excel_output}' đang được mở bởi ứng dụng khác.")
         target_excel = excel_output.replace(".xlsx", "_latest.xlsx")
         print(f"  📁 Tự động xuất ra file thay thế: {target_excel}")
         with pd.ExcelWriter(target_excel, engine="openpyxl") as writer:
@@ -270,12 +273,13 @@ def build_golden_set(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Tạo tập Golden Set chuẩn hóa cho GEM")
-    parser.add_argument("--jds", type=int, default=100, help="Số lượng JD lấy mẫu (mặc định: 100)")
-    parser.add_argument("--projs", type=int, default=20, help="Số lượng Project lấy mẫu (mặc định: 20)")
-    parser.add_argument("--model", type=str, default="qwen2.5:7b", help="Tên model LLM (mặc định: qwen2.5:7b)")
-    parser.add_argument("--backend", type=str, default="ollama", help="Backend (ollama / gemini)")
-    parser.add_argument("--delay", type=float, default=0.2, help="Thời gian chờ giữa các request (giây)")
+    parser.add_argument("--jds", type=int, default=200, help="Số lượng JD lấy mẫu (mặc định: 200)")
+    parser.add_argument("--projs", type=int, default=80, help="Số lượng Project lấy mẫu (mặc định: 80)")
+    parser.add_argument("--model", type=str, default="gemini-3.5-flash-lite", help="Tên model LLM (mặc định: gemini-3.5-flash-lite)")
+    parser.add_argument("--backend", type=str, default="gemini", help="Backend (gemini / ollama)")
+    parser.add_argument("--delay", type=float, default=0.3, help="Thời gian chờ giữa các request (giây)")
     parser.add_argument("--no-resume", action="store_true", help="Không dùng checkpoint cũ, tạo lại từ đầu")
+    parser.add_argument("--output-prefix", type=str, default="GEM_Golden_Set_280Docs", help="Tiền tố file xuất")
     args = parser.parse_args()
 
     build_golden_set(
@@ -284,5 +288,6 @@ if __name__ == "__main__":
         model_name=args.model,
         backend=args.backend,
         delay_sec=args.delay,
-        resume=not args.no_resume
+        resume=not args.no_resume,
+        output_prefix=args.output_prefix
     )
