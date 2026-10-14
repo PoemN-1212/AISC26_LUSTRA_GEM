@@ -128,6 +128,7 @@ class QdrantVectorService:
             job_id = int(row["id"])
             title = row["title"] or ""
             company = row["company"] or ""
+            content = row["content_clean"] or ""
             domain, role = self.profiler.classify_role(title, content)
 
             embed_input = f"{title}\nLĩnh vực: {domain}\nVị trí: {role}\nYêu cầu và mô tả:\n{content[:800]}"
