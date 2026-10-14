@@ -11,8 +11,11 @@ psycopg2-binary>=2.9.9
 sqlalchemy>=2.0.0
 alembic>=1.13.0
 
-# Airflow
-apache-airflow>=2.7.1
+# Vector Database
+qdrant-client>=1.7.0
+
+# Lưu ý: Apache Airflow đã được đóng gói và chạy tự động trong Docker (infra/docker-compose.yml),
+# KHÔNG cài trực tiếp trên máy Windows để tránh lỗi xung đột thư viện C/Linux.
 
 # Data Processing & Analysis
 pandas>=2.0.0

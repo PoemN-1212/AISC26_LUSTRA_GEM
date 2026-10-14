@@ -221,12 +221,35 @@ __marimo__/
 # Biến môi trường & Khóa bảo mật
 .env
 
-# Dữ liệu cào thô & tệp xuất
-data/raw/
-data/processed/
+# Tệp rác & xuất tạm thời
 *.csv
-*.json
 *.html
+
+# Checkpoint tạm thời
+data/gold/*_checkpoint.json
+data/gold/annotations/*_checkpoint.json
+data/gold/annotations/*checkpoint.json
+
+# Dữ liệu cào & xử lý (Bỏ qua các tệp khác ngoại trừ tệp Seed chuẩn)
+data/raw/*
+!data/raw/topcv/
+!data/raw/topcv/topcv_jobs.jsonl
+!data/raw/github/
+!data/raw/github/github_projects.jsonl
+
+data/processed/*
+!data/processed/jobs/
+!data/processed/jobs/cleaned_jobs.jsonl
+!data/processed/projects/
+!data/processed/projects/cleaned_projects.jsonl
+!data/processed/skills/
+!data/processed/skills/extracted_skills.jsonl
+
+# Dữ liệu nhãn vàng & Benchmark
+!data/gold/
+!data/gold/benchmark_e1_results.json
+!data/gold/annotations/
+!data/gold/annotations/GEM_Golden_Set_280Docs.xlsx
 
 # Dữ liệu cục bộ của DB / Vector DB
 qdrant_storage/

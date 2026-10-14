@@ -78,7 +78,7 @@ FEW_SHOT_EXAMPLES = [
 
 
 def build_extraction_prompt(text: str, use_few_shot: bool = True) -> str:
-    """Tạo full prompt kèm few-shot examples nếu được yêu cầu."""
+    """Tạo full prompt chuẩn Guideline kèm few-shot examples (Teacher Annotation Prompt)."""
     prompt_parts = [SYSTEM_PROMPT_EXTRACTION]
 
     if use_few_shot:
@@ -91,3 +91,33 @@ def build_extraction_prompt(text: str, use_few_shot: bool = True) -> str:
 
     prompt_parts.append(f"\n--- VĂN BẢN CẦN PHÂN TÍCH THỰC TẾ ---\n{text}")
     return "\n".join(prompt_parts)
+
+
+STUDENT_INFERENCE_PROMPT = """Bạn là trợ lý AI chuyên trích xuất thực thể kỹ năng CNTT (IT Skill NER) từ văn bản tuyển dụng và đồ án sinh viên.
+Nhiệm vụ: Trích xuất chính xác tất cả các kỹ năng kỹ thuật có trong văn bản dưới đây.
+
+NGUYÊN TẮC TRÍCH XUẤT CỐT LÕI:
+1. TÁCH ĐỘC LẬP TỪNG THỰC THỂ (ATOMIC EXTRACTION):
+   - Khi gặp một danh sách nhiều công nghệ ngăn cách bởi dấu phẩy, gạch chéo hoặc liên từ (ví dụ: 'Python, Golang, Rust', 'LAN/WAN', 'Docker và Kubernetes'), PHẢI tách thành từng thực thể độc lập riêng biệt, tuyệt đối không gộp thành một chuỗi dài.
+2. RANH GIỚI TỐI THIỂU CÓ NGHĨA (MINIMAL SPAN):
+   - Bỏ hoàn toàn các từ đệm như: 'thành thạo', 'nắm vững', 'kinh nghiệm với', 'có khả năng'. Giữ đúng tên chuẩn của kỹ năng (ví dụ: 'Python', '.NET', 'REST API').
+3. HƯỚNG DẪN PHÂN LOẠI CHUẨN XÁC:
+   - 'TECHNOLOGY': Ưu tiên cao nhất cho tên ngôn ngữ lập trình, framework, thư viện, CSDL, Cloud, DevOps, công cụ kiểm thử, giao thức mạng, kiến trúc phần mềm (ví dụ: Python, React, PostgreSQL, Docker, AWS, OOP, CI/CD).
+   - 'ABILITY': Chỉ trích xuất các hành động kỹ thuật cụ thể theo mẫu [Động từ kỹ thuật] + [Đối tượng công nghệ] (ví dụ: 'phát triển REST API', 'thiết kế cơ sở dữ liệu', 'tối ưu truy vấn SQL'). TUYỆT ĐỐI KHÔNG trích xuất nhiệm vụ/trách nhiệm chung chung (như 'báo cáo tiến độ', 'họp nhóm', 'giao tiếp khách hàng').
+
+ĐỊNH DẠNG ĐẦU RA DUY NHẤT:
+Trả về DUY NHẤT một JSON array hợp lệ:
+[
+  {
+    "evidence": "đoạn trích dẫn nguyên văn từ văn bản",
+    "skill": "Tên kỹ năng chuẩn",
+    "type": "TECHNOLOGY" hoặc "ABILITY",
+    "context": "required" hoặc "preferred" hoặc "mentioned"
+  }
+]
+"""
+
+
+def build_student_prompt(text: str) -> str:
+    """Prompt trích xuất tự nhiên độc lập dùng cho Inference/Benchmark."""
+    return f"{STUDENT_INFERENCE_PROMPT}\n\n--- VĂN BẢN CẦN TRÍCH XUẤT ---\n{text}"

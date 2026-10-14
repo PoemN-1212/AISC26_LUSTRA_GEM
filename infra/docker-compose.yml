@@ -58,6 +58,8 @@ services:
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_PRE_PING=true
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_RECYCLE=1800
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__WEBSERVER__SECRET_KEY=thu_khoa_bao_mat_cua_gem
       - CLOUD_DB_URL=${CLOUD_DB_URL}
@@ -66,10 +68,13 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+      - GEM_DATA_DIR=/opt/airflow/data
+      - FLARESOLVERR_URL=http://flaresolverr:8191/v1
       - PYTHONPATH=/opt/airflow/pipeline/src
     volumes:
       - ../pipeline/dags:/opt/airflow/dags
       - ../pipeline/src:/opt/airflow/pipeline/src
+      - ../data:/opt/airflow/data
     networks:
       - gem_network
     command: webserver
@@ -86,6 +91,8 @@ services:
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_PRE_PING=true
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_POOL_RECYCLE=1800
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__WEBSERVER__SECRET_KEY=thu_khoa_bao_mat_cua_gem
       - CLOUD_DB_URL=${CLOUD_DB_URL}
@@ -94,10 +101,13 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+      - GEM_DATA_DIR=/opt/airflow/data
+      - FLARESOLVERR_URL=http://flaresolverr:8191/v1
       - PYTHONPATH=/opt/airflow/pipeline/src
     volumes:
       - ../pipeline/dags:/opt/airflow/dags
       - ../pipeline/src:/opt/airflow/pipeline/src
+      - ../data:/opt/airflow/data
     networks:
       - gem_network
     command: scheduler

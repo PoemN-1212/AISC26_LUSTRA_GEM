@@ -22,7 +22,11 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from gem_pipeline.extraction.prompts import SYSTEM_PROMPT_EXTRACTION, build_extraction_prompt
+from gem_pipeline.extraction.prompts import (
+    SYSTEM_PROMPT_EXTRACTION,
+    build_extraction_prompt,
+    build_student_prompt
+)
 from gem_pipeline.extraction.verifier import SkillExtractionVerifier, VerificationResult
 
 load_dotenv()
@@ -119,8 +123,11 @@ class SkillExtractor:
                 except Exception as e:
                     err = str(e)
                     if any(code in err for code in ["429", "503", "RESOURCE_EXHAUSTED", "UNAVAILABLE"]):
-                        time.sleep(2 * (attempt + 1))
+                        sleep_time = 3 * (attempt + 1)
+                        print(f"  ⚠ LLM rate limited, chờ {sleep_time}s thử lại lần {attempt+1}...")
+                        time.sleep(sleep_time)
                     else:
+                        print(f"  ❌ Lỗi gọi Gemini ({model_name}): {err[:100]}")
                         break
         return "[]"
 
@@ -176,18 +183,24 @@ class SkillExtractor:
             pass
         return []
 
-    def extract_baseline(self, text: str) -> List[Dict[str, Any]]:
+    def extract_baseline(self, text: str, prompt_type: str = "guideline") -> List[Dict[str, Any]]:
         """
         Chế độ Baseline: Chỉ dùng Prompt LLM thuần, KHÔNG qua bước Verifier.
-        Dùng để làm đối chứng đo lường hiệu năng (Baseline Evaluation).
+        prompt_type:
+          - 'guideline': Teacher Prompt đầy đủ theo GEM Annotation Guideline (cho Golden Set).
+          - 'student': Inference Prompt tự nhiên độc lập (cho Benchmark / Thực tế).
         """
-        prompt = build_extraction_prompt(text, use_few_shot=self.use_few_shot)
+        if prompt_type == "student":
+            prompt = build_student_prompt(text)
+        else:
+            prompt = build_extraction_prompt(text, use_few_shot=self.use_few_shot)
         raw_json = self._call_llm(prompt)
         return self.parse_candidates(raw_json)
 
     def extract_with_verifier(
         self,
-        text: str
+        text: str,
+        prompt_type: str = "guideline"
     ) -> Tuple[List[VerificationResult], List[VerificationResult]]:
         """
         Chế độ GEM Pipeline: Kết hợp Prompt LLM + Verifier 5 lớp.
@@ -195,7 +208,7 @@ class SkillExtractor:
         1. accepted_skills: Danh sách các kỹ năng hợp lệ / đã chuẩn hóa ranh giới.
         2. rejected_skills: Danh sách các kỹ năng bị loại bỏ kèm lý do (ảo giác, chức danh, từ thừa...).
         """
-        candidates = self.extract_baseline(text)
+        candidates = self.extract_baseline(text, prompt_type=prompt_type)
         verified_results = self.verifier.verify_document_skills(candidates, text)
 
         accepted = [r for r in verified_results if r.is_valid]

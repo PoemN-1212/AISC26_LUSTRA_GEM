@@ -93,8 +93,10 @@ class SkillExtractionVerifier:
         cleaned = text.strip()
         for pattern in FILLER_PATTERNS:
             cleaned = re.sub(pattern, "", cleaned, flags=re.IGNORECASE).strip()
-        # Loại bỏ dấu câu thừa đầu và cuối span
-        cleaned = re.sub(r"^[\s,;:.\-–—]+|[\s,;:.\-–—]+$", "", cleaned)
+        # Loại bỏ dấu câu thừa đầu và cuối span (bảo vệ .NET, .NET Core)
+        if not cleaned.lower().startswith(".net"):
+            cleaned = re.sub(r"^[\s,;:.\-–—]+", "", cleaned)
+        cleaned = re.sub(r"[\s,;:.\-–—]+$", "", cleaned)
         return cleaned
 
     def check_negative_rules(self, skill: str, evidence: str) -> Optional[str]:
@@ -134,11 +136,24 @@ class SkillExtractionVerifier:
                 rejection_reason="Evidence rỗng"
             )
 
-        # Tìm vị trí xuất hiện của evidence trong source_text
+        # 1.1 Tìm vị trí xuất hiện trực tiếp của evidence trong source_text
         if self.case_sensitive:
             idx = source_text.find(raw_evidence)
         else:
             idx = source_text.lower().find(raw_evidence.lower())
+
+        # 1.2 Nếu không thấy do khác biệt ngắt dòng/dấu cách, chuẩn hóa khoảng trắng để tìm
+        if idx == -1:
+            norm_source = re.sub(r"\s+", " ", source_text).lower()
+            norm_ev = re.sub(r"\s+", " ", raw_evidence).lower()
+            idx_norm = norm_source.find(norm_ev)
+            if idx_norm != -1:
+                idx = idx_norm
+            else:
+                # 1.3 Dự phòng: nếu evidence bị LLM cắt lệch nhưng tên kỹ năng cốt lõi có trong văn bản
+                norm_sk = re.sub(r"\s+", " ", raw_skill).lower()
+                if (len(norm_sk) >= 2 or norm_sk.upper() in {"C", "R"}) and norm_source.find(norm_sk) != -1:
+                    idx = norm_source.find(norm_sk)
 
         if idx == -1:
             return VerificationResult(
@@ -164,7 +179,7 @@ class SkillExtractionVerifier:
             issues.append("TRIMMED_FILLER_WORDS")
             is_modified = True
 
-        if len(cleaned_skill) < 2:
+        if len(cleaned_skill) < 2 and cleaned_skill.upper() not in {"C", "R"}:
             return VerificationResult(
                 is_valid=False,
                 status="REJECTED",
@@ -225,15 +240,29 @@ class SkillExtractionVerifier:
     ) -> List[VerificationResult]:
         """
         Kiểm định toàn bộ danh sách candidate skills của một tài liệu,
-        bao gồm cả bước 4: Khử trùng lặp (Deduplication).
+        bao gồm tách chuỗi gộp và khử trùng lặp (Deduplication).
         """
+        # 0. Tách nhỏ các candidate gộp (Compound entities split, ví dụ: 'Hosting/VPS' -> 'Hosting', 'VPS')
+        expanded_candidates: List[Dict[str, Any]] = []
+        for cand in candidates:
+            sk = (cand.get("skill") or "").strip()
+            if "/" in sk and sk.upper() not in {"CI/CD", "TCP/IP", "I/O", "OS/2"}:
+                parts = [p.strip() for p in sk.split("/") if len(p.strip()) >= 2]
+                if len(parts) > 1:
+                    for p in parts:
+                        new_c = dict(cand)
+                        new_c["skill"] = p
+                        expanded_candidates.append(new_c)
+                    continue
+            expanded_candidates.append(cand)
+
         verified_list: List[VerificationResult] = []
         seen_skills: Dict[str, VerificationResult] = {}
 
         # Mức độ ưu tiên của context khi gộp trùng lặp
         context_priority = {"required": 3, "preferred": 2, "mentioned": 1}
 
-        for cand in candidates:
+        for cand in expanded_candidates:
             res = self.verify_single(cand, source_text)
             if not res.is_valid:
                 verified_list.append(res)
