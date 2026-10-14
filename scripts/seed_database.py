@@ -19,6 +19,7 @@ import os
 import sys
 import json
 import argparse
+import requests
 import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
@@ -484,6 +485,35 @@ def seed_from_file(reset: bool = True):
     print("\n🎉 HOÀN TẤT NẠP DỮ LIỆU TỪ FILE! Local PostgreSQL đã sẵn sàng hoạt động 100%!", flush=True)
 
 
+def seed_qdrant():
+    """Tự động kiểm tra Qdrant và lập chỉ mục Vector cho 100% JD và Đồ án."""
+    qdrant_url = os.getenv("QDRANT_URL", "http://localhost:6333")
+    print(f"\n🧠 [Qdrant Vector Store] Kiểm tra kết nối tới {qdrant_url}...", flush=True)
+    try:
+        r = requests.get(f"{qdrant_url}/collections", timeout=3)
+        if r.status_code != 200:
+            print("  ⚠️ Qdrant phản hồi không thành công, bỏ qua bước vector hóa.", flush=True)
+            return
+    except Exception:
+        print("  ℹ️ Qdrant chưa được khởi động (bạn có thể chạy: docker compose -f infra/docker-compose.yml up -d gem_qdrant). Bỏ qua vector hóa.", flush=True)
+        return
+
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "pipeline", "src")))
+    try:
+        from gem_pipeline.vector_store.qdrant_service import QdrantVectorService
+        svc = QdrantVectorService(qdrant_url=qdrant_url)
+        print("  ⚡ Đang vector hóa và nạp tin tuyển dụng (market_jds)...", flush=True)
+        cnt_jds = svc.index_all_jds()
+        print(f"  ✅ Đã nạp {cnt_jds:,} vector JD vào Qdrant.", flush=True)
+
+        print("  ⚡ Đang vector hóa và nạp đồ án sinh viên (student_projects)...", flush=True)
+        cnt_projs = svc.index_all_projects()
+        print(f"  ✅ Đã nạp {cnt_projs:,} vector đồ án vào Qdrant.", flush=True)
+        print("🎉 HOÀN TẤT ĐỒNG BỘ VECTOR QDRANT! Cả PostgreSQL và Qdrant đã sẵn sàng 100%!", flush=True)
+    except Exception as e:
+        print(f"  ⚠️ Lỗi khi nạp dữ liệu vào Qdrant: {e}", flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description="GEM Database Bootstrapper")
     parser.add_argument("--source", choices=["cloud", "file"], default="cloud",
@@ -492,12 +522,17 @@ def main():
                         help="Làm sạch dữ liệu cũ trước khi nạp để tránh trùng lặp/xung đột ID (Mặc định: True)")
     parser.add_argument("--no-reset", dest="reset", action="store_false",
                         help="Không xóa dữ liệu cũ, chỉ chèn bổ sung")
+    parser.add_argument("--skip-qdrant", action="store_true", default=False,
+                        help="Bỏ qua bước nạp vector vào Qdrant (mặc định sẽ tự động nạp)")
     args = parser.parse_args()
 
     if args.source == "cloud":
         seed_from_cloud(reset=args.reset)
     else:
         seed_from_file(reset=args.reset)
+
+    if not args.skip_qdrant:
+        seed_qdrant()
 
 
 if __name__ == "__main__":

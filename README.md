@@ -430,12 +430,12 @@ docker compose -f infra/docker-compose.yml up -d gem_postgres gem_qdrant
 
 ---
 
-#### Bước 4: Nạp Toàn bộ Dữ liệu CSDL trong 10 Giây (Data Bootstrapper)
+#### Bước 4: Nạp Toàn bộ Dữ liệu PostgreSQL & Qdrant trong 25 Giây (All-in-One Bootstrapper)
 
-Không cần cào lại dữ liệu từ đầu! Chạy ngay lệnh sau để nạp toàn bộ 5 bảng CSDL từ các file seed có sẵn trong thư mục `data/`:
+Không cần cào lại dữ liệu từ đầu! Chạy ngay lệnh sau để tự động nạp **toàn bộ 5 bảng CSDL PostgreSQL** và **tự động lập chỉ mục Vector Embeddings vào Qdrant**:
 
 ```powershell
-# Cách 1 (Khuyên dùng - Nạp Offline từ file có sẵn, mất ~10 giây):
+# Cách 1 (Khuyên dùng - Nạp Offline từ file có sẵn, mất ~20-25 giây):
 python scripts/seed_database.py --source file
 
 # Cách 2 (Tùy chọn - Đồng bộ trực tiếp từ Cloud Neon PostgreSQL của nhóm):
@@ -450,6 +450,13 @@ Kết quả hiển thị trên màn hình:
   ✅ Đã nạp thành công 527 bản ghi vào bảng cleaned_github_projects.
   ✅ Đã nạp thành công 12,557 bản ghi vào bảng extracted_skills.
 🎉 HOÀN TẤT NẠP DỮ LIỆU TỪ FILE! Local PostgreSQL đã sẵn sàng hoạt động 100%!
+
+🧠 [Qdrant Vector Store] Kiểm tra kết nối tới http://localhost:6333...
+  ⚡ Đang vector hóa và nạp tin tuyển dụng (market_jds)...
+  ✅ Đã nạp 1,732 vector JD vào Qdrant.
+  ⚡ Đang vector hóa và nạp đồ án sinh viên (student_projects)...
+  ✅ Đã nạp 527 vector đồ án vào Qdrant.
+🎉 HOÀN TẤT ĐỒNG BỘ VECTOR QDRANT! Cả PostgreSQL và Qdrant đã sẵn sàng 100%!
 ```
 
 ---
