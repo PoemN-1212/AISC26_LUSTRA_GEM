@@ -75,7 +75,11 @@ class QdrantVectorService:
         if not hasattr(self, "_ollama_available") or self._ollama_available is None:
             try:
                 probe = requests.get(f"{self.ollama_url}/api/tags", timeout=0.5)
-                self._ollama_available = probe.status_code == 200
+                if probe.status_code == 200:
+                    installed_models = [m.get("name", "").split(":")[0] for m in probe.json().get("models", [])]
+                    self._ollama_available = self.embedding_model.split(":")[0] in installed_models
+                else:
+                    self._ollama_available = False
             except Exception:
                 self._ollama_available = False
 
@@ -89,6 +93,8 @@ class QdrantVectorService:
                     vec = data.get("embedding", [])
                     if len(vec) == self.VECTOR_DIM:
                         return vec
+                else:
+                    self._ollama_available = False
             except Exception:
                 self._ollama_available = False
 
