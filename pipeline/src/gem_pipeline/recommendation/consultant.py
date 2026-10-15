@@ -315,6 +315,7 @@ Trả về DUY NHẤT một chuỗi JSON hợp lệ theo đúng cấu trúc sau 
                 "top_demanded_skills": [s["canonical_name"] for s in core_market_skills[:6]],
                 "sample_jds": [j["title"] for j in relevant_jds[:2]],
             },
+            "matched_jds": relevant_jds,
             "reference_projects": reference_note,
         }
 

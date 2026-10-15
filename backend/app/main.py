@@ -156,3 +156,11 @@ def get_roles_summary():
 def get_role_profile(role_name: str):
     """Lấy Hồ sơ Kỹ năng (Core Must-Have vs Differentiating Boosters) của một vị trí."""
     return profiler.get_role_skill_profile(role_name)
+
+
+@app.post("/api/market/match-jds", tags=["Market Data"])
+def match_jds(req: IdeaAnalysisRequest):
+    """Tìm kiếm ngữ nghĩa các tin tuyển dụng thực tế TopCV phù hợp nhất với ý tưởng đồ án qua Qdrant."""
+    if not req.idea_text.strip():
+        raise HTTPException(status_code=400, detail="Vui lòng cung cấp mô tả ý tưởng đồ án.")
+    return consultant.vector_service.search_relevant_jds(req.idea_text, limit=6)
