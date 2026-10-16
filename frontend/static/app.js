@@ -966,7 +966,7 @@ function recalculateSimulatedMetrics() {
   // Cập nhật Radar Chart đa chiều theo thời gian thực
   const potentialPoly = document.getElementById("radar-potential-poly");
   if (potentialPoly) {
-    const cx = 110, cy = 100, maxR = 68;
+    const cx = 170, cy = 110, maxR = 62;
     const axes = [
       { pFactor: 1.0 },
       { pFactor: 0.98 },
@@ -1562,9 +1562,9 @@ async function runRoleComparison() {
 // 9. MULTI-DIMENSIONAL RADAR SVG GENERATOR
 // ===================================================================
 function generateRadarSvg(baselinePct, potentialPct) {
-  const cx = 110;
-  const cy = 100;
-  const maxR = 68;
+  const cx = 170;
+  const cy = 110;
+  const maxR = 62;
 
   // 5 trục năng lực cốt lõi
   const axes = [
@@ -1613,26 +1613,26 @@ function generateRadarSvg(baselinePct, potentialPct) {
     return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>`;
   }).join("");
 
-  // Nhãn chữ các trục
+  // Nhãn chữ các trục có khoảng đệm biên rộng rãi (viewBox 340px)
   const labelOffsets = [
-    { dy: -8, anchor: "middle" },
+    { dx: 0, dy: -12, anchor: "middle" },
     { dx: 6, dy: 3, anchor: "start" },
-    { dx: 4, dy: 10, anchor: "start" },
-    { dx: -4, dy: 10, anchor: "end" },
+    { dx: 6, dy: 10, anchor: "start" },
+    { dx: -6, dy: 10, anchor: "end" },
     { dx: -6, dy: 3, anchor: "end" },
   ];
 
   const axisLabels = axes.map((axis, i) => {
-    const x = cx + (maxR + 12) * Math.cos(angles[i]) + (labelOffsets[i].dx || 0);
-    const y = cy + (maxR + 12) * Math.sin(angles[i]) + (labelOffsets[i].dy || 0);
-    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${labelOffsets[i].anchor}" fill="var(--text-muted)" font-size="8.5" font-weight="600">${axis.name}</text>`;
+    const x = cx + (maxR + 10) * Math.cos(angles[i]) + (labelOffsets[i].dx || 0);
+    const y = cy + (maxR + 10) * Math.sin(angles[i]) + (labelOffsets[i].dy || 0);
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${labelOffsets[i].anchor}" fill="var(--text-secondary)" font-size="9" font-weight="600">${axis.name}</text>`;
   }).join("");
 
   const baselinePoints = getPolygonPoints(baselinePct, "bFactor");
   const potentialPoints = getPolygonPoints(potentialPct, "pFactor");
 
   return `
-    <svg class="radar-svg" width="230" height="205" viewBox="0 0 220 200">
+    <svg class="radar-svg" viewBox="0 0 340 215" style="overflow: visible;">
       ${gridPolygons}
       ${axisLines}
       <!-- Polygon 1: Baseline Coverage -->

@@ -2826,6 +2826,18 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
+  flex-shrink: 0;
+  min-width: 280px;
+  max-width: 340px;
+  overflow: visible !important;
+}
+#radar-chart-container {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible !important;
 }
 .radar-title {
   font-size: 0.72rem;
@@ -2835,7 +2847,19 @@ body {
   letter-spacing: 0.5px;
 }
 .radar-svg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  overflow: visible !important;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+}
+.radar-svg text {
+  fill: #cbd5e1;
+  font-family: var(--font-sans);
+  user-select: none;
+}
+[data-theme="light"] .radar-svg text {
+  fill: #475569;
 }
 .radar-legend {
   display: flex;
