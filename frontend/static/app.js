@@ -624,14 +624,26 @@ function renderBlueprint(bp) {
 
     html += `
       <div class="readiness-card">
+        <!-- TOP FULL-WIDTH CONTEXT: TOPIC & INQUIRY -->
+        <div class="readiness-top-bar">
+          <div class="readiness-project-badge" title="Miền đề tài: ${escapeHtml(displayDomain)}">
+            <span class="project-badge-tag">💡 Đề tài</span>
+            <span class="project-badge-name">${escapeHtml(displayDomain)}</span>
+          </div>
+
+          ${displayInquiry ? `
+            <div class="readiness-inquiry-box" title="Nội dung/câu hỏi đang hỏi: ${escapeHtml(displayInquiry)}">
+              <span class="inquiry-icon">💬</span>
+              <div class="inquiry-body">
+                <span class="inquiry-label">Nội dung đang hỏi:</span>
+                <span class="inquiry-text">"${escapeHtml(displayInquiry)}"</span>
+              </div>
+            </div>
+          ` : ""}
+        </div>
+
         <div class="readiness-hero-row">
           <div class="readiness-info">
-            <!-- PROJECT TOPIC BADGE -->
-            <div class="readiness-project-badge" title="Miền đề tài: ${escapeHtml(displayDomain)}">
-              <span class="project-badge-tag">💡 Đề tài</span>
-              <span class="project-badge-name">${escapeHtml(displayDomain)}</span>
-            </div>
-
             <div class="readiness-title">
               <span>🎯 Điểm Khớp Nối Thực Chiến (Market Readiness)</span>
             </div>
@@ -639,16 +651,6 @@ function renderBlueprint(bp) {
             <div class="readiness-desc">
               Đo lường độ sẵn sàng thực tế khi đối chiếu với <b>${gap.sample_jd_count || 50}</b> tin tuyển dụng <b>${escapeHtml(bp.target_role || "IT")}</b> trên TopCV Việt Nam.
             </div>
-
-            ${displayInquiry ? `
-              <div class="readiness-inquiry-box" title="Nội dung/câu hỏi vừa được cố vấn: ${escapeHtml(displayInquiry)}">
-                <span class="inquiry-icon">💬</span>
-                <div class="inquiry-body">
-                  <span class="inquiry-label">Nội dung đang hỏi:</span>
-                  <span class="inquiry-text">"${escapeHtml(displayInquiry.length > 115 ? displayInquiry.substring(0, 112) + '...' : displayInquiry)}"</span>
-                </div>
-              </div>
-            ` : ""}
           </div>
 
           <!-- GAUGE CIRCLE -->

@@ -1806,6 +1806,20 @@ body {
   margin-top: 3px;
 }
 
+.readiness-top-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: 100%;
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .readiness-top-bar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
 .readiness-info {
   flex: 1;
   min-width: 0;
@@ -1817,19 +1831,19 @@ body {
 .readiness-project-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.55rem;
   background: rgba(6, 182, 212, 0.12);
   border: 1px solid rgba(6, 182, 212, 0.28);
-  border-radius: var(--radius-full, 9999px);
-  padding: 0.22rem 0.75rem;
+  border-radius: var(--radius-md);
+  padding: 0.35rem 0.85rem;
   max-width: 100%;
-  margin-bottom: 0.15rem;
   align-self: flex-start;
   box-shadow: 0 2px 8px rgba(6, 182, 212, 0.08);
+  flex-wrap: wrap;
 }
 
 .project-badge-tag {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 800;
   color: var(--accent-cyan);
   text-transform: uppercase;
@@ -1838,12 +1852,12 @@ body {
 }
 
 .project-badge-name {
-  font-size: 0.78rem;
+  font-size: 0.84rem;
   font-weight: 700;
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.45;
 }
 
 .readiness-title {
@@ -1864,17 +1878,17 @@ body {
 .readiness-inquiry-box {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
-  margin-top: 0.35rem;
-  background: rgba(255, 255, 255, 0.035);
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.04);
   border-left: 3px solid var(--accent-emerald);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.45rem 0.75rem;
-  max-width: 100%;
+  padding: 0.5rem 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .inquiry-icon {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -1882,28 +1896,26 @@ body {
 .inquiry-body {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.2rem;
+  flex: 1;
   min-width: 0;
 }
 
 .inquiry-label {
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
 }
 
 .inquiry-text {
-  font-size: 0.76rem;
+  font-size: 0.82rem;
   color: var(--text-secondary);
-  line-height: 1.45;
+  line-height: 1.5;
   font-style: italic;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: normal;
+  word-break: break-word;
 }
 
 [data-theme="light"] .readiness-project-badge {
