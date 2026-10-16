@@ -13,6 +13,8 @@ let voiceRecognition = null;
 let isVoiceListening = false;
 let currentSelectedDomain = "Tất cả";
 let roleProfilesCache = {};
+let currentProjectTopic = "";
+let latestUserQuery = "";
 
 // DOM READY
 document.addEventListener("DOMContentLoaded", () => {
@@ -109,6 +111,8 @@ function initChat() {
 function resetChatSession() {
   currentSessionId = null;
   currentBlueprint = null;
+  currentProjectTopic = "";
+  latestUserQuery = "";
   currentActiveGaps.clear();
   initChat();
 
@@ -190,10 +194,13 @@ function resetChatSession() {
 
 function loadDemoProject(type) {
   if (type === "olap") {
+    currentProjectTopic = "Hệ thống OLAP Big Data & Phát hiện Gian lận Giao dịch Ngân hàng (Bank Fraud Detection)";
     sendQuickPrompt("tôi muốn làm một đồ án OLAP về bank transaction fraud ấy");
   } else if (type === "ecom") {
+    currentProjectTopic = "Website Thương mại Điện tử Đa Kênh Tích Hợp (E-Commerce Platform)";
     sendQuickPrompt("Tôi muốn làm website thương mại điện tử cho cửa hàng nhỏ. Tôi chưa biết nên chọn công nghệ nào.");
   } else if (type === "ai") {
+    currentProjectTopic = "Hệ thống Y tế Hỗ trợ Chẩn đoán Hình ảnh & Bệnh án (HealthTech AI)";
     sendQuickPrompt("Tôi muốn làm hệ thống y tế hỗ trợ chẩn đoán hình ảnh và phân tích bệnh án cho bệnh viện, hướng tới AI Engineer.");
   }
 }
@@ -419,6 +426,12 @@ async function handleChatSubmit(e) {
 
   if (!text) return;
 
+  // Ghi nhận câu hỏi/nội dung mới nhất của người dùng
+  latestUserQuery = text;
+  if (!currentProjectTopic) {
+    currentProjectTopic = text;
+  }
+
   // Render User Message
   appendUserMessage(text);
   input.value = "";
@@ -452,6 +465,11 @@ async function handleChatSubmit(e) {
 
     // Update Live Blueprint
     if (data.blueprint) {
+      if (data.blueprint.domain) {
+        currentProjectTopic = data.blueprint.domain;
+      }
+      data.blueprint.idea_text = currentProjectTopic;
+      data.blueprint.user_inquiry = latestUserQuery;
       currentBlueprint = data.blueprint;
       renderBlueprint(data.blueprint);
     }
@@ -601,21 +619,43 @@ function renderBlueprint(bp) {
   // 1. READINESS SCORE DASHBOARD (VỚI SVG GAUGE CIRCLE & RADAR CHART)
   if (metrics.readiness_score !== undefined) {
     const strokeDash = calculateGaugeOffset(score);
+    const displayDomain = bp.domain || currentProjectTopic || "Đồ án Kỹ thuật & Công nghệ Thông tin";
+    const displayInquiry = bp.user_inquiry || latestUserQuery || "";
+
     html += `
       <div class="readiness-card">
+        <!-- TOP FULL-WIDTH CONTEXT: TOPIC & INQUIRY -->
+        <div class="readiness-top-bar">
+          <div class="readiness-project-badge" title="Miền đề tài: ${escapeHtml(displayDomain)}">
+            <span class="project-badge-tag">💡 Đề tài</span>
+            <span class="project-badge-name">${escapeHtml(displayDomain)}</span>
+          </div>
+
+          ${displayInquiry ? `
+            <div class="readiness-inquiry-box" title="Nội dung/câu hỏi đang hỏi: ${escapeHtml(displayInquiry)}">
+              <span class="inquiry-icon">💬</span>
+              <div class="inquiry-body">
+                <span class="inquiry-label">Nội dung đang hỏi:</span>
+                <span class="inquiry-text">"${escapeHtml(displayInquiry)}"</span>
+              </div>
+            </div>
+          ` : ""}
+        </div>
+
         <div class="readiness-hero-row">
           <div class="readiness-info">
             <div class="readiness-title">
               <span>🎯 Điểm Khớp Nối Thực Chiến (Market Readiness)</span>
             </div>
+
             <div class="readiness-desc">
-              Lượng hóa từ <b>${gap.sample_jd_count || 50}</b> tin tuyển dụng ${escapeHtml(bp.target_role || "IT")} thực tế trên TopCV Việt Nam.
+              Đo lường độ sẵn sàng thực tế khi đối chiếu với <b>${gap.sample_jd_count || 50}</b> tin tuyển dụng <b>${escapeHtml(bp.target_role || "IT")}</b> trên TopCV Việt Nam.
             </div>
           </div>
 
           <!-- GAUGE CIRCLE -->
           <div class="readiness-gauge-box" title="Điểm thực chiến đồ án">
-            <svg class="readiness-gauge-svg" width="124" height="124" viewBox="0 0 100 100">
+            <svg class="readiness-gauge-svg" width="94" height="94" viewBox="0 0 100 100">
               <circle class="gauge-bg" cx="50" cy="50" r="45"></circle>
               <circle class="gauge-fill" id="gauge-fill-circle" cx="50" cy="50" r="45" style="stroke-dashoffset: ${strokeDash}; stroke: ${score >= 80 ? 'var(--accent-emerald)' : (score >= 60 ? 'var(--accent-cyan)' : 'var(--accent-amber)')};"></circle>
             </svg>
@@ -966,7 +1006,7 @@ function recalculateSimulatedMetrics() {
   // Cập nhật Radar Chart đa chiều theo thời gian thực
   const potentialPoly = document.getElementById("radar-potential-poly");
   if (potentialPoly) {
-    const cx = 110, cy = 100, maxR = 68;
+    const cx = 200, cy = 132, maxR = 82;
     const axes = [
       { pFactor: 1.0 },
       { pFactor: 0.98 },
@@ -1562,9 +1602,9 @@ async function runRoleComparison() {
 // 9. MULTI-DIMENSIONAL RADAR SVG GENERATOR
 // ===================================================================
 function generateRadarSvg(baselinePct, potentialPct) {
-  const cx = 110;
-  const cy = 100;
-  const maxR = 68;
+  const cx = 200;
+  const cy = 132;
+  const maxR = 82;
 
   // 5 trục năng lực cốt lõi
   const axes = [
@@ -1613,26 +1653,26 @@ function generateRadarSvg(baselinePct, potentialPct) {
     return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>`;
   }).join("");
 
-  // Nhãn chữ các trục
+  // Nhãn chữ các trục có khoảng đệm biên rộng rãi (viewBox 400px)
   const labelOffsets = [
-    { dy: -8, anchor: "middle" },
+    { dx: 0, dy: -10, anchor: "middle" },
     { dx: 6, dy: 3, anchor: "start" },
-    { dx: 4, dy: 10, anchor: "start" },
-    { dx: -4, dy: 10, anchor: "end" },
+    { dx: 6, dy: 12, anchor: "start" },
+    { dx: -6, dy: 12, anchor: "end" },
     { dx: -6, dy: 3, anchor: "end" },
   ];
 
   const axisLabels = axes.map((axis, i) => {
     const x = cx + (maxR + 12) * Math.cos(angles[i]) + (labelOffsets[i].dx || 0);
     const y = cy + (maxR + 12) * Math.sin(angles[i]) + (labelOffsets[i].dy || 0);
-    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${labelOffsets[i].anchor}" fill="var(--text-muted)" font-size="8.5" font-weight="600">${axis.name}</text>`;
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${labelOffsets[i].anchor}" fill="var(--text-secondary)" font-size="9.5" font-weight="600">${axis.name}</text>`;
   }).join("");
 
   const baselinePoints = getPolygonPoints(baselinePct, "bFactor");
   const potentialPoints = getPolygonPoints(potentialPct, "pFactor");
 
   return `
-    <svg class="radar-svg" width="230" height="205" viewBox="0 0 220 200">
+    <svg class="radar-svg" viewBox="0 0 400 255" style="overflow: visible;">
       ${gridPolygons}
       ${axisLines}
       <!-- Polygon 1: Baseline Coverage -->
