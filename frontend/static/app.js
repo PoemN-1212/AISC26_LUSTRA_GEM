@@ -13,6 +13,8 @@ let voiceRecognition = null;
 let isVoiceListening = false;
 let currentSelectedDomain = "Tất cả";
 let roleProfilesCache = {};
+let currentProjectTopic = "";
+let latestUserQuery = "";
 
 // DOM READY
 document.addEventListener("DOMContentLoaded", () => {
@@ -109,6 +111,8 @@ function initChat() {
 function resetChatSession() {
   currentSessionId = null;
   currentBlueprint = null;
+  currentProjectTopic = "";
+  latestUserQuery = "";
   currentActiveGaps.clear();
   initChat();
 
@@ -190,10 +194,13 @@ function resetChatSession() {
 
 function loadDemoProject(type) {
   if (type === "olap") {
+    currentProjectTopic = "Hệ thống OLAP Big Data & Phát hiện Gian lận Giao dịch Ngân hàng (Bank Fraud Detection)";
     sendQuickPrompt("tôi muốn làm một đồ án OLAP về bank transaction fraud ấy");
   } else if (type === "ecom") {
+    currentProjectTopic = "Website Thương mại Điện tử Đa Kênh Tích Hợp (E-Commerce Platform)";
     sendQuickPrompt("Tôi muốn làm website thương mại điện tử cho cửa hàng nhỏ. Tôi chưa biết nên chọn công nghệ nào.");
   } else if (type === "ai") {
+    currentProjectTopic = "Hệ thống Y tế Hỗ trợ Chẩn đoán Hình ảnh & Bệnh án (HealthTech AI)";
     sendQuickPrompt("Tôi muốn làm hệ thống y tế hỗ trợ chẩn đoán hình ảnh và phân tích bệnh án cho bệnh viện, hướng tới AI Engineer.");
   }
 }
@@ -419,6 +426,12 @@ async function handleChatSubmit(e) {
 
   if (!text) return;
 
+  // Ghi nhận câu hỏi/nội dung mới nhất của người dùng
+  latestUserQuery = text;
+  if (!currentProjectTopic) {
+    currentProjectTopic = text;
+  }
+
   // Render User Message
   appendUserMessage(text);
   input.value = "";
@@ -452,6 +465,11 @@ async function handleChatSubmit(e) {
 
     // Update Live Blueprint
     if (data.blueprint) {
+      if (data.blueprint.domain) {
+        currentProjectTopic = data.blueprint.domain;
+      }
+      data.blueprint.idea_text = currentProjectTopic;
+      data.blueprint.user_inquiry = latestUserQuery;
       currentBlueprint = data.blueprint;
       renderBlueprint(data.blueprint);
     }
@@ -601,16 +619,36 @@ function renderBlueprint(bp) {
   // 1. READINESS SCORE DASHBOARD (VỚI SVG GAUGE CIRCLE & RADAR CHART)
   if (metrics.readiness_score !== undefined) {
     const strokeDash = calculateGaugeOffset(score);
+    const displayDomain = bp.domain || currentProjectTopic || "Đồ án Kỹ thuật & Công nghệ Thông tin";
+    const displayInquiry = bp.user_inquiry || latestUserQuery || "";
+
     html += `
       <div class="readiness-card">
         <div class="readiness-hero-row">
           <div class="readiness-info">
+            <!-- PROJECT TOPIC BADGE -->
+            <div class="readiness-project-badge" title="Miền đề tài: ${escapeHtml(displayDomain)}">
+              <span class="project-badge-tag">💡 Đề tài</span>
+              <span class="project-badge-name">${escapeHtml(displayDomain)}</span>
+            </div>
+
             <div class="readiness-title">
               <span>🎯 Điểm Khớp Nối Thực Chiến (Market Readiness)</span>
             </div>
+
             <div class="readiness-desc">
-              Lượng hóa từ <b>${gap.sample_jd_count || 50}</b> tin tuyển dụng ${escapeHtml(bp.target_role || "IT")} thực tế trên TopCV Việt Nam.
+              Đo lường độ sẵn sàng thực tế khi đối chiếu với <b>${gap.sample_jd_count || 50}</b> tin tuyển dụng <b>${escapeHtml(bp.target_role || "IT")}</b> trên TopCV Việt Nam.
             </div>
+
+            ${displayInquiry ? `
+              <div class="readiness-inquiry-box" title="Nội dung/câu hỏi vừa được cố vấn: ${escapeHtml(displayInquiry)}">
+                <span class="inquiry-icon">💬</span>
+                <div class="inquiry-body">
+                  <span class="inquiry-label">Nội dung đang hỏi:</span>
+                  <span class="inquiry-text">"${escapeHtml(displayInquiry.length > 115 ? displayInquiry.substring(0, 112) + '...' : displayInquiry)}"</span>
+                </div>
+              </div>
+            ` : ""}
           </div>
 
           <!-- GAUGE CIRCLE -->
