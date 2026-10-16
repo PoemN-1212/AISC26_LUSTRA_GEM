@@ -224,6 +224,7 @@ __marimo__/
 # Tệp rác & xuất tạm thời
 *.csv
 *.html
+!frontend/**/*.html
 
 # Checkpoint tạm thời
 data/gold/*_checkpoint.json
