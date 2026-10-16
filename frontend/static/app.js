@@ -9,13 +9,44 @@ let currentBlueprint = null;
 let currentActiveGaps = new Set();
 let allRolesCache = [];
 let currentExportTab = "readme";
+let voiceRecognition = null;
+let isVoiceListening = false;
+let currentSelectedDomain = "Tất cả";
+let roleProfilesCache = {};
 
 // DOM READY
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initChat();
   loadMarketRoles();
+  initKeyboardShortcuts();
 });
+
+function initKeyboardShortcuts() {
+  document.addEventListener("keydown", (e) => {
+    // Ctrl + Enter to send chat message
+    if (e.ctrlKey && e.key === "Enter") {
+      const chatInput = document.getElementById("chat-input");
+      if (chatInput && chatInput.value.trim()) {
+        e.preventDefault();
+        handleChatSubmit(new Event("submit"));
+      }
+    }
+    // "/" key to focus chat input (when not typing elsewhere)
+    if (e.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+      const chatInput = document.getElementById("chat-input");
+      if (chatInput) {
+        e.preventDefault();
+        chatInput.focus();
+      }
+    }
+    // Escape key to close modals
+    if (e.key === "Escape") {
+      closeExportModal();
+      closeRoleCompareModal();
+    }
+  });
+}
 
 // ===================================================================
 // 1. THEME SWITCHER (DARK / LIGHT MODE)
@@ -81,6 +112,9 @@ function resetChatSession() {
   currentActiveGaps.clear();
   initChat();
 
+  const tunerBar = document.getElementById("blueprint-tuner-bar");
+  if (tunerBar) tunerBar.style.display = "none";
+
   const blueprintContent = document.getElementById("blueprint-content");
   blueprintContent.innerHTML = `
     <div class="empty-blueprint-state">
@@ -91,6 +125,38 @@ function resetChatSession() {
       <p class="empty-desc">
         Hãy nhập mô tả bài toán đồ án của bạn ở khung bên trái hoặc bấm vào một trong các <b>nút gợi ý nhanh</b>.
       </p>
+
+      <!-- 1-CLICK DEMO SHOWCASE -->
+      <div class="demo-showcase-box">
+        <div class="demo-showcase-label">✨ Trải nghiệm nhanh các Đề tài Mẫu đo ni đóng giày (1-Click):</div>
+        <div class="demo-showcase-buttons">
+          <button type="button" class="demo-btn demo-btn-olap" onclick="loadDemoProject('olap')">
+            <span class="demo-btn-icon">🏦</span>
+            <div class="demo-btn-text">
+              <b>OLAP Big Data & Fraud Detection</b>
+              <span>Data Engineer · ClickHouse & dbt · 3 Tháng</span>
+            </div>
+            <span class="demo-arrow">➔</span>
+          </button>
+          <button type="button" class="demo-btn demo-btn-ecom" onclick="loadDemoProject('ecom')">
+            <span class="demo-btn-icon">🛒</span>
+            <div class="demo-btn-text">
+              <b>Web E-Commerce Đa Kênh Tích Hợp</b>
+              <span>Backend Developer · PostgreSQL & Redis · 3 Tháng</span>
+            </div>
+            <span class="demo-arrow">➔</span>
+          </button>
+          <button type="button" class="demo-btn demo-btn-ai" onclick="loadDemoProject('ai')">
+            <span class="demo-btn-icon">🧠</span>
+            <div class="demo-btn-text">
+              <b>Hệ Thống Y Tế & Chẩn Đoán AI</b>
+              <span>AI / Machine Learning Engineer · FastAPI & Model Serving</span>
+            </div>
+            <span class="demo-arrow">➔</span>
+          </button>
+        </div>
+      </div>
+
       <div class="empty-features-grid">
         <div class="empty-feature-item">
           <span class="feature-icon">🎯</span>
@@ -120,6 +186,223 @@ function resetChatSession() {
   const scoreBadge = document.getElementById("blueprint-readiness-badge");
   scoreBadge.style.display = "none";
   showToast("🔄 Đã làm mới phiên hội thoại", "info");
+}
+
+function loadDemoProject(type) {
+  if (type === "olap") {
+    sendQuickPrompt("tôi muốn làm một đồ án OLAP về bank transaction fraud ấy");
+  } else if (type === "ecom") {
+    sendQuickPrompt("Tôi muốn làm website thương mại điện tử cho cửa hàng nhỏ. Tôi chưa biết nên chọn công nghệ nào.");
+  } else if (type === "ai") {
+    sendQuickPrompt("Tôi muốn làm hệ thống y tế hỗ trợ chẩn đoán hình ảnh và phân tích bệnh án cho bệnh viện, hướng tới AI Engineer.");
+  }
+}
+
+function toggleVoiceRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    showToast("⚠️ Trình duyệt chưa hỗ trợ Web Speech API. Vui lòng dùng Google Chrome hoặc Microsoft Edge.", "error");
+    return;
+  }
+
+  const voiceBtn = document.getElementById("voice-input-btn");
+  const voiceIcon = document.getElementById("voice-icon");
+  const statusText = document.getElementById("voice-status-text");
+  const chatInput = document.getElementById("chat-input");
+
+  if (isVoiceListening) {
+    if (voiceRecognition) voiceRecognition.stop();
+    isVoiceListening = false;
+    if (voiceBtn) voiceBtn.classList.remove("listening");
+    if (voiceIcon) voiceIcon.textContent = "🎙️";
+    if (statusText) statusText.style.display = "none";
+    showToast("⏹️ Đã dừng ghi âm", "info");
+    return;
+  }
+
+  try {
+    voiceRecognition = new SpeechRecognition();
+    voiceRecognition.lang = "vi-VN";
+    voiceRecognition.continuous = false;
+    voiceRecognition.interimResults = false;
+
+    voiceRecognition.onstart = () => {
+      isVoiceListening = true;
+      if (voiceBtn) voiceBtn.classList.add("listening");
+      if (voiceIcon) voiceIcon.textContent = "🛑";
+      if (statusText) statusText.style.display = "inline";
+      showToast("🎙️ Đang nghe... Hãy nói ý tưởng đề tài bằng Tiếng Việt", "info");
+    };
+
+    voiceRecognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      if (transcript) {
+        chatInput.value = (chatInput.value ? chatInput.value + " " : "") + transcript;
+        chatInput.focus();
+        showToast("✓ Đã nhận diện giọng nói", "success");
+      }
+    };
+
+    voiceRecognition.onerror = (event) => {
+      console.warn("Speech recognition error:", event.error);
+      isVoiceListening = false;
+      if (voiceBtn) voiceBtn.classList.remove("listening");
+      if (voiceIcon) voiceIcon.textContent = "🎙️";
+      if (statusText) statusText.style.display = "none";
+      if (event.error !== "no-speech") {
+        showToast(`⚠️ Lỗi giọng nói: ${event.error}`, "error");
+      }
+    };
+
+    voiceRecognition.onend = () => {
+      isVoiceListening = false;
+      if (voiceBtn) voiceBtn.classList.remove("listening");
+      if (voiceIcon) voiceIcon.textContent = "🎙️";
+      if (statusText) statusText.style.display = "none";
+    };
+
+    voiceRecognition.start();
+  } catch (err) {
+    console.error("Voice recognition failed:", err);
+    showToast("Không thể khởi động ghi âm: " + err.message, "error");
+  }
+}
+
+function triggerFileInput() {
+  const fileInput = document.getElementById("syllabus-file-input");
+  if (fileInput) fileInput.click();
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const content = e.target.result;
+    const chatInput = document.getElementById("chat-input");
+    const summary = content.substring(0, 1000);
+    chatInput.value = `Tôi có tóm tắt đề cương đề tài (${file.name}):\n"${summary}${content.length > 1000 ? '...' : ''}"\nHãy phân tích và định hướng đồ án cho tôi.`;
+    chatInput.focus();
+    showToast(`📎 Đã đọc file "${file.name}" (${file.size} bytes)`, "success");
+  };
+  reader.onerror = () => {
+    showToast("⚠️ Không thể đọc file văn bản này", "error");
+  };
+  reader.readAsText(file);
+}
+
+function exportChatTranscript() {
+  const messages = document.querySelectorAll("#chat-messages .chat-bubble-container");
+  if (messages.length <= 1) {
+    showToast("⚠️ Chưa có nội dung hội thoại nào để lưu!", "info");
+    return;
+  }
+
+  let markdown = `# 💎 BẢN GHI HỘI THOẠI CỐ VẤN ĐỒ ÁN CNTT — GEM PLATFORM (AISC 2026)\n`;
+  markdown += `*Thời gian xuất:* ${new Date().toLocaleString("vi-VN")}\n`;
+  markdown += `*Hệ thống:* Dual Engine Google Gemini Flash & Local Qwen 2.5 · TopCV Vietnam Intelligence\n\n---\n\n`;
+
+  messages.forEach(msg => {
+    const isUser = msg.classList.contains("user");
+    const sender = isUser ? "🧑‍🎓 **Sinh Viên**" : "💎 **Cố Vấn GEM**";
+    const bubble = msg.querySelector(".bubble-content");
+    if (!bubble) return;
+    const clone = bubble.cloneNode(true);
+    const copyBtn = clone.querySelector(".bubble-copy-btn");
+    if (copyBtn) copyBtn.remove();
+    markdown += `### ${sender}:\n${clone.innerText.trim()}\n\n`;
+  });
+
+  const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `GEM_Lich_Su_Tu_Van_${Date.now()}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  showToast("💾 Đã lưu lịch sử tư vấn ra file Markdown", "success");
+}
+
+function copyMessageText(btn) {
+  const container = btn.closest(".bubble-content") || btn.closest(".chat-bubble-container");
+  if (!container) return;
+  const body = container.querySelector(".bubble-body") || container;
+  const clone = body.cloneNode(true);
+  const toolbar = clone.querySelector(".bubble-actions-toolbar");
+  if (toolbar) toolbar.remove();
+  const text = clone.innerText.trim();
+
+  navigator.clipboard.writeText(text).then(() => {
+    const origHtml = btn.innerHTML;
+    btn.classList.add("copied");
+    btn.innerHTML = `
+      <svg class="action-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      <span class="btn-text" style="color: #10b981; font-weight: 700;">Đã chép</span>
+    `;
+    showToast("📋 Đã sao chép nội dung phản hồi", "success");
+    setTimeout(() => {
+      btn.classList.remove("copied");
+      btn.innerHTML = origHtml;
+    }, 2000);
+  }).catch(() => {
+    showToast("Không thể sao chép tự động", "warning");
+  });
+}
+
+function speakMessageText(btn) {
+  if (!('speechSynthesis' in window)) {
+    showToast("Trình duyệt chưa hỗ trợ đọc giọng nói", "warning");
+    return;
+  }
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    btn.classList.remove("speaking");
+    const label = btn.querySelector(".btn-text");
+    if (label) label.textContent = "Đọc AI";
+    showToast("⏹️ Đã dừng đọc", "info");
+    return;
+  }
+  const container = btn.closest(".bubble-content") || btn.closest(".chat-bubble-container");
+  if (!container) return;
+  const body = container.querySelector(".bubble-body") || container;
+  const rawText = body.innerText.replace(/[•#*`_~]/g, " ").replace(/\s+/g, " ").trim();
+  if (!rawText) return;
+
+  const utterance = new SpeechSynthesisUtterance(rawText);
+  utterance.lang = "vi-VN";
+  utterance.rate = 1.05;
+  utterance.pitch = 1.0;
+
+  btn.classList.add("speaking");
+  const label = btn.querySelector(".btn-text");
+  if (label) label.textContent = "Dừng đọc";
+
+  utterance.onend = () => {
+    btn.classList.remove("speaking");
+    if (label) label.textContent = "Đọc AI";
+  };
+  utterance.onerror = () => {
+    btn.classList.remove("speaking");
+    if (label) label.textContent = "Đọc AI";
+  };
+
+  window.speechSynthesis.speak(utterance);
+  showToast("🔊 GEM đang đọc phản hồi bằng giọng nói...", "info");
+}
+
+function replyNumberedQuestion(text) {
+  const input = document.getElementById("chat-input");
+  if (!input) return;
+  input.focus();
+  input.value = text.trim() + " ";
+  input.scrollIntoView({ behavior: "smooth", block: "center" });
+  showToast("✍️ Đã chọn câu hỏi, hãy nhập thêm thông tin và nhấn Gửi nhé!", "info");
 }
 
 function sendQuickPrompt(promptText) {
@@ -189,9 +472,13 @@ function appendUserMessage(text) {
   const div = document.createElement("div");
   div.className = "chat-bubble-container user";
   div.innerHTML = `
-    <div class="avatar user">SV</div>
-    <div class="bubble-content">
-      <p>${escapeHtml(text)}</p>
+    <div class="avatar user" title="Sinh viên / Thí sinh UIT">SV</div>
+    <div class="bubble-wrapper">
+      <div class="bubble-content">
+        <div class="bubble-body">
+          <p class="user-bubble-text">${escapeHtml(text)}</p>
+        </div>
+      </div>
     </div>
   `;
   container.appendChild(div);
@@ -203,9 +490,37 @@ function appendGemMessage(markdownText) {
   const div = document.createElement("div");
   div.className = "chat-bubble-container gem";
   div.innerHTML = `
-    <div class="avatar gem"><img src="/static/assets/gem_logo.png" class="avatar-logo-img" alt="GEM"></div>
-    <div class="bubble-content">
-      ${formatMarkdown(markdownText)}
+    <div class="avatar gem" title="GEM AI Advisor (AISC 2026)">
+      <img src="/static/assets/gem_logo.png" class="avatar-logo-img" alt="GEM">
+    </div>
+    <div class="bubble-wrapper">
+      <div class="bubble-content">
+        <div class="bubble-body">
+          ${formatMarkdown(markdownText)}
+        </div>
+        <div class="bubble-actions-toolbar">
+          <div class="toolbar-left-actions">
+            <button type="button" class="bubble-action-btn copy-action-btn" onclick="copyMessageText(this)" title="Sao chép toàn bộ phản hồi">
+              <svg class="action-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span class="btn-text">Sao chép</span>
+            </button>
+            <button type="button" class="bubble-action-btn tts-action-btn" onclick="speakMessageText(this)" title="Nghe đọc tư vấn bằng giọng nói AI">
+              <svg class="action-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+              <span class="btn-text">Đọc AI</span>
+            </button>
+          </div>
+          <div class="bubble-meta-tag">
+            <span class="meta-dot"></span>
+            <span>GEM Cố Vấn AISC 2026</span>
+          </div>
+        </div>
+      </div>
     </div>
   `;
   container.appendChild(div);
@@ -256,6 +571,14 @@ function renderBlueprint(bp) {
     roleBadge.textContent = bp.target_role || "Định hướng";
   }
 
+  // Hiển thị thanh Quick Tuner và đồng bộ giá trị đã chọn
+  const tunerBar = document.getElementById("blueprint-tuner-bar");
+  if (tunerBar) tunerBar.style.display = "flex";
+  const tunerSelect = document.getElementById("tuner-role-select");
+  if (tunerSelect && bp.target_role) {
+    tunerSelect.value = bp.target_role;
+  }
+
   const gap = bp.skill_gap_report || {};
   const metrics = bp.readiness_metrics || gap.metrics || {};
   const score = metrics.readiness_score || 80;
@@ -275,7 +598,7 @@ function renderBlueprint(bp) {
 
   let html = "";
 
-  // 1. READINESS SCORE DASHBOARD (VỚI SVG GAUGE CIRCLE)
+  // 1. READINESS SCORE DASHBOARD (VỚI SVG GAUGE CIRCLE & RADAR CHART)
   if (metrics.readiness_score !== undefined) {
     const strokeDash = calculateGaugeOffset(score);
     html += `
@@ -290,6 +613,7 @@ function renderBlueprint(bp) {
             </div>
           </div>
 
+          <!-- GAUGE CIRCLE -->
           <div class="readiness-gauge-box" title="Điểm thực chiến đồ án">
             <svg class="readiness-gauge-svg" width="124" height="124" viewBox="0 0 100 100">
               <circle class="gauge-bg" cx="50" cy="50" r="45"></circle>
@@ -298,6 +622,18 @@ function renderBlueprint(bp) {
             <div class="gauge-center">
               <span class="gauge-score-value" id="gauge-score-num" style="color: ${score >= 80 ? 'var(--accent-emerald)' : (score >= 60 ? 'var(--accent-cyan)' : 'var(--accent-amber)')};">${score}</span>
               <span class="gauge-score-label">ĐIỂM</span>
+            </div>
+          </div>
+
+          <!-- MULTI-DIMENSIONAL RADAR CHART -->
+          <div class="readiness-radar-box" title="Radar phân bổ năng lực 5 chiều">
+            <span class="radar-title">Radar Năng Lực Đa Chiều</span>
+            <div id="radar-chart-container">
+              ${generateRadarSvg(metrics.baseline_coverage || 45, metrics.potential_coverage || 85)}
+            </div>
+            <div class="radar-legend">
+              <span class="radar-legend-item"><span class="radar-dot baseline"></span> Xuất phát: ${metrics.baseline_coverage || 45}%</span>
+              <span class="radar-legend-item"><span class="radar-dot potential"></span> GEM: <span id="radar-legend-pot">${metrics.potential_coverage || 85}%</span></span>
             </div>
           </div>
         </div>
@@ -627,6 +963,37 @@ function recalculateSimulatedMetrics() {
     banner.style.display = (activeCount < totalActionable) ? "flex" : "none";
   }
 
+  // Cập nhật Radar Chart đa chiều theo thời gian thực
+  const potentialPoly = document.getElementById("radar-potential-poly");
+  if (potentialPoly) {
+    const cx = 110, cy = 100, maxR = 68;
+    const axes = [
+      { pFactor: 1.0 },
+      { pFactor: 0.98 },
+      { pFactor: 0.92 },
+      { pFactor: 1.02 },
+      { pFactor: 1.0 },
+    ];
+    const angles = [
+      -Math.PI / 2,
+      -Math.PI / 2 + (2 * Math.PI) / 5,
+      -Math.PI / 2 + (4 * Math.PI) / 5,
+      -Math.PI / 2 + (6 * Math.PI) / 5,
+      -Math.PI / 2 + (8 * Math.PI) / 5,
+    ];
+    const newPts = axes.map((axis, i) => {
+      const val = Math.min(100, Math.max(15, newPotential * axis.pFactor));
+      const r = (val / 100) * maxR;
+      const x = (cx + r * Math.cos(angles[i])).toFixed(1);
+      const y = (cy + r * Math.sin(angles[i])).toFixed(1);
+      return `${x},${y}`;
+    }).join(" ");
+    potentialPoly.setAttribute("points", newPts);
+    potentialPoly.style.stroke = scoreColor;
+  }
+  const radarLegPot = document.getElementById("radar-legend-pot");
+  if (radarLegPot) radarLegPot.textContent = `${newPotential}%`;
+
   showToast(`🎯 Điểm Thực Chiến mô phỏng: ${newReadiness} điểm (${activeCount}/${totalActionable} kỹ năng)`, "info");
 }
 
@@ -806,7 +1173,7 @@ function downloadExportFile() {
 }
 
 // ===================================================================
-// 7. TAB 2: MARKET INTELLIGENCE EXPLORER
+// 7. TAB 2: MARKET INTELLIGENCE EXPLORER & COMPARISON
 // ===================================================================
 async function loadMarketRoles() {
   const sidebar = document.getElementById("roles-sidebar");
@@ -818,6 +1185,13 @@ async function loadMarketRoles() {
     allRolesCache = data.roles || [];
     if (allRolesCache.length === 0) return;
 
+    // Populate Quick Tuner Dropdown in Blueprint Header
+    populateTunerRoles(allRolesCache);
+
+    // Initialize Domain Category Filters
+    initDomainFilters();
+
+    // Render roles list
     renderRolesList(allRolesCache);
 
     // Mặc định nạp vị trí đầu tiên
@@ -827,6 +1201,74 @@ async function loadMarketRoles() {
   } catch (err) {
     console.error("Lỗi nạp roles:", err);
   }
+}
+
+function populateTunerRoles(roles) {
+  const select = document.getElementById("tuner-role-select");
+  if (!select) return;
+  select.innerHTML = "";
+  roles.forEach(r => {
+    const opt = document.createElement("option");
+    opt.value = r.specific_role;
+    opt.textContent = `${r.specific_role}`;
+    select.appendChild(opt);
+  });
+}
+
+function handleTunerRoleChange(role) {
+  if (!role) return;
+  showToast(`🎯 Chuyển hướng mục tiêu nghề nghiệp: ${role}`, "info");
+  sendQuickPrompt(`Tôi muốn định hướng nghề nghiệp của đồ án này chuyển sang vị trí ${role}`);
+}
+
+function handleTunerTimeChange(months) {
+  document.querySelectorAll("#tuner-time-pills .time-pill").forEach(pill => {
+    const pMonths = parseInt(pill.getAttribute("data-months"));
+    if (pMonths === months) {
+      pill.classList.add("active");
+    } else {
+      pill.classList.remove("active");
+    }
+  });
+  showToast(`⏱️ Điều chỉnh thời gian đồ án sang: ${months} tháng`, "info");
+  sendQuickPrompt(`Tôi muốn điều chỉnh thời gian thực hiện đồ án là ${months} tháng, hãy cập nhật lộ trình cho tôi`);
+}
+
+function initDomainFilters() {
+  const container = document.getElementById("domain-filter-pills");
+  if (!container || allRolesCache.length === 0) return;
+
+  const domains = ["Tất cả"];
+  allRolesCache.forEach(r => {
+    if (r.domain && !domains.includes(r.domain)) {
+      domains.push(r.domain);
+    }
+  });
+
+  let html = "";
+  domains.forEach(d => {
+    const activeClass = d === currentSelectedDomain ? "active" : "";
+    html += `<button type="button" class="domain-pill ${activeClass}" onclick="selectMarketDomain('${escapeHtml(d)}', this)">${escapeHtml(d)}</button>`;
+  });
+  container.innerHTML = html;
+}
+
+function selectMarketDomain(domainName, btnEl) {
+  currentSelectedDomain = domainName;
+  document.querySelectorAll(".domain-pill").forEach(p => p.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+
+  const searchInput = document.getElementById("role-search-input");
+  const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
+  let filtered = allRolesCache;
+  if (domainName !== "Tất cả") {
+    filtered = filtered.filter(r => r.domain === domainName);
+  }
+  if (query) {
+    filtered = filtered.filter(r => r.specific_role.toLowerCase().includes(query));
+  }
+  renderRolesList(filtered);
 }
 
 function renderRolesList(roles) {
@@ -853,14 +1295,17 @@ function renderRolesList(roles) {
 
 function filterMarketRoles(query) {
   const q = (query || "").toLowerCase().trim();
-  if (!q) {
-    renderRolesList(allRolesCache);
-    return;
+  let filtered = allRolesCache;
+
+  if (currentSelectedDomain && currentSelectedDomain !== "Tất cả") {
+    filtered = filtered.filter(r => r.domain === currentSelectedDomain);
   }
 
-  const filtered = allRolesCache.filter(r => 
-    r.specific_role.toLowerCase().includes(q) || (r.domain && r.domain.toLowerCase().includes(q))
-  );
+  if (q) {
+    filtered = filtered.filter(r => 
+      r.specific_role.toLowerCase().includes(q) || (r.domain && r.domain.toLowerCase().includes(q))
+    );
+  }
   renderRolesList(filtered);
 }
 
@@ -878,6 +1323,7 @@ async function loadRoleProfile(roleName) {
     const res = await fetch(`/api/market/role-profile/${encodeURIComponent(roleName)}`);
     if (!res.ok) throw new Error("API error");
     const data = await res.json();
+    roleProfilesCache[roleName] = data;
 
     const core = data.core_skills || [];
     const boost = data.boost_skills || [];
@@ -942,7 +1388,404 @@ async function loadRoleProfile(roleName) {
 }
 
 // ===================================================================
-// 8. TOAST NOTIFICATIONS & UTILITIES
+// 8. ROLE COMPARISON MODAL CONTROLLER
+// ===================================================================
+function openRoleCompareModal() {
+  const modal = document.getElementById("compare-modal");
+  if (!modal) return;
+  modal.classList.add("active");
+
+  const selectA = document.getElementById("compare-role-a");
+  const selectB = document.getElementById("compare-role-b");
+
+  if (selectA && selectA.options.length === 0 && allRolesCache.length > 0) {
+    allRolesCache.forEach(r => {
+      const optA = document.createElement("option");
+      optA.value = r.specific_role;
+      optA.textContent = `${r.specific_role} (${r.jd_count} JDs)`;
+      selectA.appendChild(optA);
+
+      const optB = document.createElement("option");
+      optB.value = r.specific_role;
+      optB.textContent = `${r.specific_role} (${r.jd_count} JDs)`;
+      selectB.appendChild(optB);
+    });
+
+    if (selectA.options.length > 1) {
+      selectA.selectedIndex = 0;
+      selectB.selectedIndex = Math.min(2, selectB.options.length - 1);
+    }
+  }
+
+  runRoleComparison();
+}
+
+function closeRoleCompareModal(e) {
+  if (e && e.target !== e.currentTarget && !e.target.classList.contains("modal-close-btn") && !e.target.classList.contains("btn-modal-close")) {
+    return;
+  }
+  const modal = document.getElementById("compare-modal");
+  if (modal) modal.classList.remove("active");
+}
+
+async function fetchRoleProfileData(roleName) {
+  if (roleProfilesCache[roleName]) return roleProfilesCache[roleName];
+  try {
+    const res = await fetch(`/api/market/role-profile/${encodeURIComponent(roleName)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    roleProfilesCache[roleName] = data;
+    return data;
+  } catch (err) {
+    console.error("Fetch profile error:", err);
+    return null;
+  }
+}
+
+async function runRoleComparison() {
+  const selectA = document.getElementById("compare-role-a");
+  const selectB = document.getElementById("compare-role-b");
+  const resultsContainer = document.getElementById("compare-results-container");
+  if (!selectA || !selectB || !resultsContainer) return;
+
+  const roleA = selectA.value;
+  const roleB = selectB.value;
+
+  if (roleA === roleB) {
+    resultsContainer.innerHTML = `<div style="text-align: center; color: var(--accent-amber); padding: 2rem;">Vui lòng chọn 2 vị trí khác nhau để so sánh đối chiếu!</div>`;
+    return;
+  }
+
+  resultsContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 2rem;">Đang đối chiếu dữ liệu tuyển dụng TopCV giữa <b>${escapeHtml(roleA)}</b> và <b>${escapeHtml(roleB)}</b>...</div>`;
+
+  const [dataA, dataB] = await Promise.all([
+    fetchRoleProfileData(roleA),
+    fetchRoleProfileData(roleB)
+  ]);
+
+  if (!dataA || !dataB) {
+    resultsContainer.innerHTML = `<div style="text-align: center; color: var(--accent-rose); padding: 2rem;">Lỗi tải dữ liệu so sánh</div>`;
+    return;
+  }
+
+  const skillsA = (dataA.core_skills || []).concat(dataA.boost_skills || []);
+  const skillsB = (dataB.core_skills || []).concat(dataB.boost_skills || []);
+
+  const mapA = new Map(skillsA.map(s => [s.canonical_name.toLowerCase(), s]));
+  const mapB = new Map(skillsB.map(s => [s.canonical_name.toLowerCase(), s]));
+
+  const commonSkills = [];
+  const onlyA = [];
+  const onlyB = [];
+
+  mapA.forEach((val, key) => {
+    if (mapB.has(key)) {
+      commonSkills.push({
+        name: val.canonical_name,
+        demandA: val.demand_pct,
+        demandB: mapB.get(key).demand_pct,
+      });
+    } else {
+      onlyA.push(val);
+    }
+  });
+
+  mapB.forEach((val, key) => {
+    if (!mapA.has(key)) {
+      onlyB.push(val);
+    }
+  });
+
+  commonSkills.sort((a, b) => (b.demandA + b.demandB) - (a.demandA + a.demandB));
+  onlyA.sort((a, b) => b.demand_pct - a.demand_pct);
+  onlyB.sort((a, b) => b.demand_pct - a.demand_pct);
+
+  let html = `
+    <div class="compare-grid-layout">
+      <!-- CỘT 1: ĐẶC TRƯNG ROLE A -->
+      <div class="compare-box" style="border-top: 3px solid var(--accent-cyan);">
+        <div class="compare-box-title" style="color: var(--accent-cyan);">
+          <span>🔵 Đặc trưng riêng: ${escapeHtml(roleA)}</span>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.65rem;">Kỹ năng chỉ đòi hỏi ở ${escapeHtml(roleA)}:</div>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+          ${onlyA.slice(0, 7).map(s => `
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; background: var(--bg-surface); padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--border-subtle);">
+              <span>${escapeHtml(s.canonical_name)}</span>
+              <span style="color: var(--accent-cyan); font-family: var(--font-mono); font-weight: 700;">${s.demand_pct}%</span>
+            </div>
+          `).join("")}
+          ${onlyA.length === 0 ? `<div style="font-size: 0.72rem; color: var(--text-muted);">Không có kỹ năng tách biệt</div>` : ""}
+        </div>
+      </div>
+
+      <!-- CỘT 2: ĐIỂM GIAO THOA (COMMON CORE) -->
+      <div class="compare-box" style="border-top: 3px solid var(--accent-emerald); background: rgba(16, 185, 129, 0.04);">
+        <div class="compare-box-title" style="color: var(--accent-emerald);">
+          <span>🟢 Điểm Giao Thoa Cốt Lõi (Common Core)</span>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.65rem;">Kỹ năng chung xuất hiện ở cả 2 vị trí:</div>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+          ${commonSkills.slice(0, 7).map(s => `
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; background: var(--bg-surface); padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--border-subtle);">
+              <span style="font-weight: 600;">${escapeHtml(s.name)}</span>
+              <span style="color: var(--accent-emerald); font-family: var(--font-mono); font-size: 0.7rem;">${s.demandA}% / ${s.demandB}%</span>
+            </div>
+          `).join("")}
+          ${commonSkills.length === 0 ? `<div style="font-size: 0.72rem; color: var(--text-muted);">Không có kỹ năng giao thoa</div>` : ""}
+        </div>
+      </div>
+
+      <!-- CỘT 3: ĐẶC TRƯNG ROLE B -->
+      <div class="compare-box" style="border-top: 3px solid var(--accent-purple);">
+        <div class="compare-box-title" style="color: var(--accent-purple);">
+          <span>🟣 Đặc trưng riêng: ${escapeHtml(roleB)}</span>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.65rem;">Kỹ năng chỉ đòi hỏi ở ${escapeHtml(roleB)}:</div>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+          ${onlyB.slice(0, 7).map(s => `
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; background: var(--bg-surface); padding: 0.35rem 0.65rem; border-radius: 4px; border: 1px solid var(--border-subtle);">
+              <span>${escapeHtml(s.canonical_name)}</span>
+              <span style="color: var(--accent-purple); font-family: var(--font-mono); font-weight: 700;">${s.demand_pct}%</span>
+            </div>
+          `).join("")}
+          ${onlyB.length === 0 ? `<div style="font-size: 0.72rem; color: var(--text-muted);">Không có kỹ năng tách biệt</div>` : ""}
+        </div>
+      </div>
+    </div>
+  `;
+
+  resultsContainer.innerHTML = html;
+}
+
+// ===================================================================
+// 9. MULTI-DIMENSIONAL RADAR SVG GENERATOR
+// ===================================================================
+function generateRadarSvg(baselinePct, potentialPct) {
+  const cx = 110;
+  const cy = 100;
+  const maxR = 68;
+
+  // 5 trục năng lực cốt lõi
+  const axes = [
+    { name: "Kiến trúc & Logic", bFactor: 0.95, pFactor: 1.0 },
+    { name: "CSDL & Lưu trữ", bFactor: 1.05, pFactor: 0.98 },
+    { name: "Kiểm thử & QA", bFactor: 0.70, pFactor: 0.92 },
+    { name: "Docker & DevOps", bFactor: 0.75, pFactor: 1.02 },
+    { name: "Chuẩn Bàn Giao", bFactor: 0.90, pFactor: 1.0 },
+  ];
+
+  // Tọa độ góc cho 5 trục (đỉnh 0 ở hướng 12 giờ)
+  const angles = [
+    -Math.PI / 2,
+    -Math.PI / 2 + (2 * Math.PI) / 5,
+    -Math.PI / 2 + (4 * Math.PI) / 5,
+    -Math.PI / 2 + (6 * Math.PI) / 5,
+    -Math.PI / 2 + (8 * Math.PI) / 5,
+  ];
+
+  // Tính tọa độ polygon
+  function getPolygonPoints(score, factorKey) {
+    return axes.map((axis, i) => {
+      const val = Math.min(100, Math.max(15, score * axis[factorKey]));
+      const r = (val / 100) * maxR;
+      const x = (cx + r * Math.cos(angles[i])).toFixed(1);
+      const y = (cy + r * Math.sin(angles[i])).toFixed(1);
+      return `${x},${y}`;
+    }).join(" ");
+  }
+
+  // Lưới đồng tâm ngũ giác (25%, 50%, 75%, 100%)
+  const gridLevels = [0.25, 0.5, 0.75, 1.0];
+  const gridPolygons = gridLevels.map(lvl => {
+    const pts = angles.map(a => {
+      const x = (cx + maxR * lvl * Math.cos(a)).toFixed(1);
+      const y = (cy + maxR * lvl * Math.sin(a)).toFixed(1);
+      return `${x},${y}`;
+    }).join(" ");
+    return `<polygon points="${pts}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`;
+  }).join("");
+
+  // Các đường trục tia
+  const axisLines = angles.map(a => {
+    const x = (cx + maxR * Math.cos(a)).toFixed(1);
+    const y = (cy + maxR * Math.sin(a)).toFixed(1);
+    return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>`;
+  }).join("");
+
+  // Nhãn chữ các trục
+  const labelOffsets = [
+    { dy: -8, anchor: "middle" },
+    { dx: 6, dy: 3, anchor: "start" },
+    { dx: 4, dy: 10, anchor: "start" },
+    { dx: -4, dy: 10, anchor: "end" },
+    { dx: -6, dy: 3, anchor: "end" },
+  ];
+
+  const axisLabels = axes.map((axis, i) => {
+    const x = cx + (maxR + 12) * Math.cos(angles[i]) + (labelOffsets[i].dx || 0);
+    const y = cy + (maxR + 12) * Math.sin(angles[i]) + (labelOffsets[i].dy || 0);
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${labelOffsets[i].anchor}" fill="var(--text-muted)" font-size="8.5" font-weight="600">${axis.name}</text>`;
+  }).join("");
+
+  const baselinePoints = getPolygonPoints(baselinePct, "bFactor");
+  const potentialPoints = getPolygonPoints(potentialPct, "pFactor");
+
+  return `
+    <svg class="radar-svg" width="230" height="205" viewBox="0 0 220 200">
+      ${gridPolygons}
+      ${axisLines}
+      <!-- Polygon 1: Baseline Coverage -->
+      <polygon id="radar-baseline-poly" points="${baselinePoints}" fill="rgba(148, 163, 184, 0.2)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <!-- Polygon 2: GEM Potential Coverage -->
+      <polygon id="radar-potential-poly" points="${potentialPoints}" fill="rgba(6, 182, 212, 0.35)" stroke="var(--accent-emerald)" stroke-width="2"/>
+      ${axisLabels}
+    </svg>
+  `;
+}
+
+// ===================================================================
+// 10. PRINTABLE ACADEMIC ASSESSMENT REPORT
+// ===================================================================
+function printAssessmentReport() {
+  if (!currentBlueprint) {
+    showToast("⚠️ Vui lòng phân tích đề tài hoặc bấm xem đề tài mẫu trước khi in báo cáo!", "error");
+    return;
+  }
+
+  const bp = currentBlueprint;
+  const gap = bp.skill_gap_report || {};
+  const metrics = bp.readiness_metrics || gap.metrics || {};
+  const printContainer = document.getElementById("printable-report");
+  if (!printContainer) return;
+
+  const role = bp.target_role || "Backend Developer";
+  const idea = bp.idea_text || "Đề tài Đồ án Tốt nghiệp CNTT";
+  const domain = bp.domain || "Công nghệ Thông tin & Dữ liệu";
+
+  let html = `
+    <div style="border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase;">TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN - ĐHQG-HCM</div>
+          <div style="font-size: 10pt; font-weight: 600;">CUỘC THI AI SOLUTION CHALLENGE 2026 (AISC 2026)</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 14pt; font-weight: 800; color: #0284c7;">GEM PLATFORM</div>
+          <div style="font-size: 9pt; font-style: italic;">Hệ Thống Thẩm Định Năng Lực Đồ Án CNTT</div>
+        </div>
+      </div>
+      <h1 style="text-align: center; margin: 20px 0 6px 0; font-size: 16pt; text-transform: uppercase; letter-spacing: 0.5px;">
+        BẢN BÁO CÁO THẨM ĐỊNH NĂNG LỰC ĐỒ ÁN & THU HẸP SKILL GAP
+      </h1>
+      <div style="text-align: center; font-size: 10pt; font-style: italic;">
+        (Căn cứ hệ quy chiếu 700 Tin Tuyển Dụng IT Thực Tế TopCV Việt Nam · Chuẩn Kiểm Định AISC 2026)
+      </div>
+    </div>
+
+    <!-- METADATA TABLE -->
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 10.5pt;">
+      <tr>
+        <td style="padding: 6px; border: 1px solid #ddd; width: 25%; font-weight: bold; background: #f9fafb;">Tên Đề Tài:</td>
+        <td style="padding: 6px; border: 1px solid #ddd; font-weight: 600;">${escapeHtml(idea)}</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px; border: 1px solid #ddd; font-weight: bold; background: #f9fafb;">Miền Nghiệp Vụ:</td>
+        <td style="padding: 6px; border: 1px solid #ddd;">${escapeHtml(domain)}</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px; border: 1px solid #ddd; font-weight: bold; background: #f9fafb;">Vị Trí Nghề Nghiệp Hướng Tới:</td>
+        <td style="padding: 6px; border: 1px solid #ddd; font-weight: bold; color: #0284c7;">${escapeHtml(role)}</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px; border: 1px solid #ddd; font-weight: bold; background: #f9fafb;">Quỹ Thời Gian Thực Hiện:</td>
+        <td style="padding: 6px; border: 1px solid #ddd;">${bp.time_months || 3} Tháng (Theo Lộ trình Sprint)</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px; border: 1px solid #ddd; font-weight: bold; background: #f9fafb;">Điểm Khớp Nối Thực Chiến:</td>
+        <td style="padding: 6px; border: 1px solid #ddd; font-weight: 800; font-size: 12pt; color: #059669;">
+          ${metrics.readiness_score || 80}/100 Điểm (Độ phủ tiềm năng: ${metrics.potential_coverage || 85}%, Mức thu hẹp gap: ${metrics.gap_reduction_delta || '+40%'})
+        </td>
+      </tr>
+    </table>
+
+    <!-- 1. COVERED SKILLS -->
+    <h3 style="font-size: 12pt; margin: 16px 0 8px 0; border-bottom: 1px solid #ccc; padding-bottom: 4px;">
+      1. Kỹ Năng Tự Nhiên Đã Bao Phủ (Covered Baseline)
+    </h3>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 10pt;">
+      <thead>
+        <tr style="background: #f3f4f6;">
+          <th style="border: 1px solid #ccc; padding: 6px; text-align: left; width: 30%;">Kỹ Năng</th>
+          <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Lý Do Kỹ Thuật Trong Thiết Kế Đồ Án</th>
+          <th style="border: 1px solid #ccc; padding: 6px; text-align: center; width: 15%;">Nhu Cầu TopCV</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${(gap.covered_skills || []).map(s => `
+          <tr>
+            <td style="border: 1px solid #ccc; padding: 6px; font-weight: bold;">${escapeHtml(s.skill)}</td>
+            <td style="border: 1px solid #ccc; padding: 6px;">${escapeHtml(s.reason)}</td>
+            <td style="border: 1px solid #ccc; padding: 6px; text-align: center; font-weight: bold;">${s.demand_pct ? s.demand_pct + "%" : "Core"}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+
+    <!-- 2. ACTIONABLE GAPS & DELIVERABLES -->
+    <h3 style="font-size: 12pt; margin: 16px 0 8px 0; border-bottom: 1px solid #ccc; padding-bottom: 4px;">
+      2. Kế Hoạch Can Thiệp Bổ Sung & Bằng Chứng Nộp Git (Verifiable Evidence Artifacts)
+    </h3>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 10pt;">
+      <thead>
+        <tr style="background: #f3f4f6;">
+          <th style="border: 1px solid #ccc; padding: 6px; text-align: left; width: 25%;">Kỹ Năng Cần Bổ Sung</th>
+          <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Hành Động Triển Khai Trong Code</th>
+          <th style="border: 1px solid #ccc; padding: 6px; text-align: left; width: 35%;">Bằng Chứng Bàn Giao Nộp Git (Artifact)</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${(gap.actionable_gaps || []).map(g => `
+          <tr>
+            <td style="border: 1px solid #ccc; padding: 6px; font-weight: bold; color: #b45309;">${escapeHtml(g.skill)}</td>
+            <td style="border: 1px solid #ccc; padding: 6px;">${escapeHtml(g.action_item)}</td>
+            <td style="border: 1px solid #ccc; padding: 6px; font-weight: 600;">📦 ${escapeHtml(g.proof_deliverable)}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+
+    <!-- 3. DEFERRED -->
+    <h3 style="font-size: 12pt; margin: 16px 0 8px 0; border-bottom: 1px solid #ccc; padding-bottom: 4px;">
+      3. Kỹ Năng Tạm Hoãn để Tránh Over-engineering
+    </h3>
+    <ul style="font-size: 10pt; line-height: 1.6; margin-bottom: 20px;">
+      ${(gap.deferred_or_overkill || []).map(d => `
+        <li><b>${escapeHtml(d.skill)}</b>: ${escapeHtml(d.reason)} <i>(Kết luận: ${escapeHtml(d.verdict || "Tạm hoãn")})</i></li>
+      `).join("")}
+    </ul>
+
+    <!-- SIGNATURES -->
+    <div style="margin-top: 40px; display: flex; justify-content: space-between; text-align: center; font-size: 10.5pt; page-break-inside: avoid;">
+      <div style="width: 45%;">
+        <div style="font-weight: bold;">ĐẠI DIỆN NHÓM SINH VIÊN</div>
+        <div style="font-style: italic; font-size: 9pt; margin-bottom: 60px;">(Ký và ghi rõ họ tên)</div>
+        <div style="font-weight: 600;">Nhóm Sinh viên Thực hiện</div>
+      </div>
+      <div style="width: 45%;">
+        <div style="font-weight: bold;">GIẢNG VIÊN HƯỚNG DẪN DUYỆT</div>
+        <div style="font-style: italic; font-size: 9pt; margin-bottom: 60px;">(Ký và cho ý kiến chuyên môn)</div>
+        <div style="font-weight: 600;">Hội đồng / GVHD Đề tài</div>
+      </div>
+    </div>
+  `;
+
+  printContainer.innerHTML = html;
+  window.print();
+}
+
+// ===================================================================
+// 11. TOAST NOTIFICATIONS & UTILITIES
 // ===================================================================
 function showToast(message, type = "info", duration = 3000) {
   const container = document.getElementById("toast-container");
@@ -973,20 +1816,230 @@ function escapeHtml(str) {
 
 function formatMarkdown(text) {
   if (!text) return "";
-  let out = escapeHtml(text);
+  let raw = text.trim();
 
-  // Bold
-  out = out.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  // Normalize newlines
+  raw = raw.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 
-  // Code snippets
-  out = out.replace(/`([^`]+)`/g, "<code style='background:rgba(255,255,255,0.08);padding:0.15rem 0.35rem;border-radius:3px;font-family:var(--font-mono);font-size:0.85em;'>$1</code>");
+  // Code blocks: ```lang ... ```
+  const codeBlocks = [];
+  raw = raw.replace(/```([a-zA-Z0-9_-]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    const idx = codeBlocks.length;
+    const langLabel = lang ? lang.toUpperCase() : "CODE";
+    codeBlocks.push(`
+      <div class="chat-code-card">
+        <div class="code-card-header">
+          <span class="code-lang-tag">${escapeHtml(langLabel)}</span>
+          <button type="button" class="code-copy-btn" onclick="copySnippet(this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>Sao chép</span>
+          </button>
+        </div>
+        <pre class="code-pre"><code>${escapeHtml(code.trim())}</code></pre>
+      </div>
+    `);
+    return `__CODE_BLOCK_${idx}__`;
+  });
 
-  // Bullet lists
-  out = out.replace(/(?:^|\n)[•*-]\s+(.+)/g, "<br>• $1");
+  // Split into paragraphs / sections
+  const blocks = raw.split(/\n{2,}/);
+  const htmlBlocks = blocks.map(block => {
+    block = block.trim();
+    if (!block) return "";
 
-  // Paragraphs
-  out = out.replace(/\n\n/g, "</p><p>");
-  out = out.replace(/\n/g, "<br>");
+    // Code block placeholder
+    if (/^__CODE_BLOCK_\d+__$/.test(block)) {
+      const idx = parseInt(block.replace("__CODE_BLOCK_", "").replace("__", ""), 10);
+      return codeBlocks[idx] || "";
+    }
 
-  return `<p>${out}</p>`;
+    // Horizontal Divider: --- or ***
+    if (/^(---|---|\*\*\*|___)$/.test(block)) {
+      return `<div class="chat-section-divider"><span class="divider-line"></span><span class="divider-gem">💎</span><span class="divider-line"></span></div>`;
+    }
+
+    // Headings: ###, ##, #
+    if (/^#{1,4}\s+(.+)$/m.test(block)) {
+      const match = block.match(/^(#{1,4})\s+(.+)$/m);
+      if (match) {
+        const level = match[1].length;
+        const headingContent = formatInline(match[2]);
+        const restOfBlock = block.slice(match[0].length).trim();
+        const restHtml = restOfBlock ? `<div class="heading-subcontent">${formatBlockContent(restOfBlock)}</div>` : "";
+        
+        let iconHtml = `<span class="heading-icon-badge default">💎 Chẩn đoán</span>`;
+        if (headingContent.includes("1.") || headingContent.includes("Nền tảng") || headingContent.includes("Điểm mạnh")) {
+          iconHtml = `<span class="heading-icon-badge strength">🎯 Điểm mạnh sẵn có</span>`;
+        } else if (headingContent.includes("2.") || headingContent.includes("Khoảng cách") || headingContent.includes("Actionable Gaps")) {
+          iconHtml = `<span class="heading-icon-badge gap">⚡ Gaps cần lấp đầy</span>`;
+        } else if (headingContent.includes("3.") || headingContent.includes("Cảnh báo") || headingContent.includes("Over-Engineering")) {
+          iconHtml = `<span class="heading-icon-badge warning">⚠️ Tránh sa lầy</span>`;
+        } else if (headingContent.includes("4.") || headingContent.includes("bước tiếp theo") || headingContent.includes("Lộ trình")) {
+          iconHtml = `<span class="heading-icon-badge next">🚀 Bước tiếp theo</span>`;
+        } else if (headingContent.includes("Câu hỏi") || headingContent.includes("💬") || headingContent.includes("Probing")) {
+          iconHtml = `<span class="heading-icon-badge question">💬 Câu hỏi phản hồi</span>`;
+        }
+
+        return `
+          <div class="chat-heading-wrapper level-${level}">
+            <div class="chat-heading-title">
+              ${iconHtml}
+              <h${level} class="chat-h${level}">${headingContent}</h${level}>
+            </div>
+            ${restHtml}
+          </div>
+        `;
+      }
+    }
+
+    // Callout Note Card: *(Lưu ý: ...)* or *(Cảnh báo: ...)*
+    if (/^\*\((?:Lưu ý|Chú ý|Mẹo|Gợi ý|Cảnh báo):\s*([\s\S]+?)\)\*$/.test(block)) {
+      const match = block.match(/^\*\((?:Lưu ý|Chú ý|Mẹo|Gợi ý|Cảnh báo):\s*([\s\S]+?)\)\*$/);
+      const content = formatInline(match[1]);
+      return `
+        <div class="chat-callout-card note">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <span class="callout-tag">Lưu ý cố vấn</span>
+            <p>${content}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Numbered Questions group (Interactive Probing)
+    if (/^1\.\s+[\s\S]+\n2\.\s+[\s\S]+/.test(block)) {
+      const items = block.split(/\n(?=\d+\.\s+)/);
+      const itemsHtml = items.map(item => {
+        const m = item.match(/^(\d+)\.\s+([\s\S]+)$/);
+        if (!m) return `<p class="chat-line">${formatInline(item)}</p>`;
+        const num = m[1];
+        const qText = formatInline(m[2]);
+        return `
+          <div class="chat-probing-card" onclick="replyNumberedQuestion('Câu trả lời cho câu ${num}')" title="Nhấn để trả lời câu hỏi này">
+            <div class="probing-number">${num}</div>
+            <div class="probing-text">${qText}</div>
+            <span class="probing-action-hint">✍️ Trả lời</span>
+          </div>
+        `;
+      }).join("");
+      return `<div class="chat-probing-group">${itemsHtml}</div>`;
+    }
+
+    return `<div class="chat-text-paragraph">${formatBlockContent(block)}</div>`;
+  });
+
+  return htmlBlocks.filter(b => b.trim().length > 0).join("");
+}
+
+function formatBlockContent(text) {
+  const lines = text.split("\n");
+  const result = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    // Nested sub-bullet: * Lý do: ... or * Bằng chứng nộp: ...
+    if (/^\s{2,}\*\s+(.+)$/.test(line)) {
+      const subMatch = line.match(/^\s{2,}\*\s+(.+)$/);
+      let content = subMatch[1];
+      let icon = "🔹";
+      let tagClass = "sub-generic";
+      
+      if (/^\*?Lý do:\*?/i.test(content)) {
+        icon = "🎯";
+        tagClass = "sub-reason";
+        content = content.replace(/^\*?Lý do:\*?\s*/i, "<strong>Lý do cốt lõi:</strong> ");
+      } else if (/^\*?Bằng chứng nộp:\*?/i.test(content)) {
+        icon = "📦";
+        tagClass = "sub-artifact";
+        content = content.replace(/^\*?Bằng chứng nộp:\*?\s*/i, "<strong>Bằng chứng cần nộp (Artifacts):</strong> ");
+      } else if (/^\*?Tại sao\??\*?/i.test(content)) {
+        icon = "⚡";
+        tagClass = "sub-why";
+        content = content.replace(/^\*?Tại sao\??\*?\s*/i, "<strong>Giải thích:</strong> ");
+      }
+
+      result.push(`
+        <div class="chat-sub-bullet-card ${tagClass}">
+          <span class="sub-bullet-icon">${icon}</span>
+          <div class="sub-bullet-body">${formatInline(content)}</div>
+        </div>
+      `);
+      continue;
+    }
+
+    // Main Bullet item: • or - or *
+    if (/^[•*-]\s+(.+)$/.test(trimmed)) {
+      const itemMatch = trimmed.match(/^[•*-]\s+(.+)$/);
+      let itemContent = itemMatch[1];
+      const isTechHeader = /^\*\*[^*]+(?:\d+(?:\.\d+)?%\s*JD)[^*]*\*\*/i.test(itemContent);
+      
+      result.push(`
+        <div class="chat-main-bullet-item ${isTechHeader ? 'tech-spec-item' : ''}">
+          <span class="bullet-dot"></span>
+          <div class="bullet-content">${formatInline(itemContent)}</div>
+        </div>
+      `);
+      continue;
+    }
+
+    // Numbered item: 1. ...
+    if (/^\d+\.\s+(.+)$/.test(trimmed)) {
+      const numMatch = trimmed.match(/^(\d+)\.\s+(.+)$/);
+      result.push(`
+        <div class="chat-numbered-item" onclick="replyNumberedQuestion('Trả lời câu ${numMatch[1]}')">
+          <span class="chat-num-badge">${numMatch[1]}</span>
+          <div class="chat-num-content">${formatInline(numMatch[2])}</div>
+        </div>
+      `);
+      continue;
+    }
+
+    // Regular text line
+    if (trimmed.length > 0) {
+      result.push(`<p class="chat-line">${formatInline(trimmed)}</p>`);
+    }
+  }
+
+  return result.join("");
+}
+
+function formatInline(str) {
+  if (!str) return "";
+  let out = escapeHtml(str);
+
+  // Bold: **text**
+  out = out.replace(/\*\*(.*?)\*\*/g, "<strong class=\"chat-strong\">$1</strong>");
+
+  // Italic: *text* or _text_
+  out = out.replace(/(^|[^\*])\*([^\*]+)\*([^\*]|$)/g, "$1<em class=\"chat-em\">$2</em>$3");
+
+  // Inline Code: `code`
+  out = out.replace(/`([^`]+)`/g, "<code class=\"chat-inline-code\">$1</code>");
+
+  // Market Demand JD tags: (30.43% JD), (17.39% JD)
+  out = out.replace(/\(?(\d+(?:\.\d+)?%\s*JD)\)?/gi, "<span class=\"chat-jd-tag\"><span class=\"jd-pulse\"></span>$1</span>");
+
+  // Score Badge: 89/100
+  out = out.replace(/\b(89\/100|\d{1,3}\/100)\b/g, "<span class=\"chat-score-badge\">$1</span>");
+
+  // Metric Green: +44% khoảng cách
+  out = out.replace(/\b(\+\d+%\s*khoảng cách[^\s,.<>)]*)/gi, "<span class=\"chat-metric-green\">$1</span>");
+
+  return out;
+}
+
+function copySnippet(btn) {
+  const card = btn.closest(".chat-code-card");
+  if (!card) return;
+  const code = card.querySelector("code");
+  if (!code) return;
+  navigator.clipboard.writeText(code.innerText.trim()).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<span>✓ Đã chép</span>`;
+    showToast("📋 Đã sao chép đoạn mã", "success");
+    setTimeout(() => { btn.innerHTML = orig; }, 2000);
+  });
 }
