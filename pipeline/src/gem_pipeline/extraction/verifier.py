@@ -43,9 +43,15 @@ NEGATIVE_KEYWORDS = [
     # Chế độ, phúc lợi & hành chính
     "bhxh", "bhyt", "lương tháng 13", "thưởng tết", "phụ cấp", "cơm trưa", "du lịch hàng năm",
     "khám sức khỏe", "teambuilding", "macbook", "laptop", "gửi xe miễn phí", "thời gian làm việc",
-    # Kỹ năng mềm ngoài phạm vi kỹ thuật
+    # Kỹ năng mềm ngoài phạm vi kỹ thuật (Tiếng Việt & Tiếng Anh) & hành chính
     "chăm chỉ", "trung thực", "nhiệt tình", "hòa đồng", "chịu được áp lực", "ham học hỏi",
-    "tinh thần trách nhiệm", "giao tiếp tốt", "kỹ năng thuyết trình", "làm việc độc lập"
+    "tinh thần trách nhiệm", "giao tiếp tốt", "kỹ năng thuyết trình", "làm việc độc lập",
+    "phối hợp", "hướng dẫn", "hướng dẫn nhân viên", "quản lý nhân sự", "chăm sóc khách hàng",
+    "cơ sở vật chất", "văn phòng phẩm", "thiết bị văn phòng", "tài sản công ty",
+    "communication", "team player", "teamwork", "hardworking", "problem solving",
+    "logical thinking", "learning ability", "responsibility", "smart", "agile", "honest", "careful",
+    "service-oriented", "sense of responsibility", "analytical thinking",
+    "guide new employees", "administrative", "facilities", "solving problems", "customer service"
 ]
 
 # 3. Chuẩn hóa Type hợp lệ
@@ -110,6 +116,8 @@ class SkillExtractionVerifier:
                 return f"Vi phạm Negative Rule: trùng với từ cấm/chức danh/phúc lợi '{neg}'"
             if lower_skill.startswith(neg + " ") or lower_skill.endswith(" " + neg):
                 return f"Vi phạm Negative Rule: chứa chức danh/từ cấm '{neg}'"
+            if len(neg.split()) >= 2 and (neg in lower_skill or neg in lower_evidence):
+                return f"Vi phạm Negative Rule: chứa cụm từ cấm/kỹ năng mềm '{neg}'"
 
         return None
 
@@ -152,8 +160,13 @@ class SkillExtractionVerifier:
             else:
                 # 1.3 Dự phòng: nếu evidence bị LLM cắt lệch nhưng tên kỹ năng cốt lõi có trong văn bản
                 norm_sk = re.sub(r"\s+", " ", raw_skill).lower()
+                clean_sk = self.clean_boundary(raw_skill).lower()
                 if (len(norm_sk) >= 2 or norm_sk.upper() in {"C", "R"}) and norm_source.find(norm_sk) != -1:
                     idx = norm_source.find(norm_sk)
+                    raw_evidence = raw_skill
+                elif len(clean_sk) >= 2 and norm_source.find(clean_sk) != -1:
+                    idx = norm_source.find(clean_sk)
+                    raw_evidence = clean_sk
 
         if idx == -1:
             return VerificationResult(
@@ -240,21 +253,47 @@ class SkillExtractionVerifier:
     ) -> List[VerificationResult]:
         """
         Kiểm định toàn bộ danh sách candidate skills của một tài liệu,
-        bao gồm tách chuỗi gộp và khử trùng lặp (Deduplication).
+        bao gồm tách chuỗi gộp (Compound splitting) và khử trùng lặp (Deduplication).
         """
-        # 0. Tách nhỏ các candidate gộp (Compound entities split, ví dụ: 'Hosting/VPS' -> 'Hosting', 'VPS')
+        # 0. Tách nhỏ các candidate gộp (Compound entities split: '/', ',', ';')
         expanded_candidates: List[Dict[str, Any]] = []
+        PROTECTED_COMPOUNDS = {"CI/CD", "TCP/IP", "I/O", "OS/2", "PL/SQL", ".NET", "ASPNET", "ASP.NET"}
+
+        def split_compound_technology(skill_str: str) -> List[str]:
+            if skill_str.upper() in PROTECTED_COMPOUNDS or skill_str.upper() == "R&D":
+                return [skill_str]
+            # Tách dấu phẩy, chấm phẩy, hoặc liên từ "và", "and", "&"
+            level1 = re.split(r"[,;]|\s+(?:và|and|&)\s+", skill_str, flags=re.IGNORECASE)
+            results = []
+            for item in level1:
+                item = re.sub(r"^[(\[{]+|[)\]}]+$", "", item.strip()).strip()
+                if not item or len(item) < 2 or item.lower() in {"etc", "v.v", "vv"}:
+                    continue
+                # Tách gạch chéo '/' nếu không phải chuỗi bảo vệ
+                if "/" in item and item.upper() not in PROTECTED_COMPOUNDS:
+                    sl_parts = [re.sub(r"^[(\[{]+|[)\]}]+$", "", p.strip()).strip() for p in item.split("/")]
+                    results.extend([p for p in sl_parts if len(p) >= 2])
+                else:
+                    results.append(item)
+            return results or [skill_str]
+
         for cand in candidates:
             sk = (cand.get("skill") or "").strip()
-            if "/" in sk and sk.upper() not in {"CI/CD", "TCP/IP", "I/O", "OS/2"}:
-                parts = [p.strip() for p in sk.split("/") if len(p.strip()) >= 2]
-                if len(parts) > 1:
-                    for p in parts:
+            c_type = (cand.get("type") or "TECHNOLOGY").strip().upper()
+
+            # Tách gộp cho thực thể công nghệ
+            if c_type != "ABILITY" and ("," in sk or ";" in sk or "/" in sk or re.search(r"\s+(?:và|and|&)\s+", sk, re.IGNORECASE)):
+                sub_parts = split_compound_technology(sk)
+                if len(sub_parts) > 1:
+                    for p in sub_parts:
                         new_c = dict(cand)
                         new_c["skill"] = p
+                        new_c["evidence"] = p if p.lower() in source_text.lower() else cand.get("evidence", p)
                         expanded_candidates.append(new_c)
                     continue
+
             expanded_candidates.append(cand)
+
 
         verified_list: List[VerificationResult] = []
         seen_skills: Dict[str, VerificationResult] = {}

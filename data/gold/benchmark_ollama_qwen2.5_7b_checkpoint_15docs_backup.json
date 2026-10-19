@@ -1,0 +1,5300 @@
+{
+  "preds_baseline": {
+    "JD_1": [
+      {
+        "evidence": "Java",
+        "skill": "Java",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Spring Framework",
+        "skill": "Spring Framework",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "JavaScript",
+        "skill": "JavaScript",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "TypeScript",
+        "skill": "TypeScript",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "HTML",
+        "skill": "HTML",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "CSS",
+        "skill": "CSS",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "JS",
+        "skill": "JS",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "tạo tài liệu thiết kế",
+        "skill": "tạo tài liệu thiết kế",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "phân tích yêu cầu",
+        "skill": "phân tích yêu cầu",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "JD_2": [
+      {
+        "evidence": "Python",
+        "skill": "Python",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "C#",
+        "skill": "C#",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": ".NET",
+        "skill": ".NET",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Javascript",
+        "skill": "Javascript",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "PyTorch",
+        "skill": "PyTorch",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Scikit-learn",
+        "skill": "Scikit-learn",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Hugging Face",
+        "skill": "Hugging Face",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Machine Learning",
+        "skill": "Machine Learning",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Deep Learning",
+        "skill": "Deep Learning",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "NLP",
+        "skill": "NLP",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "model evaluation",
+        "skill": "model evaluation",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "drift",
+        "skill": "drift",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "retraining",
+        "skill": "retraining",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "chạy thử nghiệm",
+        "skill": "chạy thử nghiệm",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "tối ưu chất lượng kết quả AI",
+        "skill": "tối ưu chất lượng kết quả AI",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử",
+        "skill": "kiểm thử",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "phối hợp",
+        "skill": "phối hợp",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "tích hợp API AI",
+        "skill": "tích hợp API AI",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "đọc hiểu tài liệu kỹ thuật",
+        "skill": "đọc hiểu tài liệu kỹ thuật",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "chủ động nghiên cứu công nghệ mới",
+        "skill": "chủ động nghiên cứu công nghệ mới",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "tư duy logic",
+        "skill": "tư duy logic",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "phân tích vấn đề",
+        "skill": "phân tích vấn đề",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "JD_3": [
+      {
+        "evidence": "Microsoft 365",
+        "skill": "Microsoft 365",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Azure",
+        "skill": "Azure",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Domain",
+        "skill": "Domain",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "DNS",
+        "skill": "DNS",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Hosting",
+        "skill": "Hosting",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "LAN",
+        "skill": "LAN",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "WAN",
+        "skill": "WAN",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Wireless networks",
+        "skill": "Wireless networks",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Firewall",
+        "skill": "Firewall",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Servers",
+        "skill": "Servers",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "VMware",
+        "skill": "VMware",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Windows OS",
+        "skill": "Windows OS",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "TCP/IP networking",
+        "skill": "TCP/IP networking",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Active Directory",
+        "skill": "Active Directory",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "troubleshooting network issues",
+        "skill": "troubleshooting network issues",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "install and configure computers",
+        "skill": "install and configure computers",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "troubleshoot issues related to computers",
+        "skill": "troubleshoot issues related to computers",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "troubleshoot issues related to printers",
+        "skill": "troubleshoot issues related to printers",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "troubleshoot issues related to networks",
+        "skill": "troubleshoot issues related to networks",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "troubleshoot issues related to Microsoft 365",
+        "skill": "troubleshoot issues related to Microsoft 365",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "troubleshoot issues related to work-related software",
+        "skill": "troubleshoot issues related to work-related software",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "manage IT devices",
+        "skill": "manage IT devices",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "allocate IT assets",
+        "skill": "allocate IT assets",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "recover IT assets",
+        "skill": "recover IT assets",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "inventory IT assets",
+        "skill": "inventory IT assets",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "update status of IT assets",
+        "skill": "update status of IT assets",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "maintain information security activities",
+        "skill": "maintain information security activities",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "update ISO documents",
+        "skill": "update ISO documents",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "update ISO procedures",
+        "skill": "update ISO procedures",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "update ISO forms",
+        "skill": "update ISO forms",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "organize information security awareness training programs",
+        "skill": "organize information security awareness training programs",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "guide new employees",
+        "skill": "guide new employees",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "resolve issues related to facilities",
+        "skill": "resolve issues related to facilities",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "resolve issues related to electricity",
+        "skill": "resolve issues related to electricity",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "resolve issues related to network",
+        "skill": "resolve issues related to network",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "resolve issues related to cameras",
+        "skill": "resolve issues related to cameras",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "resolve issues related to office equipment",
+        "skill": "resolve issues related to office equipment",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "good logical thinking",
+        "skill": "good logical thinking",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "fast learning ability",
+        "skill": "fast learning ability",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "proactive in researching and solving problems",
+        "skill": "proactive in researching and solving problems",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "good communication with users",
+        "skill": "good communication with users",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "service-oriented mindset",
+        "skill": "service-oriented mindset",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "strong sense of responsibility",
+        "skill": "strong sense of responsibility",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "JD_4": [],
+    "JD_5": [
+      {
+        "evidence": "nắm được quy trình kiểm thử phần mềm",
+        "skill": "quy trình kiểm thử phần mềm",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Cẩn thận, tỉ mỉ",
+        "skill": "cẩn thận, tỉ mỉ",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "tư duy logic tốt",
+        "skill": "tư duy logic tốt",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "nắm bắt nghiệp vụ nhanh",
+        "skill": "nắm bắt nghiệp vụ nhanh",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "tinh thần trách nhiệm cao",
+        "skill": "tinh thần trách nhiệm cao",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "thái độ tích cực",
+        "skill": "thái độ tích cực",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "làm việc độc lập",
+        "skill": "làm việc độc lập",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "làm theo nhóm",
+        "skill": "làm theo nhóm",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kinh nghiệm CSDL",
+        "skill": "kỹ năng quản lý cơ sở dữ liệu",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "truy vấn sql",
+        "skill": "truy vấn SQL",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "test API",
+        "skill": "test API",
+        "type": "ABILITY",
+        "context": "preferred"
+      }
+    ],
+    "JD_6": [
+      {
+        "evidence": "Java",
+        "skill": "Java",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Spring Boot",
+        "skill": "Spring Boot",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Core Java",
+        "skill": "Core Java",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "MySQL",
+        "skill": "MySQL",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "PostgreSQL",
+        "skill": "PostgreSQL",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Oracle",
+        "skill": "Oracle",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Redis",
+        "skill": "Redis",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Kafka",
+        "skill": "Kafka",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "RabbitMQ",
+        "skill": "RabbitMQ",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Microservices",
+        "skill": "Microservices",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "JUnit",
+        "skill": "JUnit",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "Mockito",
+        "skill": "Mockito",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "Integration Test",
+        "skill": "Integration Test",
+        "type": "ABILITY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "Testcontainers",
+        "skill": "Testcontainers",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      }
+    ],
+    "JD_7": [
+      {
+        "evidence": "Phỏng vấn",
+        "skill": "phỏng vấn",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "thu thập quy trình hiện tại",
+        "skill": "thu thập quy trình hiện tại",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "lập bảng phân tích",
+        "skill": "lập bảng phân tích",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "xác định thứ tự ưu tiên",
+        "skill": "xác định thứ tự ưu tiên",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "soạn tài liệu Đề xuất Giải pháp",
+        "skill": "soạn tài liệu Đề xuất Giải pháp",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "xác định entity",
+        "skill": "xác định entity",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "quan hệ Lookup",
+        "skill": "quan hệ Lookup",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "chọn kiểu trường",
+        "skill": "chọn kiểu trường",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "tạo Object",
+        "skill": "tạo Object",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Field",
+        "skill": "cấu hình Field",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kéo thả Layout Builder",
+        "skill": "kéo thả Layout Builder",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "thiết lập UI Rules",
+        "skill": "thiết lập UI Rules",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "thiết lập Transition Rules",
+        "skill": "thiết lập Transition Rules",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "bật Field Change History",
+        "skill": "bật Field Change History",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình BPMN workflow",
+        "skill": "cấu hình BPMN workflow",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Quy tắc phân bổ",
+        "skill": "cấu hình Quy tắc phân bổ",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Mẫu văn bản",
+        "skill": "cấu hình Mẫu văn bản",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Thông báo tự động",
+        "skill": "cấu hình Thông báo tự động",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Tích hợp Email",
+        "skill": "cấu hình Tích hợp Email",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Omnichannel",
+        "skill": "cấu hình Omnichannel",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Service",
+        "skill": "cấu hình Service",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "cấu hình Inventory",
+        "skill": "cấu hình Inventory",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "chạy thử",
+        "skill": "chạy thử",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "hướng dẫn và hỗ trợ migrate dữ liệu",
+        "skill": "hướng dẫn và hỗ trợ migrate dữ liệu",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "hiệu chỉnh cấu hình",
+        "skill": "hiệu chỉnh cấu hình",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "xây dựng và cập nhật playbook triển khai",
+        "skill": "xây dựng và cập nhật playbook triển khai",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "phản hồi về sản phẩm",
+        "skill": "phản hồi về sản phẩm",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "tham gia pre-sales",
+        "skill": "tham gia pre-sales",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "JD_8": [
+      {
+        "evidence": "Golang",
+        "skill": "Golang",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "tối ưu hóa SQL",
+        "skill": "tối ưu hóa truy vấn SQL",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "NoSQL",
+        "skill": "NoSQL",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Linux",
+        "skill": "Linux",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Docker",
+        "skill": "Docker",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "AWS",
+        "skill": "AWS",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Google Cloud",
+        "skill": "Google Cloud",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Digital Ocean",
+        "skill": "Digital Ocean",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "trình tự code review",
+        "skill": "code review",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "technical review",
+        "skill": "technical review",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "coding convention",
+        "skill": "coding convention",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "architecture",
+        "skill": "architecture",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "security",
+        "skill": "security",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "performance",
+        "skill": "performance",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "JD_9": [
+      {
+        "evidence": "Hybrid",
+        "skill": "Hybrid",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "On-Premises",
+        "skill": "On-Premises",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "VMware",
+        "skill": "VMware",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Cloud Provider",
+        "skill": "Cloud Provider",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Kubernetes",
+        "skill": "Kubernetes",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Docker",
+        "skill": "Docker",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "HA",
+        "skill": "HA",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Auto-scaling",
+        "skill": "Auto-scaling",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Self-healing",
+        "skill": "Self-healing",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Infrastructure as Code",
+        "skill": "Infrastructure as Code",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Terraform",
+        "skill": "Terraform",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Helm Charts",
+        "skill": "Helm Charts",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "GitLab CI",
+        "skill": "GitLab CI",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "ArgoCD",
+        "skill": "ArgoCD",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Jenkins",
+        "skill": "Jenkins",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Ansible",
+        "skill": "Ansible",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "CI/CD",
+        "skill": "CI/CD",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "GitOps",
+        "skill": "GitOps",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Load Balancer",
+        "skill": "Load Balancer",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Reverse Proxy",
+        "skill": "Reverse Proxy",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Web Server",
+        "skill": "Web Server",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "HAProxy",
+        "skill": "HAProxy",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Nginx",
+        "skill": "Nginx",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "PHP stack",
+        "skill": "PHP stack",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "MySQL",
+        "skill": "MySQL",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "MariaDB",
+        "skill": "MariaDB",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Replication",
+        "skill": "Replication",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Backup & Disaster Recovery",
+        "skill": "Backup & Disaster Recovery",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Tuning",
+        "skill": "Tuning",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Prometheus",
+        "skill": "Prometheus",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Grafana",
+        "skill": "Grafana",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "ECK",
+        "skill": "ECK",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Elasticsearch",
+        "skill": "Elasticsearch",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Logstash",
+        "skill": "Logstash",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Kibana",
+        "skill": "Kibana",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Linux",
+        "skill": "Linux",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Bash Script",
+        "skill": "Bash Script",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Python Script",
+        "skill": "Python Script",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "System/DevOps",
+        "skill": "System/DevOps",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Network",
+        "skill": "Network",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Security Hardening",
+        "skill": "Security Hardening",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "MCSA",
+        "skill": "MCSA",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "CCNA",
+        "skill": "CCNA",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "LPI",
+        "skill": "LPI",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "DevOps",
+        "skill": "DevOps",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "SysOps",
+        "skill": "SysOps",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      }
+    ],
+    "JD_10": [
+      {
+        "evidence": "xây dựng quy trình kiểm thử",
+        "skill": "xây dựng quy trình kiểm thử",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "xây dựng test case",
+        "skill": "xây dựng test case",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử chức năng",
+        "skill": "kiểm thử chức năng",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử hồi quy",
+        "skill": "kiểm thử hồi quy",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử tích hợp",
+        "skill": "kiểm thử tích hợp",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử khám phá",
+        "skill": "kiểm thử khám phá",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "phát hiện lỗi",
+        "skill": "phát hiện lỗi",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "mô tả lỗi",
+        "skill": "mô tả lỗi",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "theo dõi lỗi",
+        "skill": "theo dõi lỗi",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "giao tiếp với đội phát triển",
+        "skill": "giao tiếp với đội phát triển",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Jira",
+        "skill": "sử dụng Jira",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Redmine",
+        "skill": "sử dụng Redmine",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Backlog",
+        "skill": "sử dụng Backlog",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng DevTools",
+        "skill": "sử dụng DevTools",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Console Log",
+        "skill": "sử dụng Console Log",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Network",
+        "skill": "sử dụng Network",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Server Log",
+        "skill": "sử dụng Server Log",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "viết script kiểm thử tự động",
+        "skill": "viết script kiểm thử tự động",
+        "type": "ABILITY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng Selenium",
+        "skill": "sử dụng Selenium",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng Playwright",
+        "skill": "sử dụng Playwright",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng CodeceptJS",
+        "skill": "sử dụng CodeceptJS",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng Cypress",
+        "skill": "sử dụng Cypress",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "kiểm thử theo Use Case",
+        "skill": "kiểm thử theo Use Case",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử chuyển trạng thái",
+        "skill": "kiểm thử chuyển trạng thái",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử theo Phân vùng tương đương",
+        "skill": "kiểm thử theo Phân vùng tương đương",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "kiểm thử theo Phân tích giá trị biên",
+        "skill": "kiểm thử theo Phân tích giá trị biên",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Jira",
+        "skill": "sử dụng Jira",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng Redmine",
+        "skill": "sử dụng Redmine",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng TestRail",
+        "skill": "sử dụng TestRail",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng Excel",
+        "skill": "sử dụng Excel",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng SQL",
+        "skill": "sử dụng SQL",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng MySQL",
+        "skill": "sử dụng MySQL",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng PostgreSQL",
+        "skill": "sử dụng PostgreSQL",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "sử dụng SQL Server",
+        "skill": "sử dụng SQL Server",
+        "type": "TECHNOLOGY",
+        "context": "preferred"
+      },
+      {
+        "evidence": "có kinh nghiệm làm việc tại công ty Nhật",
+        "skill": "có kinh nghiệm làm việc tại công ty Nhật",
+        "type": "ABILITY",
+        "context": "preferred"
+      }
+    ],
+    "JD_11": [
+      {
+        "evidence": "cấu hình mạng",
+        "skill": "cấu hình mạng",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "router",
+        "skill": "router",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "switch",
+        "skill": "switch",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "MS 365",
+        "skill": "MS 365",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "sử dụng thành thạo các máy móc thiết bị liên quan đến mạng",
+        "skill": "sử dụng thành thạo các máy móc thiết bị liên quan đến mạng",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "sửa chữa phần cứng",
+        "skill": "sửa chữa phần cứng",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "chẩn đoán và thay thế được các linh kiện máy tính bị hư",
+        "skill": "chẩn đoán và thay thế được các linh kiện máy tính bị hư",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "GH_1": [
+      {
+        "evidence": "Java 21",
+        "skill": "Java 21",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Spring Boot 3.4",
+        "skill": "Spring Boot 3.4",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Spring Security",
+        "skill": "Spring Security",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "JWT",
+        "skill": "JWT",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Refresh Token Rotation",
+        "skill": "Refresh Token Rotation",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "Blacklist Access Token",
+        "skill": "Blacklist Access Token",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "Fixed Window Session",
+        "skill": "Fixed Window Session",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "RBAC",
+        "skill": "RBAC",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "USER",
+        "skill": "USER",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "ADMIN",
+        "skill": "ADMIN",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "React (Vite)",
+        "skill": "React (Vite)",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Tailwind CSS",
+        "skill": "Tailwind CSS",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Axios",
+        "skill": "Axios",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Interceptor",
+        "skill": "Interceptor",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "FastAPI",
+        "skill": "FastAPI",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Scikit-learn",
+        "skill": "Scikit-learn",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Pandas",
+        "skill": "Pandas",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Content-Based Filtering",
+        "skill": "Content-Based Filtering",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "MySQL 8",
+        "skill": "MySQL 8",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "JPA",
+        "skill": "JPA",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Hibernate",
+        "skill": "Hibernate",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "MapStruct",
+        "skill": "MapStruct",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Jakarta Validation",
+        "skill": "Jakarta Validation",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Custom Annotation",
+        "skill": "Custom Annotation",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "GH_2": [
+      {
+        "evidence": "Vision-Language Model",
+        "skill": "Vision-Language Model",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "BLIP-2",
+        "skill": "BLIP-2",
+        "type": "TECHNOLOGY",
+        "context": "baseline"
+      },
+      {
+        "evidence": "Florence-2",
+        "skill": "Florence-2",
+        "type": "TECHNOLOGY",
+        "context": "baseline"
+      },
+      {
+        "evidence": "Qwen2.5-VL",
+        "skill": "Qwen2.5-VL",
+        "type": "TECHNOLOGY",
+        "context": "baseline"
+      },
+      {
+        "evidence": "PEFT",
+        "skill": "PEFT",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "LoRA",
+        "skill": "LoRA",
+        "type": "TECHNOLOGY",
+        "context": "peft"
+      },
+      {
+        "evidence": "QLoRA",
+        "skill": "QLoRA",
+        "type": "TECHNOLOGY",
+        "context": "peft"
+      },
+      {
+        "evidence": "4-bit",
+        "skill": "4-bit",
+        "type": "TECHNOLOGY",
+        "context": "peft"
+      },
+      {
+        "evidence": "8-bit",
+        "skill": "8-bit",
+        "type": "TECHNOLOGY",
+        "context": "peft"
+      },
+      {
+        "evidence": "PaddleOCR",
+        "skill": "PaddleOCR",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "VietOCR",
+        "skill": "VietOCR",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "OCR",
+        "skill": "OCR",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "RAG",
+        "skill": "RAG",
+        "type": "TECHNOLOGY",
+        "context": "optional"
+      },
+      {
+        "evidence": "EM",
+        "skill": "EM",
+        "type": "ABILITY",
+        "context": "evaluation"
+      },
+      {
+        "evidence": "VQA Accuracy",
+        "skill": "VQA Accuracy",
+        "type": "ABILITY",
+        "context": "evaluation"
+      },
+      {
+        "evidence": "ANLS",
+        "skill": "ANLS",
+        "type": "ABILITY",
+        "context": "evaluation"
+      },
+      {
+        "evidence": "ablation",
+        "skill": "ablation",
+        "type": "ABILITY",
+        "context": "evaluation"
+      },
+      {
+        "evidence": "error analysis",
+        "skill": "error analysis",
+        "type": "ABILITY",
+        "context": "evaluation"
+      },
+      {
+        "evidence": "hallucination analysis",
+        "skill": "hallucination analysis",
+        "type": "ABILITY",
+        "context": "evaluation"
+      },
+      {
+        "evidence": "Google Colab Pro/Premium",
+        "skill": "Google Colab Pro/Premium",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "GPU server",
+        "skill": "GPU server",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Python",
+        "skill": "Python",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "PyTorch",
+        "skill": "PyTorch",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "HuggingFace",
+        "skill": "HuggingFace",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "transformers",
+        "skill": "transformers",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "peft",
+        "skill": "peft",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "bitsandbytes",
+        "skill": "bitsandbytes",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Gradio",
+        "skill": "Gradio",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "dataset",
+        "skill": "dataset",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "prompting",
+        "skill": "prompting",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "multimodal prompting",
+        "skill": "multimodal prompting",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "literature",
+        "skill": "literature",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "dataset loader",
+        "skill": "dataset loader",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "web demo",
+        "skill": "web demo",
+        "type": "ABILITY",
+        "context": "required"
+      }
+    ],
+    "GH_3": [
+      {
+        "evidence": "ROS2",
+        "skill": "ROS2",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "teleoperation",
+        "skill": "teleoperation",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "video streaming",
+        "skill": "video streaming",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "SLAM",
+        "skill": "SLAM",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Nav2",
+        "skill": "Nav2",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "object tracking",
+        "skill": "object tracking",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "LiDAR",
+        "skill": "LiDAR",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Raspberry Pi 4",
+        "skill": "Raspberry Pi 4",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Ubuntu Server 22.04.5 LTS",
+        "skill": "Ubuntu Server 22.04.5 LTS",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "YDLidar X4 Pro",
+        "skill": "YDLidar X4 Pro",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "ros-humble-ros-base",
+        "skill": "ros-humble-ros-base",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "ros-humble-desktop",
+        "skill": "ros-humble-desktop",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "SLAM Toolbox",
+        "skill": "SLAM Toolbox",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "ydlidar_ros2_driver",
+        "skill": "ydlidar_ros2_driver",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "rf2o_laser_odometry",
+        "skill": "rf2o_laser_odometry",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "motor control",
+        "skill": "motor control",
+        "type": "ABILITY",
+        "context": "required"
+      },
+      {
+        "evidence": "gpiozero",
+        "skill": "gpiozero",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "lgpio",
+        "skill": "lgpio",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      }
+    ],
+    "GH_4": [
+      {
+        "evidence": "AI-Generated Text Detection & Segmentation",
+        "skill": "AI-Generated Text Detection & Segmentation",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Semantic Skeleton",
+        "skill": "Semantic Skeleton",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Generator-Invariant Provenance Subspace",
+        "skill": "Generator-Invariant Provenance Subspace",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Weight-Decomposed Low-Rank Adaptation",
+        "skill": "Weight-Decomposed Low-Rank Adaptation",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Data Layer Hierarchy",
+        "skill": "Data Layer Hierarchy",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Curation Statistics",
+        "skill": "Curation Statistics",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Sub-Discipline Distribution",
+        "skill": "Sub-Discipline Distribution",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Preprocessing",
+        "skill": "Preprocessing",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Quality Engineering",
+        "skill": "Quality Engineering",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "AI Counterfactual Construction",
+        "skill": "AI Counterfactual Construction",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Zero-Leakage Split Strategy",
+        "skill": "Zero-Leakage Split Strategy",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "High-Level Architecture",
+        "skill": "High-Level Architecture",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Mathematical Formulation",
+        "skill": "Mathematical Formulation",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Comprehensive Architecture Specification",
+        "skill": "Comprehensive Architecture Specification",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Repository Directory Structure",
+        "skill": "Repository Directory Structure",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Quickstart",
+        "skill": "Quickstart",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Reproduction Guide",
+        "skill": "Reproduction Guide",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Data Safety",
+        "skill": "Data Safety",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      },
+      {
+        "evidence": "Git Best Practices",
+        "skill": "Git Best Practices",
+        "type": "TECHNOLOGY",
+        "context": "required"
+      }
+    ]
+  },
+  "preds_verifier": {
+    "JD_1": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Java",
+        "evidence": "Java",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 496,
+        "end_char": 500,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Spring Framework",
+        "evidence": "Spring Framework",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 501,
+        "end_char": 517,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "JavaScript",
+        "evidence": "JavaScript",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 523,
+        "end_char": 533,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "TypeScript",
+        "evidence": "TypeScript",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 534,
+        "end_char": 544,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "HTML",
+        "evidence": "HTML",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 595,
+        "end_char": 599,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "CSS",
+        "evidence": "CSS",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 601,
+        "end_char": 604,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "JS",
+        "evidence": "JS",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 605,
+        "end_char": 607,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tạo tài liệu thiết kế",
+        "evidence": "tạo tài liệu thiết kế",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 64,
+        "end_char": 85,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "phân tích yêu cầu",
+        "evidence": "phân tích yêu cầu",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 16,
+        "end_char": 33,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_2": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Python",
+        "evidence": "Python",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 759,
+        "end_char": 765,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "C#",
+        "evidence": "C#",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 767,
+        "end_char": 769,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": ".NET",
+        "evidence": ".NET",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 771,
+        "end_char": 775,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Javascript",
+        "evidence": "Javascript",
+        "type": "TECHNOLOGY",
+        "context": "preferred",
+        "start_char": 777,
+        "end_char": 787,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "PyTorch",
+        "evidence": "PyTorch",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1032,
+        "end_char": 1039,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Scikit-learn",
+        "evidence": "Scikit-learn",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1041,
+        "end_char": 1053,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Hugging Face",
+        "evidence": "Hugging Face",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1055,
+        "end_char": 1067,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Machine Learning",
+        "evidence": "Machine Learning",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 359,
+        "end_char": 375,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Deep Learning",
+        "evidence": "Deep Learning",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1165,
+        "end_char": 1178,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "NLP",
+        "evidence": "NLP",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1184,
+        "end_char": 1187,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "model evaluation",
+        "evidence": "model evaluation",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 873,
+        "end_char": 889,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "drift",
+        "evidence": "drift",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 891,
+        "end_char": 896,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "retraining",
+        "evidence": "retraining",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 900,
+        "end_char": 910,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "chạy thử nghiệm",
+        "evidence": "chạy thử nghiệm",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 329,
+        "end_char": 344,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tối ưu chất lượng kết quả AI",
+        "evidence": "tối ưu chất lượng kết quả AI",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 515,
+        "end_char": 543,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kiểm thử",
+        "evidence": "kiểm thử",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 493,
+        "end_char": 501,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "phối hợp",
+        "evidence": "phối hợp",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 425,
+        "end_char": 433,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tích hợp API AI",
+        "evidence": "tích hợp API AI",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 463,
+        "end_char": 478,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "đọc hiểu tài liệu kỹ thuật",
+        "evidence": "đọc hiểu tài liệu kỹ thuật",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1200,
+        "end_char": 1226,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "MODIFIED",
+        "skill": "nghiên cứu công nghệ mới",
+        "evidence": "nghiên cứu công nghệ mới",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1230,
+        "end_char": 1263,
+        "issues": [
+          "TRIMMED_FILLER_WORDS"
+        ],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tư duy logic",
+        "evidence": "tư duy logic",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1268,
+        "end_char": 1280,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "phân tích vấn đề",
+        "evidence": "phân tích vấn đề",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1291,
+        "end_char": 1307,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_3": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Microsoft 365",
+        "evidence": "Microsoft 365",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 128,
+        "end_char": 141,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Azure",
+        "evidence": "Azure",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 144,
+        "end_char": 149,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Domain",
+        "evidence": "Domain",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 152,
+        "end_char": 158,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "DNS",
+        "evidence": "DNS",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 160,
+        "end_char": 163,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Hosting",
+        "evidence": "Hosting",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 169,
+        "end_char": 176,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "LAN",
+        "evidence": "LAN",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 179,
+        "end_char": 182,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "WAN",
+        "evidence": "WAN",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 184,
+        "end_char": 187,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Wireless networks",
+        "evidence": "Wireless networks",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 193,
+        "end_char": 210,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Firewall",
+        "evidence": "Firewall",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 213,
+        "end_char": 221,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Servers",
+        "evidence": "Servers",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 224,
+        "end_char": 231,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "VMware",
+        "evidence": "VMware",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 236,
+        "end_char": 242,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Windows OS",
+        "evidence": "Windows OS",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1590,
+        "end_char": 1600,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "TCP",
+        "evidence": "TCP",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1617,
+        "end_char": 1620,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "IP networking",
+        "evidence": "IP networking",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1621,
+        "end_char": 1634,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Active Directory",
+        "evidence": "Active Directory",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1636,
+        "end_char": 1652,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "install and configure computers",
+        "evidence": "install and configure computers",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 425,
+        "end_char": 456,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "troubleshoot issues related to computers",
+        "evidence": "troubleshoot issues related to computers",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 492,
+        "end_char": 532,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "guide new employees",
+        "evidence": "guide new employees",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1088,
+        "end_char": 1107,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "resolve issues related to facilities",
+        "evidence": "resolve issues related to facilities",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1167,
+        "end_char": 1203,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "proactive in researching and solving problems",
+        "evidence": "proactive in researching and solving problems",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1824,
+        "end_char": 1869,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "good communication with users",
+        "evidence": "good communication with users",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1873,
+        "end_char": 1902,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_4": [],
+    "JD_5": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "quy trình kiểm thử phần mềm",
+        "evidence": "nắm được quy trình kiểm thử phần mềm",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 458,
+        "end_char": 494,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "cẩn thận, tỉ mỉ",
+        "evidence": "Cẩn thận, tỉ mỉ",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 495,
+        "end_char": 510,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tư duy logic tốt",
+        "evidence": "tư duy logic tốt",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 515,
+        "end_char": 531,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "nắm bắt nghiệp vụ nhanh",
+        "evidence": "nắm bắt nghiệp vụ nhanh",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 533,
+        "end_char": 556,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "thái độ tích cực",
+        "evidence": "thái độ tích cực",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 588,
+        "end_char": 604,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "làm theo nhóm",
+        "evidence": "làm theo nhóm",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 663,
+        "end_char": 676,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kỹ năng quản lý cơ sở dữ liệu",
+        "evidence": "kinh nghiệm CSDL",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 721,
+        "end_char": 737,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "truy vấn SQL",
+        "evidence": "truy vấn sql",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 739,
+        "end_char": 751,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "test API",
+        "evidence": "test API",
+        "type": "ABILITY",
+        "context": "preferred",
+        "start_char": 773,
+        "end_char": 781,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_6": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Java",
+        "evidence": "Java",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 66,
+        "end_char": 70,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Spring Boot",
+        "evidence": "Spring Boot",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 72,
+        "end_char": 83,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Core Java",
+        "evidence": "Core Java",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 547,
+        "end_char": 556,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "MySQL",
+        "evidence": "MySQL",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 114,
+        "end_char": 119,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "PostgreSQL",
+        "evidence": "PostgreSQL",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 120,
+        "end_char": 130,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Oracle",
+        "evidence": "Oracle",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 131,
+        "end_char": 137,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Redis",
+        "evidence": "Redis",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 149,
+        "end_char": 154,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Kafka",
+        "evidence": "Kafka",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 156,
+        "end_char": 161,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "RabbitMQ",
+        "evidence": "RabbitMQ",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 162,
+        "end_char": 170,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Microservices",
+        "evidence": "Microservices",
+        "type": "TECHNOLOGY",
+        "context": "preferred",
+        "start_char": 212,
+        "end_char": 225,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "JUnit",
+        "evidence": "JUnit",
+        "type": "TECHNOLOGY",
+        "context": "preferred",
+        "start_char": 703,
+        "end_char": 708,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Mockito",
+        "evidence": "Mockito",
+        "type": "TECHNOLOGY",
+        "context": "preferred",
+        "start_char": 710,
+        "end_char": 717,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Integration Test",
+        "evidence": "Integration Test",
+        "type": "ABILITY",
+        "context": "preferred",
+        "start_char": 282,
+        "end_char": 298,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Testcontainers",
+        "evidence": "Testcontainers",
+        "type": "TECHNOLOGY",
+        "context": "preferred",
+        "start_char": 736,
+        "end_char": 750,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_7": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "phỏng vấn",
+        "evidence": "Phỏng vấn",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 381,
+        "end_char": 390,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "thu thập quy trình hiện tại",
+        "evidence": "thu thập quy trình hiện tại",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 471,
+        "end_char": 498,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "lập bảng phân tích",
+        "evidence": "lập bảng phân tích",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 513,
+        "end_char": 531,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "xác định thứ tự ưu tiên",
+        "evidence": "xác định thứ tự ưu tiên",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 564,
+        "end_char": 587,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "soạn tài liệu Đề xuất Giải pháp",
+        "evidence": "soạn tài liệu Đề xuất Giải pháp",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 636,
+        "end_char": 667,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "xác định entity",
+        "evidence": "xác định entity",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 823,
+        "end_char": 838,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "quan hệ Lookup",
+        "evidence": "quan hệ Lookup",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 840,
+        "end_char": 854,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "chọn kiểu trường",
+        "evidence": "chọn kiểu trường",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 876,
+        "end_char": 892,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tạo Object",
+        "evidence": "tạo Object",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1264,
+        "end_char": 1274,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "cấu hình Field",
+        "evidence": "cấu hình Field",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1276,
+        "end_char": 1290,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kéo thả Layout Builder",
+        "evidence": "kéo thả Layout Builder",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1292,
+        "end_char": 1314,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "thiết lập UI Rules",
+        "evidence": "thiết lập UI Rules",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1351,
+        "end_char": 1369,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "bật Field Change History",
+        "evidence": "bật Field Change History",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1478,
+        "end_char": 1502,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "cấu hình BPMN workflow",
+        "evidence": "cấu hình BPMN workflow",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1608,
+        "end_char": 1630,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "cấu hình Service",
+        "evidence": "cấu hình Service",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1892,
+        "end_char": 1908,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "cấu hình Inventory",
+        "evidence": "cấu hình Inventory",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1951,
+        "end_char": 1969,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "chạy thử",
+        "evidence": "chạy thử",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2106,
+        "end_char": 2114,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "hướng dẫn và hỗ trợ migrate dữ liệu",
+        "evidence": "hướng dẫn và hỗ trợ migrate dữ liệu",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2182,
+        "end_char": 2217,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "hiệu chỉnh cấu hình",
+        "evidence": "hiệu chỉnh cấu hình",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2272,
+        "end_char": 2291,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "xây dựng và cập nhật playbook triển khai",
+        "evidence": "xây dựng và cập nhật playbook triển khai",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2471,
+        "end_char": 2511,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "phản hồi về sản phẩm",
+        "evidence": "phản hồi về sản phẩm",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2587,
+        "end_char": 2607,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tham gia pre-sales",
+        "evidence": "tham gia pre-sales",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2679,
+        "end_char": 2697,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_8": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Golang",
+        "evidence": "Golang",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 582,
+        "end_char": 588,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "tối ưu hóa truy vấn SQL",
+        "evidence": "tối ưu hóa SQL",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 591,
+        "end_char": 605,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "NoSQL",
+        "evidence": "NoSQL",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 164,
+        "end_char": 169,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Linux",
+        "evidence": "Linux",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 614,
+        "end_char": 619,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Docker",
+        "evidence": "Docker",
+        "type": "TECHNOLOGY",
+        "context": "preferred",
+        "start_char": 623,
+        "end_char": 629,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "AWS",
+        "evidence": "AWS",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 754,
+        "end_char": 757,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Google Cloud",
+        "evidence": "Google Cloud",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 759,
+        "end_char": 771,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Digital Ocean",
+        "evidence": "Digital Ocean",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 773,
+        "end_char": 786,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "code review",
+        "evidence": "code review",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 369,
+        "end_char": 380,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "technical review",
+        "evidence": "technical review",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 382,
+        "end_char": 398,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "coding convention",
+        "evidence": "coding convention",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 428,
+        "end_char": 445,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "architecture",
+        "evidence": "architecture",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 447,
+        "end_char": 459,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "security",
+        "evidence": "security",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 461,
+        "end_char": 469,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "performance",
+        "evidence": "performance",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 473,
+        "end_char": 484,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_9": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Hybrid",
+        "evidence": "Hybrid",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 42,
+        "end_char": 48,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "On-Premises",
+        "evidence": "On-Premises",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 58,
+        "end_char": 69,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "VMware",
+        "evidence": "VMware",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 77,
+        "end_char": 83,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Cloud Provider",
+        "evidence": "Cloud Provider",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 100,
+        "end_char": 114,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Kubernetes",
+        "evidence": "Kubernetes",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 160,
+        "end_char": 170,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Docker",
+        "evidence": "Docker",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 180,
+        "end_char": 186,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "HA",
+        "evidence": "HA",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 134,
+        "end_char": 136,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Auto-scaling",
+        "evidence": "Auto-scaling",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 252,
+        "end_char": 264,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Self-healing",
+        "evidence": "Self-healing",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 268,
+        "end_char": 280,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Infrastructure as Code",
+        "evidence": "Infrastructure as Code",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 332,
+        "end_char": 354,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Terraform",
+        "evidence": "Terraform",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 364,
+        "end_char": 373,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Helm Charts",
+        "evidence": "Helm Charts",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 375,
+        "end_char": 386,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "GitLab CI",
+        "evidence": "GitLab CI",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 517,
+        "end_char": 526,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ArgoCD",
+        "evidence": "ArgoCD",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 528,
+        "end_char": 534,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Jenkins",
+        "evidence": "Jenkins",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 536,
+        "end_char": 543,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Ansible",
+        "evidence": "Ansible",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 545,
+        "end_char": 552,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "CI/CD",
+        "evidence": "CI/CD",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 503,
+        "end_char": 508,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "GitOps",
+        "evidence": "GitOps",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 509,
+        "end_char": 515,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Load Balancer",
+        "evidence": "Load Balancer",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 677,
+        "end_char": 690,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Reverse Proxy",
+        "evidence": "Reverse Proxy",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 692,
+        "end_char": 705,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Web Server",
+        "evidence": "Web Server",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 709,
+        "end_char": 719,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "HAProxy",
+        "evidence": "HAProxy",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 721,
+        "end_char": 728,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Nginx",
+        "evidence": "Nginx",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 730,
+        "end_char": 735,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "PHP stack",
+        "evidence": "PHP stack",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 737,
+        "end_char": 746,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "MySQL",
+        "evidence": "MySQL",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 770,
+        "end_char": 775,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "MariaDB",
+        "evidence": "MariaDB",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 776,
+        "end_char": 783,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Replication",
+        "evidence": "Replication",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 785,
+        "end_char": 796,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Backup & Disaster Recovery",
+        "evidence": "Backup & Disaster Recovery",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 798,
+        "end_char": 824,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Tuning",
+        "evidence": "Tuning",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 826,
+        "end_char": 832,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Prometheus",
+        "evidence": "Prometheus",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 928,
+        "end_char": 938,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Grafana",
+        "evidence": "Grafana",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 940,
+        "end_char": 947,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ECK",
+        "evidence": "ECK",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 952,
+        "end_char": 955,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Elasticsearch",
+        "evidence": "Elasticsearch",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 957,
+        "end_char": 970,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Logstash",
+        "evidence": "Logstash",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 972,
+        "end_char": 980,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Kibana",
+        "evidence": "Kibana",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 982,
+        "end_char": 988,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Linux",
+        "evidence": "Linux",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1399,
+        "end_char": 1404,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Bash Script",
+        "evidence": "Bash Script",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2002,
+        "end_char": 2013,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Python Script",
+        "evidence": "Python Script",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2015,
+        "end_char": 2028,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "System",
+        "evidence": "System",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1322,
+        "end_char": 1328,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "DevOps",
+        "evidence": "DevOps",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1329,
+        "end_char": 1335,
+        "issues": [
+          "DUPLICATE_MERGED_FROM_DevOps"
+        ],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Security Hardening",
+        "evidence": "Security Hardening",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1085,
+        "end_char": 1103,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "MCSA",
+        "evidence": "MCSA",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2189,
+        "end_char": 2193,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "CCNA",
+        "evidence": "CCNA",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2195,
+        "end_char": 2199,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "LPI",
+        "evidence": "LPI",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2201,
+        "end_char": 2204,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "SysOps",
+        "evidence": "SysOps",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2214,
+        "end_char": 2220,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "JD_10": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "xây dựng test case",
+        "evidence": "xây dựng test case",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1403,
+        "end_char": 1421,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kiểm thử chức năng",
+        "evidence": "kiểm thử chức năng",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 330,
+        "end_char": 348,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kiểm thử hồi quy",
+        "evidence": "kiểm thử hồi quy",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 370,
+        "end_char": 386,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kiểm thử tích hợp",
+        "evidence": "kiểm thử tích hợp",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 409,
+        "end_char": 426,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kiểm thử khám phá",
+        "evidence": "kiểm thử khám phá",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 449,
+        "end_char": 466,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "theo dõi lỗi",
+        "evidence": "theo dõi lỗi",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 523,
+        "end_char": 535,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "sử dụng DevTools",
+        "evidence": "sử dụng DevTools",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 665,
+        "end_char": 681,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kiểm thử theo Use Case",
+        "evidence": "kiểm thử theo Use Case",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1304,
+        "end_char": 1326,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "kiểm thử chuyển trạng thái",
+        "evidence": "kiểm thử chuyển trạng thái",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1327,
+        "end_char": 1353,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "MODIFIED",
+        "skill": "làm việc tại công ty Nhật",
+        "evidence": "làm việc tại công ty Nhật",
+        "type": "ABILITY",
+        "context": "preferred",
+        "start_char": 2450,
+        "end_char": 2490,
+        "issues": [
+          "TRIMMED_FILLER_WORDS"
+        ],
+        "rejection_reason": null
+      }
+    ],
+    "JD_11": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "cấu hình mạng",
+        "evidence": "cấu hình mạng",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2835,
+        "end_char": 2848,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "router",
+        "evidence": "router",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2850,
+        "end_char": 2856,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "switch",
+        "evidence": "switch",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2858,
+        "end_char": 2864,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "MS 365",
+        "evidence": "MS 365",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2867,
+        "end_char": 2873,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "sử dụng thành thạo các máy móc thiết bị liên quan đến mạng",
+        "evidence": "sử dụng thành thạo các máy móc thiết bị liên quan đến mạng",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2877,
+        "end_char": 2935,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "sửa chữa phần cứng",
+        "evidence": "sửa chữa phần cứng",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2972,
+        "end_char": 2990,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "chẩn đoán và thay thế được các linh kiện máy tính bị hư",
+        "evidence": "chẩn đoán và thay thế được các linh kiện máy tính bị hư",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2992,
+        "end_char": 3047,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "GH_1": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Java 21",
+        "evidence": "Java 21",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1386,
+        "end_char": 1393,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Spring Boot 3.4",
+        "evidence": "Spring Boot 3.4",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1395,
+        "end_char": 1410,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Spring Security",
+        "evidence": "Spring Security",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1426,
+        "end_char": 1441,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "JWT",
+        "evidence": "JWT",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 732,
+        "end_char": 735,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Refresh Token Rotation",
+        "evidence": "Refresh Token Rotation",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 740,
+        "end_char": 762,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Blacklist Access Token",
+        "evidence": "Blacklist Access Token",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 767,
+        "end_char": 789,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Fixed Window Session",
+        "evidence": "Fixed Window Session",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 823,
+        "end_char": 843,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "RBAC",
+        "evidence": "RBAC",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 848,
+        "end_char": 852,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "USER",
+        "evidence": "USER",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 855,
+        "end_char": 859,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ADMIN",
+        "evidence": "ADMIN",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 864,
+        "end_char": 869,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "React (Vite)",
+        "evidence": "React (Vite)",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1633,
+        "end_char": 1645,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Tailwind CSS",
+        "evidence": "Tailwind CSS",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1655,
+        "end_char": 1667,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Axios",
+        "evidence": "Axios",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1679,
+        "end_char": 1684,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Interceptor",
+        "evidence": "Interceptor",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1686,
+        "end_char": 1697,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "FastAPI",
+        "evidence": "FastAPI",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1177,
+        "end_char": 1184,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Scikit-learn",
+        "evidence": "Scikit-learn",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1832,
+        "end_char": 1844,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Pandas",
+        "evidence": "Pandas",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1856,
+        "end_char": 1862,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Content-Based Filtering",
+        "evidence": "Content-Based Filtering",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1135,
+        "end_char": 1158,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "MySQL 8",
+        "evidence": "MySQL 8",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1462,
+        "end_char": 1469,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "JPA",
+        "evidence": "JPA",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1471,
+        "end_char": 1474,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Hibernate",
+        "evidence": "Hibernate",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1476,
+        "end_char": 1485,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "MapStruct",
+        "evidence": "MapStruct",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1500,
+        "end_char": 1509,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Jakarta Validation",
+        "evidence": "Jakarta Validation",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1527,
+        "end_char": 1545,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Custom Annotation",
+        "evidence": "Custom Annotation",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2497,
+        "end_char": 2514,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "GH_2": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Vision-Language Model",
+        "evidence": "Vision-Language Model",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 69,
+        "end_char": 90,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "BLIP-2",
+        "evidence": "BLIP-2",
+        "type": "TECHNOLOGY",
+        "context": "baseline",
+        "start_char": 235,
+        "end_char": 241,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Florence-2",
+        "evidence": "Florence-2",
+        "type": "TECHNOLOGY",
+        "context": "baseline",
+        "start_char": 244,
+        "end_char": 254,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Qwen2.5-VL",
+        "evidence": "Qwen2.5-VL",
+        "type": "TECHNOLOGY",
+        "context": "baseline",
+        "start_char": 257,
+        "end_char": 267,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "PEFT",
+        "evidence": "PEFT",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 291,
+        "end_char": 295,
+        "issues": [
+          "DUPLICATE_MERGED_FROM_peft"
+        ],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "LoRA",
+        "evidence": "LoRA",
+        "type": "TECHNOLOGY",
+        "context": "peft",
+        "start_char": 297,
+        "end_char": 301,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "QLoRA",
+        "evidence": "QLoRA",
+        "type": "TECHNOLOGY",
+        "context": "peft",
+        "start_char": 304,
+        "end_char": 309,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "4-bit",
+        "evidence": "4-bit",
+        "type": "TECHNOLOGY",
+        "context": "peft",
+        "start_char": 3026,
+        "end_char": 3031,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "8-bit",
+        "evidence": "8-bit",
+        "type": "TECHNOLOGY",
+        "context": "peft",
+        "start_char": 312,
+        "end_char": 317,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "PaddleOCR",
+        "evidence": "PaddleOCR",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 360,
+        "end_char": 369,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "VietOCR",
+        "evidence": "VietOCR",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 372,
+        "end_char": 379,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "OCR",
+        "evidence": "OCR",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 355,
+        "end_char": 358,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "RAG",
+        "evidence": "RAG",
+        "type": "TECHNOLOGY",
+        "context": "optional",
+        "start_char": 393,
+        "end_char": 396,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "EM",
+        "evidence": "EM",
+        "type": "ABILITY",
+        "context": "evaluation",
+        "start_char": 507,
+        "end_char": 509,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "VQA Accuracy",
+        "evidence": "VQA Accuracy",
+        "type": "ABILITY",
+        "context": "evaluation",
+        "start_char": 512,
+        "end_char": 524,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ANLS",
+        "evidence": "ANLS",
+        "type": "ABILITY",
+        "context": "evaluation",
+        "start_char": 527,
+        "end_char": 531,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ablation",
+        "evidence": "ablation",
+        "type": "ABILITY",
+        "context": "evaluation",
+        "start_char": 541,
+        "end_char": 549,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "error analysis",
+        "evidence": "error analysis",
+        "type": "ABILITY",
+        "context": "evaluation",
+        "start_char": 555,
+        "end_char": 569,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "hallucination analysis",
+        "evidence": "hallucination analysis",
+        "type": "ABILITY",
+        "context": "evaluation",
+        "start_char": 577,
+        "end_char": 599,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Google Colab Pro",
+        "evidence": "Google Colab Pro",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2469,
+        "end_char": 2485,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Premium",
+        "evidence": "Premium",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2486,
+        "end_char": 2493,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "GPU server",
+        "evidence": "GPU server",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2503,
+        "end_char": 2513,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Python",
+        "evidence": "Python",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2342,
+        "end_char": 2348,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "PyTorch",
+        "evidence": "PyTorch",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2351,
+        "end_char": 2358,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "HuggingFace",
+        "evidence": "HuggingFace",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2361,
+        "end_char": 2372,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "transformers",
+        "evidence": "transformers",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2374,
+        "end_char": 2386,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "bitsandbytes",
+        "evidence": "bitsandbytes",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2400,
+        "end_char": 2412,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Gradio",
+        "evidence": "Gradio",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2438,
+        "end_char": 2444,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "dataset",
+        "evidence": "dataset",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1676,
+        "end_char": 1683,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "prompting",
+        "evidence": "prompting",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1843,
+        "end_char": 1852,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "multimodal prompting",
+        "evidence": "multimodal prompting",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 2848,
+        "end_char": 2868,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "literature",
+        "evidence": "literature",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1663,
+        "end_char": 1673,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "dataset loader",
+        "evidence": "dataset loader",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1762,
+        "end_char": 1776,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "web demo",
+        "evidence": "web demo",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 1997,
+        "end_char": 2005,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "GH_3": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ROS2",
+        "evidence": "ROS2",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 46,
+        "end_char": 50,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "teleoperation",
+        "evidence": "teleoperation",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 161,
+        "end_char": 174,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "video streaming",
+        "evidence": "video streaming",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 177,
+        "end_char": 192,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "SLAM",
+        "evidence": "SLAM",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 194,
+        "end_char": 198,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Nav2",
+        "evidence": "Nav2",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 199,
+        "end_char": 203,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "object tracking",
+        "evidence": "object tracking",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 205,
+        "end_char": 220,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "LiDAR",
+        "evidence": "LiDAR",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 242,
+        "end_char": 247,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Raspberry Pi 4",
+        "evidence": "Raspberry Pi 4",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 312,
+        "end_char": 326,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Ubuntu Server 22.04.5 LTS",
+        "evidence": "Ubuntu Server 22.04.5 LTS",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 334,
+        "end_char": 359,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "YDLidar X4 Pro",
+        "evidence": "YDLidar X4 Pro",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 376,
+        "end_char": 390,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ros-humble-ros-base",
+        "evidence": "ros-humble-ros-base",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 467,
+        "end_char": 486,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ros-humble-desktop",
+        "evidence": "ros-humble-desktop",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 515,
+        "end_char": 533,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "SLAM Toolbox",
+        "evidence": "SLAM Toolbox",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 538,
+        "end_char": 550,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "ydlidar_ros2_driver",
+        "evidence": "ydlidar_ros2_driver",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 559,
+        "end_char": 578,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "rf2o_laser_odometry",
+        "evidence": "rf2o_laser_odometry",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 582,
+        "end_char": 601,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "motor control",
+        "evidence": "motor control",
+        "type": "ABILITY",
+        "context": "required",
+        "start_char": 636,
+        "end_char": 649,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "gpiozero",
+        "evidence": "gpiozero",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 652,
+        "end_char": 660,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "lgpio",
+        "evidence": "lgpio",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 672,
+        "end_char": 677,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ],
+    "GH_4": [
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "AI-Generated Text Detection & Segmentation",
+        "evidence": "AI-Generated Text Detection & Segmentation",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 218,
+        "end_char": 260,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Semantic Skeleton",
+        "evidence": "Semantic Skeleton",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 727,
+        "end_char": 744,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Generator-Invariant Provenance Subspace",
+        "evidence": "Generator-Invariant Provenance Subspace",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 794,
+        "end_char": 833,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Weight-Decomposed Low-Rank Adaptation",
+        "evidence": "Weight-Decomposed Low-Rank Adaptation",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 841,
+        "end_char": 878,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Data Layer Hierarchy",
+        "evidence": "Data Layer Hierarchy",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1553,
+        "end_char": 1573,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Curation Statistics",
+        "evidence": "Curation Statistics",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1609,
+        "end_char": 1628,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Sub-Discipline Distribution",
+        "evidence": "Sub-Discipline Distribution",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1631,
+        "end_char": 1658,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Preprocessing",
+        "evidence": "Preprocessing",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1722,
+        "end_char": 1735,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Quality Engineering",
+        "evidence": "Quality Engineering",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1738,
+        "end_char": 1757,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "AI Counterfactual Construction",
+        "evidence": "AI Counterfactual Construction",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1807,
+        "end_char": 1837,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Zero-Leakage Split Strategy",
+        "evidence": "Zero-Leakage Split Strategy",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 1896,
+        "end_char": 1923,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "High-Level Architecture",
+        "evidence": "High-Level Architecture",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2045,
+        "end_char": 2068,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Mathematical Formulation",
+        "evidence": "Mathematical Formulation",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2107,
+        "end_char": 2131,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Comprehensive Architecture Specification",
+        "evidence": "Comprehensive Architecture Specification",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2171,
+        "end_char": 2211,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Repository Directory Structure",
+        "evidence": "Repository Directory Structure",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2263,
+        "end_char": 2293,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Quickstart",
+        "evidence": "Quickstart",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2335,
+        "end_char": 2345,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Reproduction Guide",
+        "evidence": "Reproduction Guide",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2348,
+        "end_char": 2366,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Data Safety",
+        "evidence": "Data Safety",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2408,
+        "end_char": 2419,
+        "issues": [],
+        "rejection_reason": null
+      },
+      {
+        "is_valid": true,
+        "status": "ACCEPTED",
+        "skill": "Git Best Practices",
+        "evidence": "Git Best Practices",
+        "type": "TECHNOLOGY",
+        "context": "required",
+        "start_char": 2422,
+        "end_char": 2440,
+        "issues": [],
+        "rejection_reason": null
+      }
+    ]
+  },
+  "hallucinations_baseline": {
+    "JD_1": 0,
+    "JD_2": 0,
+    "JD_3": 19,
+    "JD_4": 0,
+    "JD_5": 0,
+    "JD_6": 0,
+    "JD_7": 6,
+    "JD_8": 0,
+    "JD_9": 1,
+    "JD_10": 25,
+    "JD_11": 0,
+    "GH_1": 0,
+    "GH_2": 0,
+    "GH_3": 0,
+    "GH_4": 0
+  },
+  "hallucinations_verifier": {
+    "JD_1": 0,
+    "JD_2": 0,
+    "JD_3": 0,
+    "JD_4": 0,
+    "JD_5": 0,
+    "JD_6": 0,
+    "JD_7": 0,
+    "JD_8": 0,
+    "JD_9": 0,
+    "JD_10": 0,
+    "JD_11": 0,
+    "GH_1": 0,
+    "GH_2": 0,
+    "GH_3": 0,
+    "GH_4": 0
+  },
+  "violations_baseline": {
+    "JD_1": 0,
+    "JD_2": 0,
+    "JD_3": 4,
+    "JD_4": 0,
+    "JD_5": 2,
+    "JD_6": 0,
+    "JD_7": 0,
+    "JD_8": 0,
+    "JD_9": 0,
+    "JD_10": 0,
+    "JD_11": 0,
+    "GH_1": 0,
+    "GH_2": 0,
+    "GH_3": 0,
+    "GH_4": 0
+  },
+  "violations_verifier": {
+    "JD_1": 0,
+    "JD_2": 0,
+    "JD_3": 0,
+    "JD_4": 0,
+    "JD_5": 0,
+    "JD_6": 0,
+    "JD_7": 0,
+    "JD_8": 0,
+    "JD_9": 0,
+    "JD_10": 0,
+    "JD_11": 0,
+    "GH_1": 0,
+    "GH_2": 0,
+    "GH_3": 0,
+    "GH_4": 0
+  }
+}

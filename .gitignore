@@ -252,6 +252,10 @@ data/processed/*
 !data/gold/annotations/
 !data/gold/annotations/GEM_Golden_Set_280Docs.xlsx
 
+# Qdrant Vector Snapshots (Bao gồm để khôi phục vector tức thì cho nhóm)
+!data/qdrant_snapshots/
+!data/qdrant_snapshots/*.snapshot
+
 # Dữ liệu cục bộ của DB / Vector DB
 qdrant_storage/
 postgres_data/

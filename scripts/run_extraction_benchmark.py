@@ -241,8 +241,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Chạy benchmark đối sánh trích xuất kỹ năng")
     parser.add_argument("--excel", type=str, default="data/gold/annotations/GEM_Golden_Set_280Docs.xlsx")
     parser.add_argument("--max_docs", type=int, default=0, help="Số lượng tài liệu đánh giá (0 = toàn bộ tập)")
-    parser.add_argument("--model", type=str, default="gemini-3.5-flash-lite")
-    parser.add_argument("--backend", type=str, default="gemini")
+    parser.add_argument("--model", type=str, default="qwen2.5:7b", help="Mô hình LLM đánh giá (mặc định: qwen2.5:7b)")
+    parser.add_argument("--backend", type=str, default="ollama", help="Backend thực thi (ollama / gemini)")
     parser.add_argument("--prompt_type", type=str, default="student", choices=["student", "guideline"], help="Loại prompt đánh giá: 'student' (độc lập) hoặc 'guideline'")
     args = parser.parse_args()
 

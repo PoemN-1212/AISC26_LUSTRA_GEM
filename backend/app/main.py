@@ -164,3 +164,6 @@ def match_jds(req: IdeaAnalysisRequest):
     if not req.idea_text.strip():
         raise HTTPException(status_code=400, detail="Vui lòng cung cấp mô tả ý tưởng đồ án.")
     return consultant.vector_service.search_relevant_jds(req.idea_text, limit=6)
+
+# Reload triggered for GEM AISC 2026 Phase 1 Engine
+
