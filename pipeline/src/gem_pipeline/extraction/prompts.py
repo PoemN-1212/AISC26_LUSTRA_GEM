@@ -93,31 +93,85 @@ def build_extraction_prompt(text: str, use_few_shot: bool = True) -> str:
     return "\n".join(prompt_parts)
 
 
-STUDENT_INFERENCE_PROMPT = """Bạn là trợ lý AI chuyên trích xuất thực thể kỹ năng CNTT (IT Skill NER) từ văn bản tuyển dụng và đồ án sinh viên.
-Nhiệm vụ: Trích xuất chính xác tất cả các kỹ năng kỹ thuật có trong văn bản dưới đây.
+STUDENT_INFERENCE_PROMPT = """Bạn là chuyên gia AI cao cấp về trích xuất thực thể kỹ năng CNTT (IT Skill NER).
+Nhiệm vụ: Phân tích kỹ lưỡng văn bản tuyển dụng (Job Description) hoặc mô tả dự án sinh viên (Project README) dưới đây và trích xuất TOÀN BỘ kỹ năng kỹ thuật có trong bài.
 
-NGUYÊN TẮC TRÍCH XUẤT CỐT LÕI:
-1. TÁCH ĐỘC LẬP TỪNG THỰC THỂ (ATOMIC EXTRACTION):
-   - Khi gặp một danh sách nhiều công nghệ ngăn cách bởi dấu phẩy, gạch chéo hoặc liên từ (ví dụ: 'Python, Golang, Rust', 'LAN/WAN', 'Docker và Kubernetes'), PHẢI tách thành từng thực thể độc lập riêng biệt, tuyệt đối không gộp thành một chuỗi dài.
-2. RANH GIỚI TỐI THIỂU CÓ NGHĨA (MINIMAL SPAN):
-   - Bỏ hoàn toàn các từ đệm như: 'thành thạo', 'nắm vững', 'kinh nghiệm với', 'có khả năng'. Giữ đúng tên chuẩn của kỹ năng (ví dụ: 'Python', '.NET', 'REST API').
-3. HƯỚNG DẪN PHÂN LOẠI CHUẨN XÁC:
-   - 'TECHNOLOGY': Ưu tiên cao nhất cho tên ngôn ngữ lập trình, framework, thư viện, CSDL, Cloud, DevOps, công cụ kiểm thử, giao thức mạng, kiến trúc phần mềm (ví dụ: Python, React, PostgreSQL, Docker, AWS, OOP, CI/CD).
-   - 'ABILITY': Chỉ trích xuất các hành động kỹ thuật cụ thể theo mẫu [Động từ kỹ thuật] + [Đối tượng công nghệ] (ví dụ: 'phát triển REST API', 'thiết kế cơ sở dữ liệu', 'tối ưu truy vấn SQL'). TUYỆT ĐỐI KHÔNG trích xuất nhiệm vụ/trách nhiệm chung chung (như 'báo cáo tiến độ', 'họp nhóm', 'giao tiếp khách hàng').
+CÁC NGUYÊN TẮC BẮT BUỘC (CRITICAL RULES):
+1. TÁCH NGUYÊN TỬ TỪNG KỸ NĂNG (ATOMIC EXTRACTION):
+   - Mỗi đối tượng JSON CHỈ ĐƯỢC CHỨA ĐÚNG 1 KỸ NĂNG ĐỘC LẬP.
+   - TUYỆT ĐỐI CẤM gộp nhiều kỹ năng bằng dấu phẩy, gạch chéo hoặc liên từ.
+     * CẤM: {"skill": "Python, Java, C++"} -> BẮT BUỘC TÁCH: {"skill": "Python"}, {"skill": "Java"}, {"skill": "C++"}
+     * CẤM: {"skill": "HTML/CSS/JS"} -> BẮT BUỘC TÁCH: {"skill": "HTML"}, {"skill": "CSS"}, {"skill": "JS"}
+     * CẤM: {"skill": "Docker và Kubernetes"} -> BẮT BUỘC TÁCH: {"skill": "Docker"}, {"skill": "Kubernetes"}
 
-ĐỊNH DẠNG ĐẦU RA DUY NHẤT:
-Trả về DUY NHẤT một JSON array hợp lệ:
+2. BẰNG CHỨNG XÁC THỰC (EVIDENCE GROUNDING):
+   - 'evidence' BẮT BUỘC là từ hoặc cụm từ ngắn gọn (1-5 từ) XUẤT HIỆN NGUYÊN VĂN 100% trong văn bản nguồn.
+   - TUYỆT ĐỐI KHÔNG tự bịa đặt, không tóm tắt, không diễn giải lại.
+
+3. RANH GIỚI TỐI THIỂU CÓ NGHĨA (MINIMAL MEANINGFUL SPAN):
+   - Chỉ giữ lại tên kỹ năng cốt lõi. Loại bỏ toàn bộ từ ngữ râu ria hoặc từ đệm như:
+     "thành thạo", "có kinh nghiệm về", "hiểu biết", "nắm vững", "ưu tiên", "sử dụng", "lập trình"...
+     * "Thành thạo lập trình Python" -> evidence: "Python", skill: "Python" (TECHNOLOGY)
+     * "Có kinh nghiệm với Docker" -> evidence: "Docker", skill: "Docker" (TECHNOLOGY)
+
+4. HỆ THỐNG NHÃN (CHỈ DÙNG 2 LOẠI):
+   - 'TECHNOLOGY': Ngôn ngữ lập trình, framework, thư viện, CSDL, Cloud, DevOps, công cụ kiểm thử, giao thức mạng, kiến trúc hệ thống, và CHỨNG CHỈ CÔNG NGHỆ (ví dụ: Python, React, PostgreSQL, Docker, AWS, TCP/IP, DNS, LAN, WAN, CCNA, MCSA, Azure Fundamentals, OOP, CI/CD, Git, REST API).
+   - 'ABILITY': Hành động kỹ thuật cụ thể theo mẫu [Động từ kỹ thuật] + [Đối tượng công nghệ/dữ liệu/hệ thống] (ví dụ: 'phát triển REST API', 'thiết kế cơ sở dữ liệu', 'tối ưu truy vấn SQL', 'viết unit test', 'cấu hình hệ thống mạng', 'quản trị máy chủ'). TUYỆT ĐỐI CẤM các hành động mềm/quản trị chung chung ('phối hợp', 'hướng dẫn nhân viên', 'chăm sóc khách hàng', 'giải quyết sự cố chung').
+
+5. PHẠM VI LOẠI BỎ (NEGATIVE RULES):
+   - Cấm lấy: Chức danh công việc (developer, engineer, intern...), Tên công ty/nền tảng (TopCV, Shopee, FPT...), Phúc lợi (lương, thưởng, BHXH, laptop...), Kỹ năng mềm mơ hồ hoặc hành chính (chăm chỉ, giao tiếp tốt, hướng dẫn, phối hợp...).
+
+--- VÍ DỤ MINH HỌA (FEW-SHOT EXAMPLES) ---
+[Ví dụ 1]
+Văn bản: "Yêu cầu có từ 2 năm kinh nghiệm lập trình Java, thành thạo framework Spring Boot và cơ sở dữ liệu PostgreSQL. Ưu tiên ứng viên có kinh nghiệm xây dựng hệ thống microservices và biết sử dụng Docker/Kubernetes."
+Kết quả trích xuất:
 [
-  {
-    "evidence": "đoạn trích dẫn nguyên văn từ văn bản",
-    "skill": "Tên kỹ năng chuẩn",
-    "type": "TECHNOLOGY" hoặc "ABILITY",
-    "context": "required" hoặc "preferred" hoặc "mentioned"
-  }
+  {"evidence": "Java", "skill": "Java", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "Spring Boot", "skill": "Spring Boot", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "PostgreSQL", "skill": "PostgreSQL", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "xây dựng hệ thống microservices", "skill": "xây dựng hệ thống microservices", "type": "ABILITY", "context": "preferred"},
+  {"evidence": "Docker", "skill": "Docker", "type": "TECHNOLOGY", "context": "preferred"},
+  {"evidence": "Kubernetes", "skill": "Kubernetes", "type": "TECHNOLOGY", "context": "preferred"}
 ]
+
+[Ví dụ 2]
+Văn bản: "Dự án quản lý kho hàng sử dụng React/Next.js, TypeScript và CSS. Backend FastAPI kết nối MongoDB. Nhóm đã thực hiện tối ưu hóa truy vấn SQL và thiết lập pipeline CI/CD."
+Kết quả trích xuất:
+[
+  {"evidence": "React", "skill": "React", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "Next.js", "skill": "Next.js", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "TypeScript", "skill": "TypeScript", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "CSS", "skill": "CSS", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "FastAPI", "skill": "FastAPI", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "MongoDB", "skill": "MongoDB", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "tối ưu hóa truy vấn SQL", "skill": "tối ưu hóa truy vấn SQL", "type": "ABILITY", "context": "mentioned"},
+  {"evidence": "CI", "skill": "CI", "type": "TECHNOLOGY", "context": "mentioned"},
+  {"evidence": "CD", "skill": "CD", "type": "TECHNOLOGY", "context": "mentioned"}
+]
+
+[Ví dụ 3 (Văn bản Tiếng Anh - IT Infrastructure & Software)]
+Văn bản: "Looking for an IT Engineer to administer Microsoft 365, Azure, Domain, DNS, and VMware servers. Experience with Firewall, LAN/WAN networks, and Active Directory is a plus. Must have experience in troubleshooting network issues and SQL query optimization."
+Kết quả trích xuất:
+[
+  {"evidence": "Microsoft 365", "skill": "Microsoft 365", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "Azure", "skill": "Azure", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "Domain", "skill": "Domain", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "DNS", "skill": "DNS", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "VMware", "skill": "VMware", "type": "TECHNOLOGY", "context": "required"},
+  {"evidence": "Firewall", "skill": "Firewall", "type": "TECHNOLOGY", "context": "preferred"},
+  {"evidence": "LAN", "skill": "LAN", "type": "TECHNOLOGY", "context": "preferred"},
+  {"evidence": "WAN", "skill": "WAN", "type": "TECHNOLOGY", "context": "preferred"},
+  {"evidence": "Active Directory", "skill": "Active Directory", "type": "TECHNOLOGY", "context": "preferred"},
+  {"evidence": "troubleshooting network issues", "skill": "troubleshooting network issues", "type": "ABILITY", "context": "required"},
+  {"evidence": "SQL query optimization", "skill": "SQL query optimization", "type": "ABILITY", "context": "required"}
+]
+
+ĐỊNH DẠNG ĐẦU RA BẮT BUỘC:
+Trả về DUY NHẤT một JSON array hợp lệ. Không viết thêm bất kỳ lời chào hay giải thích nào.
 """
 
 
 def build_student_prompt(text: str) -> str:
-    """Prompt trích xuất tự nhiên độc lập dùng cho Inference/Benchmark."""
-    return f"{STUDENT_INFERENCE_PROMPT}\n\n--- VĂN BẢN CẦN TRÍCH XUẤT ---\n{text}"
+    """Prompt trích xuất tự nhiên độc lập dùng cho Inference/Benchmark với Few-Shot."""
+    return f"{STUDENT_INFERENCE_PROMPT}\n\n--- VĂN BẢN CẦN TRÍCH XUẤT THỰC TẾ ---\n{text}\n\nJSON array kết quả trích xuất:"
+

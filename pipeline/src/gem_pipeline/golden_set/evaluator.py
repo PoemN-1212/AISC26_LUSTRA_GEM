@@ -68,8 +68,21 @@ class ExtractionEvaluator:
     """
 
     @staticmethod
+    def _normalize_alias(skill: str) -> str:
+        import re
+        s = skill.lower().strip()
+        s = re.sub(r"^(?:lập\s+trình|ngôn\s+ngữ|framework|thư\s+viện|cơ\s+sở\s+dữ\s+liệu|csdl)\s+", "", s)
+        s = re.sub(r"[\s\-_]+", "", s)
+        s = s.replace("reactjs", "react").replace("nodejs", "node").replace("vuejs", "vue")
+        s = s.replace("csharp", "c#").replace("c-sharp", "c#")
+        s = s.replace("dotnet", "net")
+        if s.startswith(".") and len(s) > 1:
+            s = s[1:]
+        return s
+
+    @staticmethod
     def _is_relaxed_match(pred_skill: str, gt_skill: str) -> bool:
-        """Kiểm tra khớp nới lỏng (Relaxed match) qua bao hàm xâu con hoặc trùng lặp token."""
+        """Kiểm tra khớp nới lỏng (Relaxed match) qua bao hàm xâu con, trùng lặp token hoặc alias chuẩn hóa."""
         p = pred_skill.lower().strip()
         g = gt_skill.lower().strip()
         if p == g or p in g or g in p:
@@ -77,6 +90,11 @@ class ExtractionEvaluator:
         p_tokens = set(p.split())
         g_tokens = set(g.split())
         if p_tokens and g_tokens and (p_tokens.issubset(g_tokens) or g_tokens.issubset(p_tokens)):
+            return True
+        # Chuẩn hóa alias công nghệ (ví dụ: reactjs vs react, .net vs net, c# vs c-sharp)
+        p_norm = ExtractionEvaluator._normalize_alias(pred_skill)
+        g_norm = ExtractionEvaluator._normalize_alias(gt_skill)
+        if p_norm and g_norm and (p_norm == g_norm or p_norm in g_norm or g_norm in p_norm):
             return True
         return False
 

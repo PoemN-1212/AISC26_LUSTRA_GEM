@@ -41,7 +41,7 @@ class SkillExtractor:
     def __init__(
         self,
         backend: str = "auto",                  # 'auto' | 'ollama' | 'gemini'
-        ollama_model: str = "qwen2.5:3b",       # Mặc định qwen2.5:3b (hoặc qwen2.5:7b)
+        ollama_model: str = "qwen2.5:7b",       # Mặc định qwen2.5:7b cho chất lượng cao nhất
         ollama_base_url: str = "http://localhost:11434",
         api_key: Optional[str] = None,
         gemini_models: Optional[List[str]] = None,
@@ -67,15 +67,21 @@ class SkillExtractor:
 
     def _call_ollama(self, prompt: str) -> str:
         """Gọi Qwen qua Ollama Local API (hoàn toàn offline, không tốn API key)."""
+        options = {
+            "temperature": 0.1,
+            "num_predict": 1024,
+            "num_ctx": 4096,
+            "stop": ["\n\n---", "<|im_end|>", "<|endoftext|>"]
+        }
+        # Cấu hình tối ưu GPU offload cho 7B trên card 4GB VRAM
+        if "7b" in self.ollama_model.lower():
+            options["num_gpu"] = int(os.getenv("OLLAMA_NUM_GPU", "16"))
+
         payload = {
             "model": self.ollama_model,
             "prompt": prompt,
             "stream": False,
-            "options": {
-                "temperature": 0.1,
-                "num_predict": 2048,
-                "num_ctx": 4096
-            }
+            "options": options
         }
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
@@ -102,6 +108,9 @@ class SkillExtractor:
             raw_text = self._call_ollama(prompt)
             if raw_text and raw_text != "[]":
                 return self._clean_json_fence(raw_text)
+            if self.backend == "ollama":
+                # Người dùng chỉ định rõ backend=ollama: giữ tính độc lập tuyệt đối, không fallback sang Gemini
+                return self._clean_json_fence(raw_text or "[]")
             print("  ⚠ Chuyển sang Gemini cloud dự phòng do Ollama không phản hồi.")
 
         # Gọi Gemini Cloud
@@ -155,8 +164,35 @@ class SkillExtractor:
 
     def parse_candidates(self, raw_json_str: str) -> List[Dict[str, Any]]:
         """Parse và chuẩn hóa danh sách candidate từ chuỗi JSON của LLM."""
+        data = None
         try:
             data = json.loads(raw_json_str)
+        except Exception:
+            # Fallback 1: Tự động đóng mảng nếu bị ngắt stream ở cuối (thiếu ']')
+            trimmed = raw_json_str.strip()
+            if trimmed.startswith("[") and not trimmed.endswith("]"):
+                try:
+                    last_brace = trimmed.rfind("}")
+                    if last_brace != -1:
+                        data = json.loads(trimmed[:last_brace + 1] + "\n]")
+                except Exception:
+                    pass
+
+            # Fallback 2: Quét mọi JSON object {...} hoàn chỉnh nếu mảng bị vỡ
+            if data is None:
+                matches = re.findall(r"\{[^{}]+\}", raw_json_str)
+                objs = []
+                for m in matches:
+                    try:
+                        o = json.loads(m)
+                        if isinstance(o, dict) and (o.get("skill") or o.get("evidence") or o.get("name")):
+                            objs.append(o)
+                    except Exception:
+                        continue
+                if objs:
+                    data = objs
+
+        try:
             raw_list = []
             if isinstance(data, list):
                 raw_list = data
@@ -166,17 +202,28 @@ class SkillExtractor:
                     if k in data and isinstance(data[k], list):
                         raw_list = data[k]
                         break
-                if not raw_list and data.get("evidence"):
+                if not raw_list and (data.get("evidence") or data.get("skill") or data.get("name")):
                     raw_list = [data]
 
             valid = []
             for item in raw_list:
-                if isinstance(item, dict) and item.get("evidence"):
+                if isinstance(item, dict):
+                    skill_name = item.get("skill") or item.get("name") or item.get("technology") or ""
+                    evidence_str = item.get("evidence") or skill_name
+                    if skill_name or evidence_str:
+                        valid.append({
+                            "evidence": str(evidence_str or skill_name).strip(),
+                            "skill": str(skill_name or evidence_str).strip(),
+                            "type": str(item.get("type", "TECHNOLOGY")).strip().upper(),
+                            "context": str(item.get("context", "required")).strip().lower()
+                        })
+                elif isinstance(item, str) and len(item.strip()) >= 2:
+                    s = item.strip()
                     valid.append({
-                        "evidence": str(item.get("evidence", "")).strip(),
-                        "skill": str(item.get("skill", item.get("evidence", ""))).strip(),
-                        "type": str(item.get("type", "TECHNOLOGY")).strip().upper(),
-                        "context": str(item.get("context", "required")).strip().lower()
+                        "evidence": s,
+                        "skill": s,
+                        "type": "TECHNOLOGY",
+                        "context": "required"
                     })
             return valid
         except Exception:

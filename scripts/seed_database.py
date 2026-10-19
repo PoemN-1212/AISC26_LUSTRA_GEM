@@ -498,6 +498,36 @@ def seed_qdrant():
         print("  ℹ️ Qdrant chưa được khởi động (bạn có thể chạy: docker compose -f infra/docker-compose.yml up -d gem_qdrant). Bỏ qua vector hóa.", flush=True)
         return
 
+    # 1. ƯU TIÊN KHÔI PHỤC SIÊU TỐC TỪ SNAPSHOT NẾU CÓ (Chỉ mất 2-3 giây, không cần Ollama/GPU)
+    data_dir = get_data_dir()
+    snapshots_dir = os.path.join(data_dir, "qdrant_snapshots")
+    market_snap = os.path.join(snapshots_dir, "market_jds.snapshot")
+    proj_snap = os.path.join(snapshots_dir, "student_projects.snapshot")
+
+    if os.path.exists(market_snap) and os.path.exists(proj_snap):
+        print("  ⚡ Tìm thấy file Vector Snapshots trong data/qdrant_snapshots/! Khôi phục tức thì trong vài giây...", flush=True)
+        try:
+            with open(market_snap, "rb") as f1:
+                r1 = requests.post(
+                    f"{qdrant_url}/collections/market_jds/snapshots/upload?priority=snapshot",
+                    files={"snapshot": ("market_jds.snapshot", f1, "application/octet-stream")},
+                    timeout=60
+                )
+            with open(proj_snap, "rb") as f2:
+                r2 = requests.post(
+                    f"{qdrant_url}/collections/student_projects/snapshots/upload?priority=snapshot",
+                    files={"snapshot": ("student_projects.snapshot", f2, "application/octet-stream")},
+                    timeout=60
+                )
+            if r1.status_code == 200 and r2.status_code == 200:
+                print("  🎉 KHÔI PHỤC VECTOR QDRANT THÀNH CÔNG TỪ SNAPSHOT! (Không cần chạy Embedding Ollama)", flush=True)
+                return
+            else:
+                print(f"  ⚠️ Phản hồi upload snapshot: {r1.status_code}, {r2.status_code}. Chuyển sang fallback...", flush=True)
+        except Exception as e:
+            print(f"  ⚠️ Khôi phục snapshot thất bại ({e}), chuyển sang fallback...", flush=True)
+
+    # 2. FALLBACK: Chạy Vector hóa tuần tự qua BGE-M3 (nếu không có snapshot)
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "pipeline", "src")))
     try:
         from gem_pipeline.vector_store.qdrant_service import QdrantVectorService

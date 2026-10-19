@@ -76,8 +76,13 @@ def init_extracted_skills_table(engine):
     print("✅ Đã khởi tạo bảng 'extracted_skills' và các chỉ mục trong PostgreSQL.")
 
 
-def preload_golden_set_skills(engine, excel_path: str = "data/gold/annotations/GEM_Golden_Set_100JDs.xlsx") -> set:
-    """Nạp sẵn các kỹ năng đã trích xuất từ tệp Golden Set để bỏ qua 120 tài liệu đã làm."""
+def preload_golden_set_skills(engine, excel_path: str = "data/gold/annotations/GEM_Golden_Set_280Docs.xlsx") -> set:
+    """Nạp sẵn các kỹ năng đã trích xuất từ tệp Golden Set để bỏ qua các tài liệu đã làm."""
+    if not os.path.exists(excel_path):
+        for alt in ["data/gold/annotations/GEM_Golden_Set_280Docs.xlsx", "data/gold/annotations/GEM_Golden_Set_200JDs.xlsx", "data/gold/annotations/GEM_Golden_Set_100JDs.xlsx"]:
+            if os.path.exists(alt):
+                excel_path = alt
+                break
     if not os.path.exists(excel_path):
         return set()
 
@@ -191,6 +196,14 @@ def run_full_extraction(
         if not records:
             return
         df_buf = pd.DataFrame(records)
+        if "context" in df_buf.columns:
+            df_buf["context"] = df_buf["context"].astype(str).str.slice(0, 250)
+        if "type" in df_buf.columns:
+            df_buf["type"] = df_buf["type"].astype(str).str.slice(0, 95)
+        if "source_type" in df_buf.columns:
+            df_buf["source_type"] = df_buf["source_type"].astype(str).str.slice(0, 45)
+        if "verifier_status" in df_buf.columns:
+            df_buf["verifier_status"] = df_buf["verifier_status"].astype(str).str.slice(0, 45)
         df_buf.to_sql("extracted_skills", engine, if_exists="append", index=False)
         records.clear()
 
@@ -206,7 +219,7 @@ def run_full_extraction(
         print(f"\n[{processed_count}/{total_pending}] Đang xử lý {doc_id}: {title[:40]}... ({len(content)} ký tự)", flush=True)
 
         t0 = time.time()
-        raw_candidates = extractor.extract_baseline(content)
+        raw_candidates = extractor.extract_baseline(content, prompt_type="student")
         t_el = time.time() - t0
 
         verified_results = verifier.verify_document_skills(raw_candidates, content)
@@ -249,7 +262,7 @@ def run_full_extraction(
         print(f"\n[{processed_count}/{total_pending}] Đang xử lý {doc_id}: {repo[:40]}... ({len(content)} ký tự)", flush=True)
 
         t0 = time.time()
-        raw_candidates = extractor.extract_baseline(content)
+        raw_candidates = extractor.extract_baseline(content, prompt_type="student")
         t_el = time.time() - t0
 
         verified_results = verifier.verify_document_skills(raw_candidates, content)
@@ -293,10 +306,30 @@ def run_full_extraction(
     print(f"  ✅ Kỹ năng đạt chuẩn (ACCEPT): {total_acc} ({total_acc/max(total_in_db,1)*100:.1f}%)")
     print("=" * 80)
 
+    # Đồng bộ ra tệp seed data/processed/skills/extracted_skills.jsonl
+    print("\n📦 Đang đồng bộ bảng 'extracted_skills' ra tệp data/processed/skills/extracted_skills.jsonl...")
+    df_all_skills = pd.read_sql("SELECT * FROM extracted_skills ORDER BY id ASC;", engine)
+    out_dir = os.path.join("data", "processed", "skills")
+    os.makedirs(out_dir, exist_ok=True)
+    out_file = os.path.join(out_dir, "extracted_skills.jsonl")
+    df_all_skills.to_json(out_file, orient="records", lines=True, force_ascii=False)
+    print(f"✅ Đã ghi {len(df_all_skills)} bản ghi vào {out_file}")
+
+    # Làm giàu và cập nhật vào Qdrant
+    print("\n🚀 Đang cập nhật dữ liệu và kỹ năng vào Qdrant Vector Store...")
+    try:
+        from gem_pipeline.vector_store.qdrant_service import QdrantVectorService
+        qs = QdrantVectorService()
+        qs.index_all_jds()
+        qs.index_all_projects()
+        print("✅ Hoàn tất đồng bộ Qdrant với đầy đủ Vector BGE-M3 và nhãn kỹ năng!")
+    except Exception as e:
+        print(f"⚠ Lỗi khi cập nhật Qdrant: {e}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Chạy trích xuất hàng loạt toàn bộ kho dữ liệu GEM")
-    parser.add_argument("--model", type=str, default="qwen2.5:7b", help="Mô hình trích xuất")
+    parser.add_argument("--model", type=str, default="qwen2.5:7b", help="Mô hình trích xuất (mặc định: qwen2.5:7b)")
     parser.add_argument("--backend", type=str, default="ollama", help="Backend (ollama / gemini)")
     args = parser.parse_args()
 
