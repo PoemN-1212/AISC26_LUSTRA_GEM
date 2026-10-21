@@ -193,6 +193,7 @@ function resetChatSession() {
 }
 
 function loadDemoProject(type) {
+  resetChatSession();
   if (type === "olap") {
     currentProjectTopic = "Hệ thống OLAP Big Data & Phát hiện Gian lận Giao dịch Ngân hàng (Bank Fraud Detection)";
     sendQuickPrompt("tôi muốn làm một đồ án OLAP về bank transaction fraud ấy");
@@ -428,18 +429,18 @@ async function handleChatSubmit(e) {
 
   // Ghi nhận câu hỏi/nội dung mới nhất của người dùng
   latestUserQuery = text;
-  if (!currentProjectTopic) {
-    currentProjectTopic = text;
-  }
 
-  // Render User Message
+  // Render User Message bên trái
   appendUserMessage(text);
   input.value = "";
   input.disabled = true;
   sendBtn.disabled = true;
 
-  // Render Typing Indicator
+  // Render Typing Indicator cho cột Chat bên trái
   const typingId = appendTypingIndicator();
+
+  // BẬT TRẠNG THÁI RELOAD / LOADING CHO MÀN HÌNH BÁO CÁO BÊN PHẢI (BLUEPRINT PANEL)
+  setBlueprintReloadingState(true, text);
 
   try {
     const response = await fetch("/api/consultation/chat", {
@@ -460,29 +461,132 @@ async function handleChatSubmit(e) {
     const data = await response.json();
     currentSessionId = data.session_id;
 
-    // Render GEM response
+    // Render GEM response bên trái
     appendGemMessage(data.reply);
 
-    // Update Live Blueprint
+    // Update Live Blueprint bên phải
     if (data.blueprint) {
       if (data.blueprint.domain) {
         currentProjectTopic = data.blueprint.domain;
+      } else if (!currentProjectTopic) {
+        currentProjectTopic = text;
       }
-      data.blueprint.idea_text = currentProjectTopic;
+      data.blueprint.idea_text = data.blueprint.domain || currentProjectTopic;
       data.blueprint.user_inquiry = latestUserQuery;
       currentBlueprint = data.blueprint;
+
+      // Render lại màn hình báo cáo bên phải với dữ liệu mới
       renderBlueprint(data.blueprint);
+      
+      // Hiệu ứng reload nhấp nháy highlight & toast thông báo
+      triggerBlueprintReloadEffect();
+      showToast("✓ Đã cập nhật Báo cáo Định hướng & Thu hẹp Skill Gap!", "success");
     }
   } catch (err) {
     removeTypingIndicator(typingId);
+    setBlueprintReloadingState(false);
     appendGemMessage("⚠️ Xin lỗi, đã có lỗi kết nối tới máy chủ GEM. Vui lòng kiểm tra lại dịch vụ Backend (port 8000).");
     showToast("Lỗi kết nối Backend", "error");
     console.error("Chat error:", err);
   } finally {
+    setBlueprintReloadingState(false);
     input.disabled = false;
     sendBtn.disabled = false;
     input.focus();
   }
+}
+
+function setBlueprintReloadingState(isLoading, queryText) {
+  const roleBadge = document.getElementById("blueprint-target-role");
+  const blueprintContent = document.getElementById("blueprint-content");
+  if (!blueprintContent) return;
+
+  if (isLoading) {
+    // 1. Cập nhật header badge bên phải
+    if (roleBadge) {
+      roleBadge.dataset.origText = roleBadge.textContent;
+      roleBadge.innerHTML = `<span class="reloading-spin">🔄</span> Đang cập nhật...`;
+      roleBadge.classList.add("role-badge-reloading");
+    }
+
+    // 2. Nếu đã có nội dung báo cáo bên phải (đang có .readiness-card)
+    const inquiryBox = blueprintContent.querySelector(".readiness-inquiry-box");
+    if (inquiryBox && queryText) {
+      const inquiryText = inquiryBox.querySelector(".inquiry-text");
+      if (inquiryText) {
+        inquiryText.innerHTML = `"${escapeHtml(queryText)}" <span class="inquiry-updating-tag">⏳ Đang phân tích...</span>`;
+      }
+    }
+
+    // Chèn banner Reloading ở đầu màn hình báo cáo bên phải
+    let reloadBanner = document.getElementById("blueprint-reload-banner");
+    if (!reloadBanner) {
+      reloadBanner = document.createElement("div");
+      reloadBanner.id = "blueprint-reload-banner";
+      reloadBanner.className = "blueprint-reload-banner";
+      reloadBanner.innerHTML = `
+        <div class="reload-banner-inner">
+          <div class="reload-banner-spinner"></div>
+          <div class="reload-banner-text">
+            <b>Đang tái phân tích độ vênh kỹ năng & cập nhật báo cáo cho câu hỏi mới...</b>
+            <span>Hệ thống đang đối chiếu 700 JDs TopCV, tính toán lại điểm thực chiến & ma trận kỹ năng tương ứng.</span>
+          </div>
+        </div>
+      `;
+      blueprintContent.insertBefore(reloadBanner, blueprintContent.firstChild);
+      blueprintContent.classList.add("blueprint-is-reloading");
+      blueprintContent.scrollTop = 0;
+    }
+
+    // Nếu là empty state ban đầu (chưa có báo cáo nào)
+    const emptyState = blueprintContent.querySelector(".empty-blueprint-state");
+    if (emptyState) {
+      emptyState.style.display = "none";
+      let skeleton = document.getElementById("blueprint-skeleton-loading");
+      if (!skeleton) {
+        skeleton = document.createElement("div");
+        skeleton.id = "blueprint-skeleton-loading";
+        skeleton.className = "blueprint-skeleton-loading";
+        skeleton.innerHTML = `
+          <div class="skeleton-card-pulse">
+            <div class="skeleton-shimmer-line skeleton-title"></div>
+            <div class="skeleton-shimmer-line skeleton-desc"></div>
+            <div class="skeleton-row">
+              <div class="skeleton-circle"></div>
+              <div class="skeleton-shimmer-line skeleton-col"></div>
+            </div>
+            <div class="skeleton-shimmer-line skeleton-desc" style="width: 80%; margin-top: 1rem;"></div>
+          </div>
+        `;
+        blueprintContent.appendChild(skeleton);
+      }
+    }
+  } else {
+    // Tắt trạng thái loading
+    const reloadBanner = document.getElementById("blueprint-reload-banner");
+    if (reloadBanner) reloadBanner.remove();
+    const skeleton = document.getElementById("blueprint-skeleton-loading");
+    if (skeleton) skeleton.remove();
+    blueprintContent.classList.remove("blueprint-is-reloading");
+    if (roleBadge) {
+      roleBadge.classList.remove("role-badge-reloading");
+    }
+    const emptyState = blueprintContent.querySelector(".empty-blueprint-state");
+    if (emptyState && !currentBlueprint) {
+      emptyState.style.display = "flex";
+    }
+  }
+}
+
+function triggerBlueprintReloadEffect() {
+  const blueprintContent = document.getElementById("blueprint-content");
+  if (!blueprintContent) return;
+  blueprintContent.classList.remove("blueprint-updated-pulse");
+  void blueprintContent.offsetWidth; // Trigger reflow
+  blueprintContent.classList.add("blueprint-updated-pulse");
+  setTimeout(() => {
+    blueprintContent.classList.remove("blueprint-updated-pulse");
+  }, 1600);
 }
 
 function appendUserMessage(text) {
