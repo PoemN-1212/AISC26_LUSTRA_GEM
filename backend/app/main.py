@@ -97,6 +97,21 @@ def health_check():
 # ==========================================
 
 
+import math
+
+def sanitize_for_json(obj: Any) -> Any:
+    """Khử sạch triệt để các giá trị float NaN / Infinity để JSON compliant 100%."""
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, dict):
+        return {k: sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [sanitize_for_json(x) for x in obj]
+    return obj
+
+
 @app.post("/api/consultation/analyze-idea", tags=["Consultation"])
 def analyze_idea(req: IdeaAnalysisRequest):
     """
@@ -105,7 +120,8 @@ def analyze_idea(req: IdeaAnalysisRequest):
     """
     if not req.idea_text.strip():
         raise HTTPException(status_code=400, detail="Vui lòng nhập mô tả ý tưởng đồ án.")
-    return consultant.analyze_idea(req.idea_text)
+    res = consultant.analyze_idea(req.idea_text)
+    return sanitize_for_json(res)
 
 
 @app.post("/api/consultation/blueprint", tags=["Consultation"])
@@ -119,12 +135,13 @@ def generate_blueprint(req: BlueprintRequest):
     """
     if not req.idea_text.strip():
         raise HTTPException(status_code=400, detail="Vui lòng nhập mô tả ý tưởng đồ án.")
-    return consultant.generate_blueprint(
+    res = consultant.generate_blueprint(
         idea_text=req.idea_text,
         target_role=req.target_role,
         time_months=req.time_months or 3,
         preferred_tech=req.preferred_tech or [],
     )
+    return sanitize_for_json(res)
 
 
 @app.post("/api/consultation/chat", tags=["Consultation"])
@@ -138,7 +155,8 @@ def chat_copilot(req: ChatRequest):
     """
     if not req.message.strip():
         raise HTTPException(status_code=400, detail="Nội dung tin nhắn không được để trống.")
-    return consultant.chat(session_id=req.session_id, user_message=req.message)
+    res = consultant.chat(session_id=req.session_id, user_message=req.message)
+    return sanitize_for_json(res)
 
 
 # ==========================================

@@ -127,10 +127,35 @@ class IdeationConsultant:
         detected_role = intent.get("detected_role")
         is_undecided = intent["is_undecided"]
 
+        msg_lower = (user_message or "").lower().strip()
+        topic_indicators = [
+            "tôi muốn làm", "tôi muốn xây dựng", "em muốn làm", "em muốn xây dựng",
+            "đề tài", "website", "thương mại điện tử", "e-commerce", "ecommerce",
+            "bán lẻ", "bán hàng", "bệnh viện", "quản lý", "phát hiện gian lận",
+            "kho dữ liệu", "olap", "chẩn đoán", "hệ thống", "ứng dụng", "dự án", "nghiên cứu"
+        ]
+        is_new_topic = any(k in msg_lower for k in topic_indicators) and len(user_message.strip()) >= 20
+
         role_switched = False
         is_explicit_role = False
 
-        if previous_role is None:
+        if is_new_topic or (is_undecided and len(user_message.strip()) >= 30):
+            # Cập nhật đề tài mới cho phiên hội thoại
+            session["idea"] = user_message
+            topic_analysis = self.analyze_idea(user_message)
+            if explicit_role:
+                if explicit_role != previous_role:
+                    role_switched = True
+                    session["previous_role"] = previous_role
+                session["target_role"] = explicit_role
+                is_explicit_role = True
+            else:
+                new_primary = topic_analysis.get("primary_role", "Backend Developer")
+                if previous_role and previous_role != new_primary:
+                    role_switched = True
+                    session["previous_role"] = previous_role
+                session["target_role"] = new_primary
+        elif previous_role is None:
             if detected_role:
                 is_explicit_role = bool(explicit_role)
                 session["target_role"] = detected_role
@@ -139,14 +164,30 @@ class IdeationConsultant:
                 session["target_role"] = initial_analysis.get("primary_role", "Backend Developer")
         else:
             # ĐÃ CÓ vai trò trước đó trong session:
-            # CHỈ đổi vai trò nếu người dùng nói TƯỜNG MINH một vai trò mới (explicit_role)
-            # Không tự ý đổi vai trò chỉ vì người dùng nhắc đến một công nghệ đơn lẻ (ví dụ hỏi về Docker không làm đổi role thành DevOps)
+            # 1. Đổi vai trò nếu người dùng nói TƯỜNG MINH một vai trò mới (explicit_role)
             if explicit_role and explicit_role != previous_role:
                 role_switched = True
                 session["previous_role"] = previous_role
                 session["target_role"] = explicit_role
+                is_explicit_role = True
             elif explicit_role:
                 session["target_role"] = explicit_role
+                is_explicit_role = True
+            # 2. Nếu người dùng trả lời câu hỏi mở của GEM về công nghệ/sở thích và trước đó chưa chốt vai trò cứng:
+            elif detected_role and detected_role != previous_role and len(session.get("history", [])) > 0:
+                # Kiểm tra xem vai trò trước đó có phải do hệ thống tự đoán ban đầu không
+                if not session.get("explicit_role_locked", False):
+                    role_switched = True
+                    session["previous_role"] = previous_role
+                    session["target_role"] = detected_role
+
+            # Bổ sung thông tin người dùng vào ngữ cảnh bài toán nếu không phải câu hỏi tra cứu số liệu
+            meta_queries = ["tại sao", "giải thích", "so sánh", "chất lượng", "bao nhiêu tin", "xếp hạng"]
+            if len(session.get("history", [])) > 0 and not any(k in msg_lower for k in meta_queries):
+                session["idea"] = f"{session.get('idea', '')} - Ghi nhận thêm: {user_message}"
+
+        if is_explicit_role:
+            session["explicit_role_locked"] = True
 
         session["role_switched"] = role_switched
 
@@ -224,6 +265,8 @@ class IdeationConsultant:
             time_months=session["time_months"],
             preferred_tech=session["preferred_tech"],
         )
+        blueprint["user_inquiry"] = user_message
+        blueprint["idea_text"] = session["idea"]
 
         # Sinh câu trả lời định hướng của Cố vấn GEM bằng LLM
         reply = self.chat_service.generate_ai_reply(
