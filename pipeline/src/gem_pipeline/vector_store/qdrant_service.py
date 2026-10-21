@@ -401,10 +401,22 @@ class QdrantVectorService:
                 for hit in response.points:
                     if hit.score >= min_score:
                         item = dict(hit.payload)
+                        # Làm sạch triệt để float NaN/Inf từ payload Qdrant
+                        for k, v in list(item.items()):
+                            if isinstance(v, float) and (math.isnan(v) or math.isinf(v)):
+                                item[k] = None
+                            elif pd.isna(v):
+                                item[k] = None
                         item["similarity_score"] = round(hit.score, 4)
                         item["retrieval_method"] = "bge_m3_cosine"
-                        author = item.get("author") or "vietnam-student"
-                        repo_name = item.get("repo_name") or f"project-{item.get('project_id', 1)}"
+                        raw_author = item.get("author")
+                        author = raw_author if pd.notnull(raw_author) and str(raw_author).strip() and str(raw_author).lower() != "nan" else "vietnam-student"
+                        item["author"] = author
+                        raw_repo = item.get("repo_name")
+                        repo_name = raw_repo if pd.notnull(raw_repo) and str(raw_repo).strip() and str(raw_repo).lower() != "nan" else f"project-{item.get('project_id', 1)}"
+                        item["repo_name"] = repo_name
+                        raw_lang = item.get("language")
+                        item["language"] = raw_lang if pd.notnull(raw_lang) and str(raw_lang).strip() and str(raw_lang).lower() != "nan" else "Python"
                         if not item.get("repo_url"):
                             item["repo_url"] = f"https://github.com/{author}/{repo_name}"
                         output.append(item)
@@ -501,16 +513,18 @@ class QdrantVectorService:
 
                 sim = round(0.55 + min(0.35, matches * 0.07), 2)
                 p_id = int(row["id"])
-                author = row["author"] or "vietnam-student"
-                repo_name = row["repo_name"] or f"project-{p_id}"
-                raw_lang = str(row["language"]).strip() if pd.notnull(row.get("language")) else ""
-                clean_lang = raw_lang if raw_lang and raw_lang.lower() not in ["nan", "none", "null"] else "JavaScript"
+                raw_author = row["author"]
+                author = raw_author if pd.notnull(raw_author) and str(raw_author).strip() and str(raw_author).lower() != "nan" else "vietnam-student"
+                raw_repo = row["repo_name"]
+                repo_name = raw_repo if pd.notnull(raw_repo) and str(raw_repo).strip() and str(raw_repo).lower() != "nan" else f"project-{p_id}"
+                raw_lang = row["language"]
+                lang = raw_lang if pd.notnull(raw_lang) and str(raw_lang).strip() and str(raw_lang).lower() != "nan" else "Python"
                 candidates.append({
                     "doc_type": "project",
                     "project_id": p_id,
                     "repo_name": repo_name,
                     "author": author,
-                    "language": clean_lang,
+                    "language": lang,
                     "repo_url": f"https://github.com/{author}/{repo_name}",
                     "skills": skills_dict.get(str(p_id), []),
                     "tech_skills": skills_dict.get(str(p_id), []),

@@ -142,7 +142,8 @@ def analyze_idea(req: IdeaAnalysisRequest):
     """
     if not req.idea_text.strip():
         raise HTTPException(status_code=400, detail="Vui lòng nhập mô tả ý tưởng đồ án.")
-    return consultant.analyze_idea(req.idea_text)
+    res = consultant.analyze_idea(req.idea_text)
+    return sanitize_for_json(res)
 
 
 @app.post("/api/consultation/blueprint", tags=["Consultation"])
@@ -156,12 +157,13 @@ def generate_blueprint(req: BlueprintRequest):
     """
     if not req.idea_text.strip():
         raise HTTPException(status_code=400, detail="Vui lòng nhập mô tả ý tưởng đồ án.")
-    return consultant.generate_blueprint(
+    res = consultant.generate_blueprint(
         idea_text=req.idea_text,
         target_role=req.target_role,
         time_months=req.time_months or 3,
         preferred_tech=req.preferred_tech or [],
     )
+    return sanitize_for_json(res)
 
 
 @app.post("/api/consultation/chat", tags=["Consultation"])
@@ -176,8 +178,8 @@ def chat_copilot(req: ChatRequest):
     if not req.message.strip():
         raise HTTPException(status_code=400, detail="Nội dung tin nhắn không được để trống.")
     try:
-        raw_result = consultant.chat(session_id=req.session_id, user_message=req.message)
-        return sanitize_for_json(raw_result)
+        res = consultant.chat(session_id=req.session_id, user_message=req.message)
+        return sanitize_for_json(res)
     except Exception as e:
         import traceback
         traceback.print_exc()
