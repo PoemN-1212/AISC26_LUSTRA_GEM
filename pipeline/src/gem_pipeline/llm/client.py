@@ -65,7 +65,7 @@ class GEMAdvisorLLM:
         """Kiểm tra xem Gemini Cloud API có đang hoạt động và không bị ngắt mạch không."""
         return time.time() >= cls._gemini_disabled_until and bool(os.getenv("GEMINI_API_KEY"))
 
-    def generate_text(self, prompt: str, temperature: float = 0.2, max_tokens: int = 500) -> str:
+    def generate_text(self, prompt: str, temperature: float = 0.2, max_tokens: int = 2048) -> str:
         """Thực thi gọi LLM với cơ chế circuit-breaker và fallback tự động tốc độ cao."""
         now = time.time()
 
