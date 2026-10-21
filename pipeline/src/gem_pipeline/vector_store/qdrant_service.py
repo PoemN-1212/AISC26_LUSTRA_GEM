@@ -97,7 +97,11 @@ class QdrantVectorService:
             return None
 
         endpoint = f"{self.ollama_url}/api/embeddings"
-        payload = {"model": self.embedding_model, "prompt": clean_text}
+        payload = {
+            "model": self.embedding_model,
+            "prompt": clean_text,
+            "options": {"num_gpu": 0},
+        }
         try:
             resp = requests.post(endpoint, json=payload, timeout=timeout)
             if resp.status_code == 200:
@@ -168,6 +172,7 @@ class QdrantVectorService:
             tech_s = tech_by_job.get(str(job_id), [])
             ab_s = ability_by_job.get(str(job_id), [])
 
+            embed_input = f"{title}. Vai trò: {role}. Lĩnh vực: {domain}. Kỹ năng: {', '.join(job_skills[:10])}. Mô tả: {content[:1000]}"
             vec = self.embed_text(embed_input)
             if vec is None:
                 continue
@@ -250,6 +255,7 @@ class QdrantVectorService:
             tech_s = tech_by_proj.get(str(proj_id), [])
             ab_s = ability_by_proj.get(str(proj_id), [])
 
+            embed_input = f"{repo_name}. Tác giả: {author}. Ngôn ngữ: {lang}. Kỹ năng: {', '.join(proj_skills[:10])}. Mô tả: {content[:1000]}"
             vec = self.embed_text(embed_input)
             if vec is None:
                 continue
@@ -454,7 +460,7 @@ class QdrantVectorService:
             LIMIT 60;
         """
         try:
-            df = pd.read_sql(sql, engine)
+            df = pd.read_sql(sql, engine).fillna("")
             if df.empty:
                 return []
             
@@ -497,12 +503,14 @@ class QdrantVectorService:
                 p_id = int(row["id"])
                 author = row["author"] or "vietnam-student"
                 repo_name = row["repo_name"] or f"project-{p_id}"
+                raw_lang = str(row["language"]).strip() if pd.notnull(row.get("language")) else ""
+                clean_lang = raw_lang if raw_lang and raw_lang.lower() not in ["nan", "none", "null"] else "JavaScript"
                 candidates.append({
                     "doc_type": "project",
                     "project_id": p_id,
                     "repo_name": repo_name,
                     "author": author,
-                    "language": row["language"] or "JavaScript",
+                    "language": clean_lang,
                     "repo_url": f"https://github.com/{author}/{repo_name}",
                     "skills": skills_dict.get(str(p_id), []),
                     "tech_skills": skills_dict.get(str(p_id), []),

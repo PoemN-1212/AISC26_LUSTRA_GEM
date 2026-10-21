@@ -15,6 +15,7 @@ Kiến trúc Refactored (Clean Architecture / Single Responsibility):
 """
 
 import sys
+import concurrent.futures
 from typing import Dict, List, Optional, Any, Tuple
 from dotenv import load_dotenv
 
@@ -67,6 +68,7 @@ class IdeationConsultant:
         target_role: Optional[str] = None,
         time_months: int = 3,
         preferred_tech: Optional[List[str]] = None,
+        analysis: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Trụ cột 2 & 3: Xây dựng Kiến trúc Đề xuất Công nghệ 3 Lớp & Lộ trình Sprint đo ni đóng giày.
@@ -77,25 +79,27 @@ class IdeationConsultant:
         - Báo cáo chẩn đoán Skill Gap từ SkillGapEngine
         """
         preferred_tech = preferred_tech or []
-        analysis = self.analyze_idea(idea_text)
+        if analysis is None:
+            analysis = self.analyze_idea(idea_text)
         target_role = target_role or analysis.get("primary_role", "Backend Developer")
 
         # 1. Truy xuất dữ liệu thị trường thực tế cho target_role từ PostgreSQL
         role_profile = self.profiler.get_role_skill_profile(target_role, top_k=25)
 
-        # 2. Truy xuất JD liên quan qua Qdrant Vector Store
-        relevant_jds = self.vector_service.search_relevant_jds(idea_text, limit=3)
-
-        # 3. Truy xuất Đồ án GitHub tham khảo
-        similar_projects = self.vector_service.search_similar_projects(idea_text, limit=2, min_score=0.52)
-
-        # 4. Chẩn đoán và định lượng Skill Gap
-        skill_gap_report = self.skill_gap_engine.evaluate_skill_gap(
-            idea_text=idea_text,
-            analysis=analysis,
-            target_role=target_role,
-            role_profile=role_profile,
-        )
+        # 2, 3, 4. Thực thi song song: tìm JD, tìm đồ án tham khảo và đánh giá skill gap
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+            f_jds = executor.submit(self.vector_service.search_relevant_jds, idea_text, limit=3)
+            f_projs = executor.submit(self.vector_service.search_similar_projects, idea_text, limit=2, min_score=0.52)
+            f_gap = executor.submit(
+                self.skill_gap_engine.evaluate_skill_gap,
+                idea_text=idea_text,
+                analysis=analysis,
+                target_role=target_role,
+                role_profile=role_profile,
+            )
+            relevant_jds = f_jds.result()
+            similar_projects = f_projs.result()
+            skill_gap_report = f_gap.result()
 
         # 5. Lắp ghép thành Blueprint 3 Lớp & Lộ trình Sprint
         return self.blueprint_gen.build_blueprint(
@@ -129,6 +133,7 @@ class IdeationConsultant:
 
         role_switched = False
         is_explicit_role = False
+        initial_analysis = None
 
         if previous_role is None:
             if detected_role:
@@ -223,6 +228,7 @@ class IdeationConsultant:
             target_role=session["target_role"],
             time_months=session["time_months"],
             preferred_tech=session["preferred_tech"],
+            analysis=initial_analysis,
         )
 
         # Sinh câu trả lời định hướng của Cố vấn GEM bằng LLM
