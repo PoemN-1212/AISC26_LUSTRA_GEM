@@ -533,5 +533,5 @@ class ChatService:
             readiness_score_info=readiness_score_info,
             previous_role=previous_role,
         )
-        return self.llm.generate_text(prompt, temperature=0.25)
+        return self.llm.generate_text(prompt, temperature=0.25, max_tokens=2048)
 

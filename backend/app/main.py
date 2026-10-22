@@ -8,22 +8,59 @@ import os
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Thêm pipeline/src vào sys.path để import các module GEM
 pipeline_src = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "pipeline", "src"))
 if pipeline_src not in sys.path:
     sys.path.insert(0, pipeline_src)
 
+import math
+import json
 from gem_pipeline.market.role_profiler import RoleSkillProfiler
 from gem_pipeline.recommendation.consultant import IdeationConsultant
+
+
+def sanitize_for_json(data: Any) -> Any:
+    """Khử bỏ triệt để NaN, Infinity thành 0.0 để tránh lỗi JSON Starlette/FastAPI."""
+    if data is None:
+        return None
+    try:
+        if isinstance(data, (float, int)):
+            if math.isnan(float(data)) or math.isinf(float(data)):
+                return 0.0
+            return data
+    except (TypeError, ValueError):
+        pass
+    if isinstance(data, dict):
+        return {str(k): sanitize_for_json(v) for k, v in data.items()}
+    elif isinstance(data, (list, tuple, set)):
+        return [sanitize_for_json(v) for v in data]
+    return data
+
+
+class SafeJSONResponse(JSONResponse):
+    """Lớp phản hồi JSON tự động xử lý NaN / Infinity an toàn cho toàn bộ API."""
+    def render(self, content: Any) -> bytes:
+        return json.dumps(
+            sanitize_for_json(content),
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=None,
+            separators=(",", ":"),
+        ).encode("utf-8")
+
 
 app = FastAPI(
     title="GEM - Nền tảng AI định hướng và khớp nối năng lực Đồ án CNTT với xu hướng tuyển dụng",
     description="Hệ thống AI Cố vấn Ý tưởng Đồ án, Phân tích Thị trường IT và Khớp nối Tuyển dụng (AISC 2026 - UIT)",
     version="1.0.0",
+    default_response_class=SafeJSONResponse,
 )
 
 # Cấu hình CORS cho Frontend
@@ -97,21 +134,6 @@ def health_check():
 # ==========================================
 
 
-import math
-
-def sanitize_for_json(obj: Any) -> Any:
-    """Khử sạch triệt để các giá trị float NaN / Infinity để JSON compliant 100%."""
-    if isinstance(obj, float):
-        if math.isnan(obj) or math.isinf(obj):
-            return None
-        return obj
-    elif isinstance(obj, dict):
-        return {k: sanitize_for_json(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [sanitize_for_json(x) for x in obj]
-    return obj
-
-
 @app.post("/api/consultation/analyze-idea", tags=["Consultation"])
 def analyze_idea(req: IdeaAnalysisRequest):
     """
@@ -155,8 +177,13 @@ def chat_copilot(req: ChatRequest):
     """
     if not req.message.strip():
         raise HTTPException(status_code=400, detail="Nội dung tin nhắn không được để trống.")
-    res = consultant.chat(session_id=req.session_id, user_message=req.message)
-    return sanitize_for_json(res)
+    try:
+        res = consultant.chat(session_id=req.session_id, user_message=req.message)
+        return sanitize_for_json(res)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Lỗi xử lý tư vấn: {e}")
 
 
 # ==========================================

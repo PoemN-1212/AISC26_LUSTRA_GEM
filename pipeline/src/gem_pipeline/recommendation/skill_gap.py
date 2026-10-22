@@ -49,7 +49,7 @@ class SkillGapEngine:
             boost_skills=boost_skills,
         )
 
-        raw_res = self.llm.generate_text(prompt, temperature=0.2)
+        raw_res = self.llm.generate_text(prompt, temperature=0.2, max_tokens=1000)
         clean = clean_json_markdown(raw_res)
 
         try:

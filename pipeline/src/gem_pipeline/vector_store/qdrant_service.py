@@ -97,7 +97,11 @@ class QdrantVectorService:
             return None
 
         endpoint = f"{self.ollama_url}/api/embeddings"
-        payload = {"model": self.embedding_model, "prompt": clean_text}
+        payload = {
+            "model": self.embedding_model,
+            "prompt": clean_text,
+            "options": {"num_gpu": 0},
+        }
         try:
             resp = requests.post(endpoint, json=payload, timeout=timeout)
             if resp.status_code == 200:
@@ -168,6 +172,7 @@ class QdrantVectorService:
             tech_s = tech_by_job.get(str(job_id), [])
             ab_s = ability_by_job.get(str(job_id), [])
 
+            embed_input = f"{title}. Vai trò: {role}. Lĩnh vực: {domain}. Kỹ năng: {', '.join(job_skills[:10])}. Mô tả: {content[:1000]}"
             vec = self.embed_text(embed_input)
             if vec is None:
                 continue
@@ -250,6 +255,7 @@ class QdrantVectorService:
             tech_s = tech_by_proj.get(str(proj_id), [])
             ab_s = ability_by_proj.get(str(proj_id), [])
 
+            embed_input = f"{repo_name}. Tác giả: {author}. Ngôn ngữ: {lang}. Kỹ năng: {', '.join(proj_skills[:10])}. Mô tả: {content[:1000]}"
             vec = self.embed_text(embed_input)
             if vec is None:
                 continue
@@ -466,7 +472,7 @@ class QdrantVectorService:
             LIMIT 60;
         """
         try:
-            df = pd.read_sql(sql, engine)
+            df = pd.read_sql(sql, engine).fillna("")
             if df.empty:
                 return []
             

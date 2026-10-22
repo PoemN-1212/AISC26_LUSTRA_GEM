@@ -157,7 +157,8 @@ def run_full_extraction(
     with engine.connect() as conn:
         already_extracted = set(conn.execute(text("SELECT DISTINCT doc_id FROM extracted_skills")).scalars().all())
 
-    extractor = SkillExtractor(backend=backend, ollama_model=model_name)
+    gem_models = [model_name] if "gemini" in model_name.lower() else ["gemini-3.5-flash-lite", "gemini-3.8-flash"]
+    extractor = SkillExtractor(backend=backend, ollama_model=model_name, gemini_models=gem_models)
     verifier = SkillExtractionVerifier()
 
     # 2. Tải toàn bộ JDs cần trích xuất
@@ -325,6 +326,43 @@ def run_full_extraction(
         print("✅ Hoàn tất đồng bộ Qdrant với đầy đủ Vector BGE-M3 và nhãn kỹ năng!")
     except Exception as e:
         print(f"⚠ Lỗi khi cập nhật Qdrant: {e}")
+
+    # Đồng bộ lên Cloud Neon DB nếu có cấu hình CLOUD_DB_URL
+    cloud_url = os.getenv("CLOUD_DB_URL")
+    if cloud_url:
+        print("\n☁️ Đang tự động đồng bộ kết quả lên Cloud Neon Database...")
+        try:
+            import psycopg2
+            from psycopg2.extras import execute_values
+            conn_c = psycopg2.connect(cloud_url, connect_timeout=30)
+            conn_l = psycopg2.connect(
+                host=os.getenv("POSTGRES_HOST", "localhost"),
+                port=int(os.getenv("POSTGRES_PORT", "5432")),
+                user=os.getenv("POSTGRES_USER", "gem_admin"),
+                password=os.getenv("POSTGRES_PASSWORD", "gem_secret_password"),
+                dbname=os.getenv("POSTGRES_DB", "gem_database")
+            )
+            with conn_l.cursor() as cur_l:
+                cur_l.execute("""
+                    SELECT id, source_type, source_id, doc_id, title, evidence, skill, 
+                           type, context, start_char, end_char, verifier_status, rejection_reason, model_name, created_at
+                    FROM extracted_skills ORDER BY id;
+                """)
+                rows = cur_l.fetchall()
+            with conn_c.cursor() as cur_c:
+                cur_c.execute("TRUNCATE TABLE extracted_skills RESTART IDENTITY;")
+                insert_sql = """
+                    INSERT INTO extracted_skills 
+                    (id, source_type, source_id, doc_id, title, evidence, skill, type, context, start_char, end_char, verifier_status, rejection_reason, model_name, created_at)
+                    VALUES %s;
+                """
+                for i in range(0, len(rows), 3000):
+                    execute_values(cur_c, insert_sql, rows[i:i + 3000])
+                cur_c.execute("SELECT setval(pg_get_serial_sequence('extracted_skills', 'id'), COALESCE(MAX(id), 1)) FROM extracted_skills;")
+                conn_c.commit()
+            print(f"✅ Đã đồng bộ thành công {len(rows):,} kỹ năng lên Cloud Neon DB!")
+        except Exception as e:
+            print(f"⚠ Lỗi khi đồng bộ Cloud DB: {e}")
 
 
 if __name__ == "__main__":

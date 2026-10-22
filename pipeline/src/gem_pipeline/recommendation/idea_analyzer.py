@@ -33,7 +33,7 @@ class IdeaAnalyzer:
             return self._cache[cache_key]
 
         prompt = build_idea_analysis_prompt(idea_text)
-        raw_res = self.llm.generate_text(prompt, temperature=0.2)
+        raw_res = self.llm.generate_text(prompt, temperature=0.2, max_tokens=800)
         clean = clean_json_markdown(raw_res)
 
         try:
