@@ -15,17 +15,27 @@
     href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="icon" type="image/png" href="/static/assets/favicon.png">
-  <link rel="stylesheet" href="/static/styles.css?v=5.9">
+
+  <!-- Modular CSS Architecture -->
+  <link rel="stylesheet" href="/static/css/variables.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/base.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/header.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/layout.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/chat.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/blueprint.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/market.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/about.css?v=6.3">
+  <link rel="stylesheet" href="/static/css/modals.css?v=6.3">
 </head>
 
 <body>
 
   <!-- ==========================================
-       APP HEADER
+       APP HEADER (TOP SEGMENTED NAVIGATION)
        ========================================== -->
   <header class="app-header">
     <div class="brand">
-      <div class="brand-logo-wrapper">
+      <div class="brand-logo-wrapper" title="GEM Platform (AISC 2026 - UIT)">
         <img src="/static/assets/gem_logo.png" alt="GEM Logo" class="brand-logo-img">
       </div>
       <div class="brand-info">
@@ -140,8 +150,16 @@
         <section class="chat-panel">
           <div class="panel-header">
             <div class="panel-title-group">
-              <span class="panel-title">💬 Trò chuyện Cố vấn Ý tưởng Đồ án</span>
-              <span class="panel-subtitle">Dual Engine: Google Gemini Flash & Local Qwen 2.5</span>
+              <div class="panel-title-mascot-row">
+                <div class="chat-header-mascot-wrapper" title="Trợ lý Lustra sẵn sàng cố vấn">
+                  <img src="/static/assets/mascot.png" alt="Lustra Mascot" class="chat-header-mascot" onerror="this.src='/static/assets/gem_logo.png'">
+                  <span class="mascot-online-dot"></span>
+                </div>
+                <div>
+                  <div class="panel-title">Trò chuyện Cố vấn Ý tưởng Đồ án</div>
+                  <div class="panel-subtitle">Trợ lý Lustra</div>
+                </div>
+              </div>
             </div>
             <div class="panel-header-actions">
               <button class="header-action-btn" onclick="exportChatTranscript()" title="Tải xuống toàn bộ lịch sử tư vấn dạng Markdown">
@@ -240,12 +258,17 @@
           <div class="blueprint-content" id="blueprint-content">
             <!-- Rendered dynamically -->
             <div class="empty-blueprint-state">
-              <div class="empty-icon-wrapper">
-                <span class="empty-icon">💡</span>
+              <div class="mascot-empty-wrapper">
+                <div class="mascot-aura-glow"></div>
+                <img src="/static/assets/mascot.png" alt="Lustra Crystal Fox Mascot" class="mascot-empty-img" onerror="this.src='/static/assets/gem_logo.png'">
+                <div class="mascot-chat-bubble">
+                  <span class="mascot-bubble-sparkle">✨</span>
+                  <span>Chào bạn! Mình là <b>Lustra</b>. Hãy chọn 1 đề tài mẫu bên dưới hoặc gõ ý tưởng vào khung chat để mình chẩn đoán độ vênh kỹ năng ngay nhé!</span>
+                </div>
               </div>
-              <h3 class="empty-title">Chưa có ý tưởng nào được phân tích</h3>
+              <h3 class="empty-title">Trung Tâm Định Hướng & Thẩm Định Năng Lực Đồ Án</h3>
               <p class="empty-desc">
-                Hãy nhập mô tả bài toán đồ án của bạn ở khung bên trái hoặc bấm vào một trong các <b>nút gợi ý nhanh</b>.
+                Hệ thống AI đối chiếu tự động với <b>700 Tin Tuyển Dụng IT TopCV</b> để lượng hóa Điểm Thực Chiến, đề xuất kiến trúc 3 lớp và lộ trình thu hẹp Skill Gap.
               </p>
 
               <!-- 1-CLICK DEMO SHOWCASE -->
@@ -337,7 +360,7 @@
             <div class="stat-info">
               <div class="stat-label">Lĩnh Vực Nghề Nghiệp IT</div>
               <div class="stat-value">12 / 34</div>
-              <div class="stat-desc">12 Phân tầng lớn $\rightarrow$ 34 Vị trí Chuyên môn</div>
+              <div class="stat-desc">12 Phân tầng lớn ➔ 34 Vị trí Chuyên môn</div>
             </div>
           </div>
           <div class="stat-card">
@@ -390,91 +413,198 @@
     <div class="tab-pane" id="tab-pane-about" role="tabpanel">
       <div class="about-container">
 
-        <!-- SECTION: HERO PRESENTATION -->
+        <!-- SECTION 1: HERO PRESENTATION -->
         <div class="layer-card hero-about-card">
-          <div class="about-badge">AISC 2026 · AI Solution Challenge · UIT</div>
-          <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
-            <img src="/static/assets/gem_logo.png" alt="GEM Platform" class="about-hero-logo">
+          <div class="about-badge">
+            <span>✨</span> AISC 2026 · AI Solution Challenge · UIT
+          </div>
+          <div class="about-mascot-hero-box">
+            <div class="about-mascot-podium"></div>
+            <div class="about-mascot-aura"></div>
+            <img src="/static/assets/mascot.png" alt="Lustra Crystal Fox Mascot" class="about-hero-mascot" onerror="this.src='/static/assets/gem_logo.png'">
           </div>
           <h1 class="about-title">
-            GEM Platform
+            GEM Platform & Linh Vật Lustra
           </h1>
           <p class="about-lead">
-            Nền tảng AI Định hướng và Khớp nối Năng lực Đồ án CNTT với Xu hướng Tuyển dụng thực tế.
+            Nền tảng AI Định hướng và Khớp nối Năng lực Đồ án Tốt nghiệp CNTT với Xu hướng Tuyển dụng thực tế TopCV Việt Nam.
           </p>
           <div class="about-tags-row">
-            <span class="about-tag">Track: Data-Driven Business & AI</span>
-            <span class="about-tag">Trường ĐH Công nghệ Thông tin (UIT - ĐHQG-HCM)</span>
-            <span class="about-tag">Team LUSTRA</span>
+            <span class="about-tag tag-fox">🦊 Linh vật: Lustra Crystal Fox</span>
+            <span class="about-tag tag-track">🏆 Track: Data-Driven Business & AI</span>
+            <span class="about-tag tag-uit">🏫 Trường ĐH Công nghệ Thông tin (UIT - ĐHQG-HCM)</span>
+            <span class="about-tag tag-team">💎 Team LUSTRA</span>
           </div>
         </div>
 
-        <!-- SECTION: SCIENTIFIC PHILOSOPHY & FORMULA -->
+        <!-- SECTION 2: END-TO-END PIPELINE WORKFLOW -->
+        <div class="layer-card workflow-overview-card">
+          <div class="about-card-header">
+            <span class="about-card-icon">⚡</span>
+            <div>
+              <h3 class="about-card-title">Kiến Trúc Pipeline Xử Lý Dữ Liệu Khép Kín</h3>
+              <span class="about-card-subtitle">Hành trình chuẩn hóa từ 700 JDs TopCV đến Lộ trình Đồ án tối ưu cho sinh viên</span>
+            </div>
+          </div>
+          <div class="pipeline-steps-grid">
+            <div class="pipeline-step-item">
+              <div class="step-number">01</div>
+              <div class="step-icon">📥</div>
+              <div class="step-title">Thu Thập Dữ Liệu</div>
+              <div class="step-desc">Cào & làm sạch 700 tin tuyển dụng thực tế TopCV trên 34 vị trí IT trọng điểm.</div>
+            </div>
+            <div class="pipeline-step-arrow">➔</div>
+            <div class="pipeline-step-item">
+              <div class="step-number">02</div>
+              <div class="step-icon">🛡️</div>
+              <div class="step-title">Verifier 5 Lớp</div>
+              <div class="step-desc">Trích xuất kỹ năng chính xác với tỷ lệ chấp thuận 95.1% ACCEPT, loại bỏ nhiễu.</div>
+            </div>
+            <div class="pipeline-step-arrow">➔</div>
+            <div class="pipeline-step-item">
+              <div class="step-number">03</div>
+              <div class="step-icon">🧠</div>
+              <div class="step-title">Vector Search BGE-M3</div>
+              <div class="step-desc">Nhúng 1024 chiều lưu trên Qdrant DB để đo độ tương đồng ngữ nghĩa Cosine.</div>
+            </div>
+            <div class="pipeline-step-arrow">➔</div>
+            <div class="pipeline-step-item">
+              <div class="step-number">04</div>
+              <div class="step-icon">🎯</div>
+              <div class="step-title">Co-Pilot Shift-Left</div>
+              <div class="step-desc">Đề xuất kiến trúc 3 lớp, đo Điểm Thực Chiến & xuất Starter Kit hoàn chỉnh.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: SCIENTIFIC PHILOSOPHY & FORMULA -->
         <div class="about-grid-2col">
-          <div class="layer-card">
+          <!-- CARD: SHIFT-LEFT -->
+          <div class="layer-card shift-left-card">
             <div class="about-card-header">
               <span class="about-card-icon">🎯</span>
-              <h3 class="about-card-title">Triết lý Can thiệp Shift-Left</h3>
+              <div>
+                <h3 class="about-card-title">Triết lý Can thiệp Shift-Left</h3>
+                <span class="about-card-subtitle">Định hướng công nghệ ngay từ ngày đầu tiên</span>
+              </div>
             </div>
             <p class="about-text">
-              Thay vì là một công cụ thụ động đợi sinh viên làm xong đồ án rồi mới chấm điểm/đo khoảng cách kỹ năng (khi đó đã quá muộn để sửa đổi), GEM <b>can thiệp ngay từ ngày đầu tiên khi sinh viên mới nhen nhóm ý tưởng</b>, giúp chọn đúng công nghệ, bám sát nhu cầu thị trường và tối ưu hóa thời gian thực hiện.
+              Thay vì đợi sinh viên làm xong đồ án rồi mới chấm điểm/đo khoảng cách kỹ năng (khi đó đã quá muộn để sửa đổi), GEM <b>can thiệp ngay từ ngày đầu tiên khi sinh viên mới nhen nhóm ý tưởng</b>, giúp chọn đúng công nghệ và bám sát nhu cầu thị trường.
             </p>
+            <div class="shift-comparison-grid">
+              <div class="comparison-box old-way">
+                <span class="comparison-label">❌ Cách truyền thống:</span>
+                <p>Làm đồ án theo sở thích hoặc công nghệ cũ ➔ CV bị loại ở vòng lọc hồ sơ.</p>
+              </div>
+              <div class="comparison-box gem-way">
+                <span class="comparison-label">✅ Giải pháp GEM:</span>
+                <p>Khớp nối kỹ năng ngay từ ngày đầu ➔ Đồ án chuẩn hóa theo JD tuyển dụng thực tế.</p>
+              </div>
+            </div>
             <div class="about-subbox">
               <b>Tránh bẫy Tech Stack Dumping:</b> GEM không đổ đống công nghệ (Kafka, Kubernetes, Microservices...) vào một đề tài nhỏ, mà phân định 3 trạng thái: 🟢 <i>Đã bao phủ</i>, 🟡 <i>Cần bổ sung</i> và ⚪ <i>Tạm hoãn</i> để tránh over-engineering.
             </div>
           </div>
 
-          <div class="layer-card">
+          <!-- CARD: FORMULA -->
+          <div class="layer-card formula-card">
             <div class="about-card-header">
               <span class="about-card-icon">📐</span>
-              <h3 class="about-card-title">Công thức Định lượng Điểm Thực Chiến</h3>
+              <div>
+                <h3 class="about-card-title">Công thức Định lượng Điểm Thực Chiến</h3>
+                <span class="about-card-subtitle">Mô hình toán học lượng hóa độ vênh năng lực</span>
+              </div>
             </div>
             <p class="about-text">
               Điểm thực chiến trong GEM được tính toán minh bạch qua mô hình toán học:
             </p>
             <div class="math-formula-box">
-              <code>R_market = round(0.35 × S_semantic + 0.65 × C_potential)</code>
+              <span class="formula-label">CHỈ SỐ SẴN SÀNG THỰC CHIẾN (MARKET READINESS):</span>
+              <div class="formula-code">
+                R_market = round(0.35 × S_semantic + 0.65 × C_potential)
+              </div>
             </div>
-            <ul class="about-list">
-              <li><b>S_semantic:</b> Độ tương đồng ngữ nghĩa giữa đồ án và kho JD (Cosine qua BGE-M3 trên Qdrant).</li>
-              <li><b>C_baseline:</b> Độ bao phủ kỹ năng tự nhiên của đồ án trước khi can thiệp.</li>
-              <li><b>C_potential:</b> Độ bao phủ tiềm năng sau khi thực hiện các hành động bổ sung.</li>
-              <li><b>Δ_reduction:</b> Tỷ lệ thu hẹp Skill Gap thực tế mà đồ án mang lại.</li>
-            </ul>
+            <div class="formula-pillars-grid">
+              <div class="formula-pillar">
+                <div class="pillar-weight">35%</div>
+                <div class="pillar-info">
+                  <b>S_semantic (Ngữ nghĩa):</b>
+                  <span>Cosine Similarity giữa đồ án và kho JD qua BGE-M3 (Qdrant).</span>
+                </div>
+              </div>
+              <div class="formula-pillar">
+                <div class="pillar-weight">65%</div>
+                <div class="pillar-info">
+                  <b>C_potential (Bao phủ Kỹ năng):</b>
+                  <span>Tỷ lệ đáp ứng các yêu cầu Must-have & Booster của vị trí mục tiêu.</span>
+                </div>
+              </div>
+            </div>
+            <div class="formula-meta-row">
+              <span class="meta-pill"><b>C_baseline:</b> Độ bao phủ tự nhiên ban đầu</span>
+              <span class="meta-pill"><b>Δ_reduction:</b> Tỷ lệ thu hẹp Skill Gap thực tế</span>
+            </div>
           </div>
         </div>
 
-        <!-- SECTION: 3-LAYER ARCHITECTURE -->
-        <div class="layer-card">
+        <!-- SECTION 4: 3-LAYER ARCHITECTURE -->
+        <div class="layer-card architecture-card">
           <div class="about-card-header">
             <span class="about-card-icon">🏗️</span>
-            <h3 class="about-card-title">Khung Đề Xuất Công Nghệ 3 Lớp</h3>
+            <div>
+              <h3 class="about-card-title">Khung Đề Xuất Công Nghệ 3 Lớp</h3>
+              <span class="about-card-subtitle">Cấu trúc kiến trúc chuẩn giúp sinh viên vượt trội khi bảo vệ đồ án tốt nghiệp</span>
+            </div>
           </div>
           <div class="layers-explain-grid">
-            <div class="layer-explain-item">
+            <div class="layer-explain-item tier-1">
               <div class="layer-pill l1">Lớp 1: Core Foundation</div>
+              <div class="layer-focus">Nền tảng MVP Đồ Án</div>
               <p>Công nghệ nền tảng bắt buộc để sản phẩm chạy được MVP, hoàn thành đúng yêu cầu nghiệp vụ để bảo vệ đồ án tốt nghiệp.</p>
+              <div class="layer-tech-samples">
+                <span>FastAPI / Spring Boot</span>
+                <span>PostgreSQL</span>
+                <span>Docker MVP</span>
+              </div>
             </div>
-            <div class="layer-explain-item">
+            <div class="layer-explain-item tier-2">
               <div class="layer-pill l2">Lớp 2: Career Boosters</div>
-              <p>3–5 kỹ năng có tần suất tuyển dụng cao nhất trên TopCV Việt Nam (Docker, Redis, CI/CD, Unit Test) giúp CV nổi bật trước nhà tuyển dụng.</p>
+              <div class="layer-focus">Bứt Phá Tuyển Dụng (+40% Điểm)</div>
+              <p>Top 3–5 kỹ năng có tần suất tuyển dụng cao nhất trên TopCV Việt Nam giúp CV vượt trội trước nhà tuyển dụng.</p>
+              <div class="layer-tech-samples">
+                <span>Redis Caching</span>
+                <span>CI/CD GitHub Actions</span>
+                <span>Unit Test & TDD</span>
+              </div>
             </div>
-            <div class="layer-explain-item">
+            <div class="layer-explain-item tier-3">
               <div class="layer-pill l3">Lớp 3: Personal Extension</div>
-              <p>Module chuyên sâu hướng nghiệp theo mục tiêu cá nhân (AI Fraud Detection, Real-time Stream Analytics, An ninh ứng dụng).</p>
+              <div class="layer-focus">Chuyên Sâu Hướng Nghiệp</div>
+              <p>Module nâng tầm sản phẩm theo mục tiêu nghề nghiệp riêng (AI Fraud Detection, Stream Analytics, An ninh).</p>
+              <div class="layer-tech-samples">
+                <span>AI Model Serving</span>
+                <span>ClickHouse OLAP</span>
+                <span>Kafka Streaming</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- SECTION: DEVELOPMENT TEAM -->
-        <div class="layer-card">
+        <!-- SECTION 5: DEVELOPMENT TEAM -->
+        <div class="layer-card team-section-card">
           <div class="about-card-header">
             <span class="about-card-icon">👥</span>
-            <h3 class="about-card-title">Đội Ngũ Tác Giả (Team LUSTRA - UIT)</h3>
+            <div>
+              <h3 class="about-card-title">Đội Ngũ Tác Giả (Team LUSTRA - UIT)</h3>
+              <span class="about-card-subtitle">Sinh viên Khóa 2023 - 2024, Trường ĐH Công nghệ Thông tin (ĐHQG-HCM)</span>
+            </div>
           </div>
           <div class="team-grid">
             <div class="team-card">
-              <div class="team-avatar">LT</div>
+              <div class="team-avatar-box">
+                <div class="team-avatar">LT</div>
+                <div class="avatar-ring"></div>
+              </div>
               <div class="team-info">
                 <div class="team-name">Lê Vĩnh Thái</div>
                 <div class="team-mssv">MSSV: 23521417</div>
@@ -482,7 +612,10 @@
               </div>
             </div>
             <div class="team-card">
-              <div class="team-avatar">MH</div>
+              <div class="team-avatar-box">
+                <div class="team-avatar">MH</div>
+                <div class="avatar-ring"></div>
+              </div>
               <div class="team-info">
                 <div class="team-name">Nguyễn Văn Mạnh Huy</div>
                 <div class="team-mssv">MSSV: 23520641</div>
@@ -490,7 +623,10 @@
               </div>
             </div>
             <div class="team-card">
-              <div class="team-avatar">TP</div>
+              <div class="team-avatar-box">
+                <div class="team-avatar">TP</div>
+                <div class="avatar-ring"></div>
+              </div>
               <div class="team-info">
                 <div class="team-name">Trần Nhụy Tam Tử Phục</div>
                 <div class="team-mssv">MSSV: 24521400</div>
@@ -498,7 +634,10 @@
               </div>
             </div>
             <div class="team-card">
-              <div class="team-avatar">NK</div>
+              <div class="team-avatar-box">
+                <div class="team-avatar">NK</div>
+                <div class="avatar-ring"></div>
+              </div>
               <div class="team-info">
                 <div class="team-name">Phạm Nhật Khoa</div>
                 <div class="team-mssv">MSSV: 23520753</div>
@@ -609,8 +748,15 @@
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-  <!-- APPLICATION SCRIPTS -->
-  <script src="/static/app.js?v=5.9"></script>
+  <!-- MODULAR JAVASCRIPT ARCHITECTURE -->
+  <script src="/static/js/state.js?v=6.1"></script>
+  <script src="/static/js/ui.js?v=6.1"></script>
+  <script src="/static/js/api.js?v=6.1"></script>
+  <script src="/static/js/chat.js?v=6.1"></script>
+  <script src="/static/js/blueprint.js?v=6.1"></script>
+  <script src="/static/js/market.js?v=6.1"></script>
+  <script src="/static/js/export.js?v=6.1"></script>
+  <script src="/static/js/main.js?v=6.1"></script>
 </body>
 
 </html>
