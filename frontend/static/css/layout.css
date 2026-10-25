@@ -1,0 +1,41 @@
+/* ===================================================================
+   💎 GEM PLATFORM (AISC 2026 - UIT)
+   MAIN WORKSPACE & 2-COLUMN GRID LAYOUT
+   =================================================================== */
+
+.main-container {
+  flex: 1;
+  max-width: 1680px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-pane {
+  display: none;
+  flex: 1;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-pane.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* COPILOT WORKSPACE (2-COLUMN BALANCED) */
+.copilot-workspace {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 1.5rem;
+  height: calc(100vh - 105px);
+  min-height: 620px;
+}
+
+@media (max-width: 1180px) {
+  .copilot-workspace {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}

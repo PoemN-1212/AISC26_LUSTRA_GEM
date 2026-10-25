@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEM Platform — AI Skill-Gap Intelligence &amp; Project Advisor (AISC 2026)</title>
+  <meta name="description" content="Hệ thống AI phân tích độ vênh kỹ năng (Skill Gap), đo điểm thực chiến và định hướng đồ án CNTT bám sát thị trường tuyển dụng TopCV (AISC 2026 - UIT).">
+  <meta property="og:title" content="GEM Platform — AI Skill-Gap Intelligence &amp; Project Advisor">
+  <meta property="og:description" content="Hệ thống AI phân tích độ vênh kỹ năng và định hướng đồ án CNTT bám sát thị trường tuyển dụng TopCV (AISC 2026 - UIT).">
+  <meta property="og:image" content="/static/assets/gem_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="icon" type="image/png" href="/static/assets/favicon.png">
+  <link rel="stylesheet" href="/static/styles.css?v=5.9">
+</head>
+
+<body>
+
+  <!-- ==========================================
+       APP HEADER
+       ========================================== -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-logo-wrapper">
+        <img src="/static/assets/gem_logo.png" alt="GEM Logo" class="brand-logo-img">
+      </div>
+      <div class="brand-info">
+        <div class="brand-title-row">
+          <span class="brand-title">GEM Platform</span>
+          <span class="brand-badge">AISC 2026</span>
+        </div>
+        <div class="brand-tagline">AI Skill-Gap Intelligence & Project Advisor</div>
+      </div>
+    </div>
+
+    <!-- MAIN NAVIGATION TABS (Segmented Control) -->
+    <nav class="nav-tabs" role="tablist" aria-label="GEM Navigation Tabs">
+      <button class="nav-tab-btn active" id="tab-btn-copilot" onclick="switchTab('copilot')" role="tab" aria-selected="true">
+        <svg class="nav-tab-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <circle cx="12" cy="12" r="6"></circle>
+          <circle cx="12" cy="12" r="2"></circle>
+        </svg>
+        <span>Cố vấn Định hướng Đồ án</span>
+      </button>
+      <button class="nav-tab-btn" id="tab-btn-market" onclick="switchTab('market')" role="tab" aria-selected="false">
+        <svg class="nav-tab-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Thị Trường Tuyển Dụng</span>
+      </button>
+      <button class="nav-tab-btn" id="tab-btn-about" onclick="switchTab('about')" role="tab" aria-selected="false">
+        <svg class="nav-tab-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Thuyết Minh Đề Tài</span>
+      </button>
+    </nav>
+
+    <!-- HEADER RIGHT CONTROLS -->
+    <div class="header-actions">
+      <!-- Action Buttons CTA Group -->
+      <div class="header-actions-cta">
+        <!-- Printable Assessment Report Button -->
+        <button class="header-btn header-btn-pdf btn-print-report" id="btn-print-report" onclick="printAssessmentReport()" title="In / Xuất Báo Cáo Thẩm Định Năng Lực ra PDF (AISC 2026)">
+          <svg class="header-btn-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Báo Cáo PDF</span>
+        </button>
+
+        <!-- Starter Kit Export Button -->
+        <button class="header-btn header-btn-starter btn-starter-kit" id="starter-kit-btn" onclick="openExportModal()" title="Xuất Gói Khởi Động Đồ Án (Dockerfile, docker-compose, README)">
+          <svg class="header-btn-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          <span>Gói Khởi Động</span>
+        </button>
+      </div>
+
+      <!-- Vertical Divider -->
+      <div class="header-divider" aria-hidden="true"></div>
+
+      <!-- System Utilities Group -->
+      <div class="header-actions-system">
+        <!-- Theme Switcher (Dark / Light Mode) -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Chuyển chế độ Sáng / Tối" aria-label="Toggle Dark and Light theme">
+          <svg class="theme-icon-light header-theme-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-dark header-theme-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- System Health Indicator -->
+        <div class="status-pill" id="system-status-pill" title="Hệ thống Backend FastAPI và Vector DB Qdrant hoạt động bình thường">
+          <span class="status-dot"></span>
+          <span class="status-text" id="system-status-text">FastAPI & Qdrant Live</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       MAIN CONTAINER
+       ========================================== -->
+  <main class="main-container">
+
+    <!-- ==========================================
+         TAB 1: AI IDEATION & CAREER ADVISOR
+         ========================================== -->
+    <div class="tab-pane active" id="tab-pane-copilot" role="tabpanel">
+      <div class="copilot-workspace">
+
+        <!-- LEFT COLUMN: CHAT STREAM & INPUT -->
+        <section class="chat-panel">
+          <div class="panel-header">
+            <div class="panel-title-group">
+              <span class="panel-title">💬 Trò chuyện Cố vấn Ý tưởng Đồ án</span>
+              <span class="panel-subtitle">Dual Engine: Google Gemini Flash & Local Qwen 2.5</span>
+            </div>
+            <div class="panel-header-actions">
+              <button class="header-action-btn" onclick="exportChatTranscript()" title="Tải xuống toàn bộ lịch sử tư vấn dạng Markdown">
+                <span>💾</span> Lưu Chat
+              </button>
+              <button class="reset-chat-btn" onclick="resetChatSession()" title="Tạo phiên làm việc mới">
+                <span>🔄</span> Phiên mới
+              </button>
+            </div>
+          </div>
+
+          <div class="chat-messages" id="chat-messages">
+            <!-- Messages rendered dynamically via JS -->
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div class="suggestion-chips-container">
+            <div class="chips-label">💡 Gợi ý tình huống khởi tạo nhanh:</div>
+            <div class="suggestion-chips">
+              <button class="chip-btn" onclick="sendQuickPrompt('tôi muốn làm một đồ án OLAP về bank transaction fraud ấy')">
+                🏦 OLAP Bank Transaction Fraud
+              </button>
+              <button class="chip-btn" onclick="sendQuickPrompt('Tôi muốn làm website thương mại điện tử cho cửa hàng nhỏ. Tôi chưa biết nên chọn công nghệ nào.')">
+                🛒 Web E-Commerce Bán lẻ
+              </button>
+              <button class="chip-btn" onclick="sendQuickPrompt('Nếu tôi muốn hướng tới AI Engineer thì cần bổ sung những gì?')">
+                🧠 Muốn hướng tới AI Engineer?
+              </button>
+              <button class="chip-btn" onclick="sendQuickPrompt('Tôi chỉ có ba tháng và muốn ưu tiên Python, scikit-learn. Có thể làm một phiên bản vừa sức không?')">
+                ⏱️ Giới hạn 3 tháng & Python
+              </button>
+              <button class="chip-btn" onclick="sendQuickPrompt('Tôi muốn làm hệ thống quản lý bệnh viện và đặt lịch khám bệnh.')">
+                🏥 Quản lý Bệnh viện & Đặt khám
+              </button>
+            </div>
+          </div>
+
+          <!-- Input Area -->
+          <form class="chat-input-area" id="chat-form" onsubmit="handleChatSubmit(event)">
+            <!-- Hidden file input for syllabus / outline upload -->
+            <input type="file" id="syllabus-file-input" accept=".txt,.md,.json" style="display: none;" onchange="handleFileUpload(event)">
+
+            <div class="input-wrapper">
+              <button type="button" class="input-tool-btn" id="file-upload-btn" onclick="triggerFileInput()" title="Đính kèm tóm tắt / đề cương đề tài (.txt, .md)">
+                <span>📎</span>
+              </button>
+              <button type="button" class="input-tool-btn" id="voice-input-btn" onclick="toggleVoiceRecognition()" title="Nhập ý tưởng bằng giọng nói (Voice-to-Text)">
+                <span id="voice-icon">🎙️</span>
+              </button>
+              <input type="text" class="chat-input" id="chat-input"
+                placeholder="Nhập ý tưởng đồ án, bài toán cần giải quyết hoặc vị trí nghề nghiệp hướng tới..." autocomplete="off" />
+              <button type="submit" class="send-btn" id="send-btn" title="Gửi tin nhắn (Ctrl + Enter)">
+                <span>Gửi</span>
+                <span class="send-icon">➔</span>
+              </button>
+            </div>
+            <div class="input-hint-row">
+              <span class="input-hint-item"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> gửi</span>
+              <span class="input-hint-item"><kbd>/</kbd> gõ nhanh</span>
+              <span class="voice-status" id="voice-status-text" style="display: none;">🔴 Đang lắng nghe giọng nói... Hãy nói ý tưởng của bạn</span>
+            </div>
+          </form>
+        </section>
+
+        <!-- RIGHT COLUMN: LIVE SKILL GAP DIAGNOSIS & BLUEPRINT -->
+        <section class="blueprint-panel">
+          <div class="panel-header">
+            <div class="panel-title-group">
+              <span class="panel-title">📊 Báo cáo Định hướng & Thu hẹp Skill Gap</span>
+              <span class="panel-subtitle">Hệ quy chiếu 700 JDs TopCV thực tế · Chuẩn kiểm định AISC 2026</span>
+            </div>
+            <div class="panel-header-badges">
+              <span class="brand-badge role-badge" id="blueprint-target-role">Chờ phân tích</span>
+              <span class="brand-badge score-badge" id="blueprint-readiness-badge" style="display: none;">0/100 Điểm</span>
+            </div>
+          </div>
+
+          <!-- QUICK PARAMETER TUNER TOOLBAR -->
+          <div class="blueprint-tuner-bar" id="blueprint-tuner-bar" style="display: none;">
+            <div class="tuner-item">
+              <label for="tuner-role-select" class="tuner-label">🎯 Vị trí mục tiêu:</label>
+              <select id="tuner-role-select" class="tuner-select" onchange="handleTunerRoleChange(this.value)">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+            <div class="tuner-item">
+              <span class="tuner-label">⏱️ Quỹ thời gian:</span>
+              <div class="tuner-time-pills" id="tuner-time-pills">
+                <button type="button" class="time-pill" data-months="1" onclick="handleTunerTimeChange(1)">1 Tháng</button>
+                <button type="button" class="time-pill active" data-months="3" onclick="handleTunerTimeChange(3)">3 Tháng</button>
+                <button type="button" class="time-pill" data-months="6" onclick="handleTunerTimeChange(6)">6 Tháng</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="blueprint-content" id="blueprint-content">
+            <!-- Rendered dynamically -->
+            <div class="empty-blueprint-state">
+              <div class="empty-icon-wrapper">
+                <span class="empty-icon">💡</span>
+              </div>
+              <h3 class="empty-title">Chưa có ý tưởng nào được phân tích</h3>
+              <p class="empty-desc">
+                Hãy nhập mô tả bài toán đồ án của bạn ở khung bên trái hoặc bấm vào một trong các <b>nút gợi ý nhanh</b>.
+              </p>
+
+              <!-- 1-CLICK DEMO SHOWCASE -->
+              <div class="demo-showcase-box">
+                <div class="demo-showcase-label">✨ Trải nghiệm nhanh các Đề tài Mẫu đo ni đóng giày (1-Click):</div>
+                <div class="demo-showcase-buttons">
+                  <button type="button" class="demo-btn demo-btn-olap" onclick="loadDemoProject('olap')">
+                    <span class="demo-btn-icon">🏦</span>
+                    <div class="demo-btn-text">
+                      <b>OLAP Big Data & Fraud Detection</b>
+                      <span>Data Engineer · ClickHouse & dbt · 3 Tháng</span>
+                    </div>
+                    <span class="demo-arrow">➔</span>
+                  </button>
+                  <button type="button" class="demo-btn demo-btn-ecom" onclick="loadDemoProject('ecom')">
+                    <span class="demo-btn-icon">🛒</span>
+                    <div class="demo-btn-text">
+                      <b>Web E-Commerce Đa Kênh Tích Hợp</b>
+                      <span>Backend Developer · PostgreSQL & Redis · 3 Tháng</span>
+                    </div>
+                    <span class="demo-arrow">➔</span>
+                  </button>
+                  <button type="button" class="demo-btn demo-btn-ai" onclick="loadDemoProject('ai')">
+                    <span class="demo-btn-icon">🧠</span>
+                    <div class="demo-btn-text">
+                      <b>Hệ Thống Y Tế & Chẩn Đoán AI</b>
+                      <span>AI / Machine Learning Engineer · FastAPI & Model Serving</span>
+                    </div>
+                    <span class="demo-arrow">➔</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="empty-features-grid">
+                <div class="empty-feature-item">
+                  <span class="feature-icon">🎯</span>
+                  <b>Đo Điểm Thực Chiến</b>
+                  <span>Lượng hóa độ vênh năng lực theo công thức chuẩn</span>
+                </div>
+                <div class="empty-feature-item">
+                  <span class="feature-icon">⚡</span>
+                  <b>Mô phỏng Kỹ năng Động</b>
+                  <span>Bật/tắt công nghệ để xem điểm nhảy theo thời gian thực</span>
+                </div>
+                <div class="empty-feature-item">
+                  <span class="feature-icon">💼</span>
+                  <b>Khớp Tin Tuyển Dụng</b>
+                  <span>Tìm tin tuyển dụng TopCV thật sát nhất với đồ án</span>
+                </div>
+                <div class="empty-feature-item">
+                  <span class="feature-icon">📦</span>
+                  <b>Gói Khởi Động</b>
+                  <span>Xuất sẵn Dockerfile, docker-compose & README mẫu</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 2: MARKET INTELLIGENCE EXPLORER
+         ========================================== -->
+    <div class="tab-pane" id="tab-pane-market" role="tabpanel">
+      <div class="market-workspace">
+
+        <!-- Stats Overview Row -->
+        <div class="stats-overview">
+          <div class="stat-card">
+            <div class="stat-icon-bg">📋</div>
+            <div class="stat-info">
+              <div class="stat-label">Tổng Tin Tuyển Dụng Sạch</div>
+              <div class="stat-value" id="market-total-jds">700</div>
+              <div class="stat-desc">Dữ liệu thực nghiệm TopCV Việt Nam</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-bg">✅</div>
+            <div class="stat-info">
+              <div class="stat-label">Kỹ Năng Đã Kiểm Định</div>
+              <div class="stat-value" id="market-accepted-skills">11,930+</div>
+              <div class="stat-desc">100% qua Verifier 5 lớp (ACCEPT 95.1%)</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-bg">🏢</div>
+            <div class="stat-info">
+              <div class="stat-label">Lĩnh Vực Nghề Nghiệp IT</div>
+              <div class="stat-value">12 / 34</div>
+              <div class="stat-desc">12 Phân tầng lớn $\rightarrow$ 34 Vị trí Chuyên môn</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-bg">🧠</div>
+            <div class="stat-info">
+              <div class="stat-label">Mô Hình Nhúng Vector</div>
+              <div class="stat-value">BGE-M3</div>
+              <div class="stat-desc">1024 chiều Cosine Similarity (Qdrant)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Split Grid: Roles List + Detailed Profile -->
+        <div class="market-split-grid">
+
+          <!-- Roles Sidebar with Quick Search Filter -->
+          <div class="roles-sidebar-wrapper">
+            <div class="roles-search-box">
+              <input type="text" id="role-search-input" class="role-search-input"
+                placeholder="🔍 Tìm nhanh 34 vị trí việc làm..." oninput="filterMarketRoles(this.value)" />
+              <button type="button" class="btn-compare-trigger" onclick="openRoleCompareModal()" title="So sánh đối chiếu kỹ năng giữa 2 vị trí việc làm">
+                <span>⚖️</span> So Sánh
+              </button>
+            </div>
+            <!-- Domain Category Filter Pills -->
+            <div class="domain-filter-pills" id="domain-filter-pills">
+              <!-- Populated dynamically via JS -->
+            </div>
+            <div class="roles-sidebar" id="roles-sidebar">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Role Details Panel -->
+          <div class="role-details-panel" id="role-details-panel">
+            <div class="empty-blueprint-state">
+              <span class="empty-icon">📊</span>
+              <p>Đang tải dữ liệu hồ sơ vị trí tuyển dụng...</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 3: ABOUT & ARCHITECTURE DEFENSE
+         ========================================== -->
+    <div class="tab-pane" id="tab-pane-about" role="tabpanel">
+      <div class="about-container">
+
+        <!-- SECTION: HERO PRESENTATION -->
+        <div class="layer-card hero-about-card">
+          <div class="about-badge">AISC 2026 · AI Solution Challenge · UIT</div>
+          <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
+            <img src="/static/assets/gem_logo.png" alt="GEM Platform" class="about-hero-logo">
+          </div>
+          <h1 class="about-title">
+            GEM Platform
+          </h1>
+          <p class="about-lead">
+            Nền tảng AI Định hướng và Khớp nối Năng lực Đồ án CNTT với Xu hướng Tuyển dụng thực tế.
+          </p>
+          <div class="about-tags-row">
+            <span class="about-tag">Track: Data-Driven Business & AI</span>
+            <span class="about-tag">Trường ĐH Công nghệ Thông tin (UIT - ĐHQG-HCM)</span>
+            <span class="about-tag">Team LUSTRA</span>
+          </div>
+        </div>
+
+        <!-- SECTION: SCIENTIFIC PHILOSOPHY & FORMULA -->
+        <div class="about-grid-2col">
+          <div class="layer-card">
+            <div class="about-card-header">
+              <span class="about-card-icon">🎯</span>
+              <h3 class="about-card-title">Triết lý Can thiệp Shift-Left</h3>
+            </div>
+            <p class="about-text">
+              Thay vì là một công cụ thụ động đợi sinh viên làm xong đồ án rồi mới chấm điểm/đo khoảng cách kỹ năng (khi đó đã quá muộn để sửa đổi), GEM <b>can thiệp ngay từ ngày đầu tiên khi sinh viên mới nhen nhóm ý tưởng</b>, giúp chọn đúng công nghệ, bám sát nhu cầu thị trường và tối ưu hóa thời gian thực hiện.
+            </p>
+            <div class="about-subbox">
+              <b>Tránh bẫy Tech Stack Dumping:</b> GEM không đổ đống công nghệ (Kafka, Kubernetes, Microservices...) vào một đề tài nhỏ, mà phân định 3 trạng thái: 🟢 <i>Đã bao phủ</i>, 🟡 <i>Cần bổ sung</i> và ⚪ <i>Tạm hoãn</i> để tránh over-engineering.
+            </div>
+          </div>
+
+          <div class="layer-card">
+            <div class="about-card-header">
+              <span class="about-card-icon">📐</span>
+              <h3 class="about-card-title">Công thức Định lượng Điểm Thực Chiến</h3>
+            </div>
+            <p class="about-text">
+              Điểm thực chiến trong GEM được tính toán minh bạch qua mô hình toán học:
+            </p>
+            <div class="math-formula-box">
+              <code>R_market = round(0.35 × S_semantic + 0.65 × C_potential)</code>
+            </div>
+            <ul class="about-list">
+              <li><b>S_semantic:</b> Độ tương đồng ngữ nghĩa giữa đồ án và kho JD (Cosine qua BGE-M3 trên Qdrant).</li>
+              <li><b>C_baseline:</b> Độ bao phủ kỹ năng tự nhiên của đồ án trước khi can thiệp.</li>
+              <li><b>C_potential:</b> Độ bao phủ tiềm năng sau khi thực hiện các hành động bổ sung.</li>
+              <li><b>Δ_reduction:</b> Tỷ lệ thu hẹp Skill Gap thực tế mà đồ án mang lại.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SECTION: 3-LAYER ARCHITECTURE -->
+        <div class="layer-card">
+          <div class="about-card-header">
+            <span class="about-card-icon">🏗️</span>
+            <h3 class="about-card-title">Khung Đề Xuất Công Nghệ 3 Lớp</h3>
+          </div>
+          <div class="layers-explain-grid">
+            <div class="layer-explain-item">
+              <div class="layer-pill l1">Lớp 1: Core Foundation</div>
+              <p>Công nghệ nền tảng bắt buộc để sản phẩm chạy được MVP, hoàn thành đúng yêu cầu nghiệp vụ để bảo vệ đồ án tốt nghiệp.</p>
+            </div>
+            <div class="layer-explain-item">
+              <div class="layer-pill l2">Lớp 2: Career Boosters</div>
+              <p>3–5 kỹ năng có tần suất tuyển dụng cao nhất trên TopCV Việt Nam (Docker, Redis, CI/CD, Unit Test) giúp CV nổi bật trước nhà tuyển dụng.</p>
+            </div>
+            <div class="layer-explain-item">
+              <div class="layer-pill l3">Lớp 3: Personal Extension</div>
+              <p>Module chuyên sâu hướng nghiệp theo mục tiêu cá nhân (AI Fraud Detection, Real-time Stream Analytics, An ninh ứng dụng).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: DEVELOPMENT TEAM -->
+        <div class="layer-card">
+          <div class="about-card-header">
+            <span class="about-card-icon">👥</span>
+            <h3 class="about-card-title">Đội Ngũ Tác Giả (Team LUSTRA - UIT)</h3>
+          </div>
+          <div class="team-grid">
+            <div class="team-card">
+              <div class="team-avatar">LT</div>
+              <div class="team-info">
+                <div class="team-name">Lê Vĩnh Thái</div>
+                <div class="team-mssv">MSSV: 23521417</div>
+                <div class="team-role">Team Lead · AI Pipeline Architect</div>
+              </div>
+            </div>
+            <div class="team-card">
+              <div class="team-avatar">MH</div>
+              <div class="team-info">
+                <div class="team-name">Nguyễn Văn Mạnh Huy</div>
+                <div class="team-mssv">MSSV: 23520641</div>
+                <div class="team-role">AI Engineer · Benchmark & Normalization</div>
+              </div>
+            </div>
+            <div class="team-card">
+              <div class="team-avatar">TP</div>
+              <div class="team-info">
+                <div class="team-name">Trần Nhụy Tam Tử Phục</div>
+                <div class="team-mssv">MSSV: 24521400</div>
+                <div class="team-role">Backend Developer · API & Ingestion</div>
+              </div>
+            </div>
+            <div class="team-card">
+              <div class="team-avatar">NK</div>
+              <div class="team-info">
+                <div class="team-name">Phạm Nhật Khoa</div>
+                <div class="team-mssv">MSSV: 23520753</div>
+                <div class="team-role">Frontend Developer · UI/UX & Visualization</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL: EXPORT STARTER KIT & DELIVERABLES
+       ========================================== -->
+  <div class="modal-backdrop" id="export-modal" onclick="closeExportModal(event)">
+    <div class="modal-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-title">📦 Gói Khởi Động Đồ Án (Project Starter Kit)</span>
+          <span class="modal-subtitle">Tự động kết xuất dựa trên Kiến trúc 3 Lớp & Kỹ năng đã chọn</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeExportModal()" title="Đóng">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-tabs">
+          <button class="modal-tab-btn active" id="modal-tab-readme" onclick="switchModalTab('readme')">
+            📄 README.md Mẫu
+          </button>
+          <button class="modal-tab-btn" id="modal-tab-docker" onclick="switchModalTab('docker')">
+            🐳 docker-compose.yml
+          </button>
+          <button class="modal-tab-btn" id="modal-tab-report" onclick="switchModalTab('report')">
+            📑 Tóm Tắt Nộp GVHD
+          </button>
+        </div>
+
+        <div class="modal-code-wrapper">
+          <div class="code-toolbar">
+            <span class="code-filename" id="export-filename">README.md</span>
+            <div class="code-actions">
+              <button class="btn-copy-code" onclick="copyExportCode()" id="copy-code-btn">
+                <span>📋</span>
+                <span id="copy-btn-text">Sao chép</span>
+              </button>
+              <button class="btn-download-file" onclick="downloadExportFile()">
+                <span>💾</span>
+                <span>Tải File</span>
+              </button>
+            </div>
+          </div>
+          <pre class="code-pre"><code id="export-code-preview">Đang chuẩn bị gói khởi động...</code></pre>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-tip">
+          💡 <b>Mẹo:</b> Đưa các file này vào thư mục gốc của Git Repository để hoàn thành tiêu chí "Bằng chứng bàn giao kỹ thuật" (Verifiable Evidence Artifacts).
+        </div>
+        <button class="btn-modal-close" onclick="closeExportModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL: COMPARE 2 ROLES
+       ========================================== -->
+  <div class="modal-backdrop" id="compare-modal" onclick="closeRoleCompareModal(event)">
+    <div class="modal-dialog modal-dialog-lg" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-title">⚖️ Đối Chiếu Kỹ Năng 2 Vị Trí Tuyển Dụng</span>
+          <span class="modal-subtitle">So sánh giao thoa (Common Core) và khác biệt (Differentiators) trên 700 JDs TopCV</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeRoleCompareModal()" title="Đóng">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="compare-selectors-row">
+          <div class="compare-col-select">
+            <label class="compare-label" for="compare-role-a">Vị trí A:</label>
+            <select id="compare-role-a" class="tuner-select" onchange="runRoleComparison()"></select>
+          </div>
+          <div class="compare-vs-badge">VS</div>
+          <div class="compare-col-select">
+            <label class="compare-label" for="compare-role-b">Vị trí B:</label>
+            <select id="compare-role-b" class="tuner-select" onchange="runRoleComparison()"></select>
+          </div>
+        </div>
+        <div id="compare-results-container" class="compare-results-container">
+          <div style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+            <span>Đang chuẩn bị ma trận so sánh 2 vị trí việc làm...</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-tip">💡 <b>Mẹo:</b> Dùng bảng đối chiếu này để chọn lựa đề tài bao phủ cả 2 vị trí nếu bạn muốn theo đuổi hướng Fullstack/DevOps hoặc Data/AI.</div>
+        <button class="btn-modal-close" onclick="closeRoleCompareModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINTABLE REPORT CONTAINER (ACTIVE DURING WINDOW.PRINT) -->
+  <div id="printable-report" class="printable-report-container"></div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- APPLICATION SCRIPTS -->
+  <script src="/static/app.js?v=5.9"></script>
+</body>
+
+</html>
